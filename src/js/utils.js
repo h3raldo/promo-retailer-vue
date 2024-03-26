@@ -111,5 +111,24 @@ export default
 
             return USDollar.format(price)
         },
+    },
+
+    form: {
+        toGetParams( form ){
+            let params = [];
+
+            let inputs = form.elements;
+
+            for (let i = 0; i < inputs.length; i++) {
+                let input = inputs[i];
+
+                if( !input.name ) continue;
+                if( input.type === 'checkbox' && input.checked !== true ) continue;
+
+                params.push( input.name + '=' + input.value );
+            }
+
+            return params.join('&')
+        }
     }
 }

@@ -34,18 +34,20 @@ export default {
 				{
 					title: 'Refresh Images',
 					icon: 'bi bi-images',
-					url: '/s3/imageCrawl/refresh',
-					type: 'external'
+					url: '/update-cdn-images/',
+					type: 'vue'
 				},
 				{
 					title: 'Reports',
 					icon: 'bi-bar-chart-line-fill',
-					url: '/magento/report/items',
-					type: 'external'
+					url: '/reports/magento/',
+					type: 'vue'
 				}
 			]
 		}
 	},
+
+	inject: ['symfony'],
 
 	methods: {
 
@@ -88,7 +90,7 @@ export default {
 							</ul>
 						</div>
 						<div>
-							<a class="nav-link" href="/logout"><i class="bi bi-door-closed"></i> Logout (admin)</a>
+							<a class="nav-link" :href="symfony.logoutUrl"><i class="bi bi-door-closed"></i> Logout ({{ symfony.user }})</a>
 						</div>
 					</div>
 				</nav>

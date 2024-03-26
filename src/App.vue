@@ -9,7 +9,8 @@ import {computed} from "vue";
 export default {
 	data() {
 		return {
-			version: '1.1.11',
+			version: '1.1.13',
+			symfony: window.symfony,
 			alert: {
 				enabled: false,
 				message: '',
@@ -27,7 +28,10 @@ export default {
 		showAlert(message, type, data){
 			if( typeof data === 'object' ) data = JSON.stringify(data);
 			this.alert.message = message;
+
 			if( typeof type === 'string' ) this.alert.type = type;
+			else this.alert.type = 'success'
+
 			if( typeof data === 'string' ) this.alert.data = data;
 			this.alert.enabled = true;
 		},
@@ -35,7 +39,8 @@ export default {
 
 	provide() {
 		return {
-			alert: this.showAlert
+			alert: this.showAlert,
+			symfony: computed(() => this.symfony),
 		}
 	},
 

@@ -1,29 +1,14 @@
 
 <script>
+import utils from "@/js/utils.js";
+
 export default {
 	props: ['getQuotes'],
 	methods: {
 		search(e){
 			e.preventDefault();
-			let params = this.getParams(e.target);
+			let params = utils.form.toGetParams(e.target);
 			this.getQuotes(params);
-		},
-
-		getParams(form){
-			let params = [];
-
-			let inputs = form.elements;
-
-			for (let i = 0; i < inputs.length; i++) {
-				let input = inputs[i];
-
-				if( !input.name ) continue;
-				if( input.type === 'checkbox' && input.checked !== true ) continue;
-
-				params.push( input.name + '=' + input.value );
-			}
-
-			return params.join('&')
 		}
 	}
 }
