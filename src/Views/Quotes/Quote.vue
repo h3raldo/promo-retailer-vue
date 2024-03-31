@@ -18,7 +18,6 @@ export default {
 			id: this.$route.params.id,
 			loading: true,
 
-			urls: {},
 			edited: false,
 			quote: {},
 			logos: [],
@@ -26,6 +25,8 @@ export default {
 			vendors: []
 		}
 	},
+
+	inject: ['symfony'],
 
 	methods: {
 		addItem( item ){
@@ -59,7 +60,6 @@ export default {
 				this.quote = entity.quote.patchData(init.quote);
 			}
 
-			if( init.urls ) this.urls = init.urls;
 			if( init.logos ) this.logos = init.logos;
 			if( init.decorators ) this.logos = init.decorators;
 
@@ -71,7 +71,6 @@ export default {
 		return {
 			hasEdited: this.hasEdited,
 			decorators: computed(() => this.decorators),
-			urls: computed(() => this.urls),
 			edited: computed(() => this.edited ),
 			quote: computed(() => this.quote),
 			logos: computed(() => this.logos),
@@ -92,8 +91,9 @@ export default {
 	created()
 	{
 		let self = this;
+		let url = this.symfony.quotes.quote.get.replace(':id', this.id);
 
-		utils.ajax(`https://preview.promoretailer.dev/api/quotes/quote/${this.id}/`, (data) => {
+		utils.ajax(url, (data) => {
 			self.setup( data );
 			self.loading = false;
 		})
@@ -103,7 +103,7 @@ export default {
 		let self = this;
 
 		if( this.vendors.length > 0 ) return;
-		utils.ajax('https://preview.promoretailer.dev/quote/decorators/', (data) => {
+		utils.ajax(this.symfony.quotes.decorators, (data) => {
 			self.decorators = data;
 		})
 		entity.vendor.getAll().forEach(v => self.vendors.push(v))

@@ -14,7 +14,53 @@
     <script>
         window.symfony = {
             user: 'admin',
-            logoutUrl: '/logout'
+            logoutUrl: '/',
+            views: {
+                dashboard: '/admin/',
+                quotes: '/quotes/',
+                quotes_quote: '/quotes/quote/:id/',
+                orders: '/orders/',
+                orders_order: '/orders/order/:id/',
+                global_sheets: '/global-sheets/',
+                images_update: '/update-cdn-images/',
+                images_upload: '/upload-image/',
+                reports_orders: '/reports/magento/',
+                purchase_orders: '/purchase-orders/'
+            },
+            quotes: {
+                search: 'https://tools.promoretailer.dev/api/quotes/',
+                quote: {
+                    new: 'https://tools.promoretailer.dev/quotes/create/',
+                    save: 'https://tools.promoretailer.dev/quotes/save/:id/',
+                    duplicate: 'https://tools.promoretailer.dev/quotes/duplicate/:id/',
+                    delete: 'https://tools.promoretailer.dev/quotes/delete/:id/',
+                    push: 'https://preview.promoretailer.dev/quotes/push/:id/',
+                    public: 'https://tools.promoretailer.dev/quote/public/view/:id/',
+                    get: 'https://tools.promoretailer.dev/api/quotes/quote/:id/',
+                },
+                decorators: 'https://preview.promoretailer.dev/quote/decorators/'
+            },
+            orders: {
+                search: 'https://preview.promoretailer.dev/api/orders/'
+            },
+            reports: {
+                orders: 'https://preview.promoretailer.dev/api/reports/magento/'
+            },
+            images: {
+                update: 'https://preview.promoretailer.dev/s3/imageCrawl/',
+                upload: 'https://preview.promoretailer.dev/api/upload-image/',
+                recompile: 'https://preview.promoretailer.dev/s3/images/recompile/'
+            },
+            sources: {
+                globals: 'https://preview.promoretailer.dev/api/prismic/global-sheets/'
+            },
+            logos: {
+                search: 'https://preview.promoretailer.dev/prismic/lookup/logo/:name/'
+            },
+            sage: {
+                search: 'https://preview.promoretailer.dev/quote/lookup/',
+                item: 'https://preview.promoretailer.dev/quote/lookup/:id/'
+            }
         }
     </script>
 </head>

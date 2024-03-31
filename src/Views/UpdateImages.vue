@@ -12,11 +12,11 @@ export default {
 		}
 	},
 
-	inject: ['alert'],
+	inject: ['alert', 'symfony'],
 
 	methods: {
 		refresh(){
-			let refreshUrl = 'https://preview.promoretailer.dev/s3/imageCrawl/';
+			let refreshUrl = this.symfony.images.update;
 			let self = this;
 
 			let refresher = {
@@ -94,7 +94,7 @@ export default {
 		},
 
 		recompile(){
-			let url = 'https://preview.promoretailer.dev/s3/images/recompile/';
+			let url = this.symfony.images.recompile;
 
 			this.compiling = true;
 

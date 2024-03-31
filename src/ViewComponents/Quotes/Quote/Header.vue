@@ -11,9 +11,15 @@ export default {
 		}
 	},
 
-	inject: ['quote', 'logos', 'vendors', 'urls', 'updatePricing', 'hasEdited', 'alert'],
+	inject: ['quote', 'logos', 'vendors', 'updatePricing', 'hasEdited', 'alert', 'symfony'],
 
 	computed: {
+		publicUrl(){
+			return this.symfony.quotes.quote.public.replace(':id', this.quote.id);
+		},
+		saveUrl(){
+			return this.symfony.quotes.quote.save.replace(':id', this.quote.id);
+		}
 	},
 
 	methods: {
@@ -59,7 +65,7 @@ export default {
 				}
 			}
 
-			this.ajaxUrl( this.urls.save, callback.success, callback.error )
+			this.ajaxUrl( this.saveUrl, callback.success, callback.error )
 		},
 		push(){
 			let self = this;
@@ -72,7 +78,7 @@ export default {
 					self.hasEdited(false);
 
 					self.ajaxUrl(
-					  self.urls.push,
+					  self.symfony.quotes.quote.push,
 					  () => {
 						  self.alert('Quote Pushed to Zoho!');
 						  self.loading = false;
@@ -89,7 +95,7 @@ export default {
 				}
 			}
 
-			this.ajaxUrl( this.urls.save, callback.success, callback.error );
+			this.ajaxUrl( this.saveUrl, callback.success, callback.error );
 		}
 	}
 }
@@ -100,7 +106,7 @@ export default {
 		<div class="flex-grow-1">
 			<div class="d-flex gap-3 align-items-center">
 				<div>
-					<RouterLink to="/quotes/" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></RouterLink>
+					<RouterLink :to="symfony.views.quotes" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></RouterLink>
 				</div>
 				<div>
 					<div class="form-floating">
@@ -184,7 +190,7 @@ export default {
 			</div>
 		</div>
 		<div class="text-end d-flex gap-2">
-			<a :href="urls.public" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Public Version</a>
+			<a :href="publicUrl" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Public Version</a>
 			<button class="btn btn-primary" :disabled="loading" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
 			<button class="btn btn-danger me-2 btn-push-to-zoho" :disabled="loading" @click="push"><i class="bi bi-cloud-arrow-up-fill"></i> Push</button>
 		</div>

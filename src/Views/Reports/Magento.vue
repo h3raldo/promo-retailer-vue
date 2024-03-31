@@ -10,21 +10,20 @@ export default {
 
 	data(){
 		return {
-			url: 'https://preview.promoretailer.dev/api/reports/magento/',
 			loading: true,
 			report: {},
 			group: '',
 		}
 	},
 
-	inject: ['alert'],
+	inject: ['alert', "symfony"],
 
 	methods: {
 		getReport(params){
 			let self = this;
 			if( !params ) params = '';
 
-			let url = this.url + '?' + params
+			let url = this.symfony.reports.orders + '?' + params
 
 			self.loading = true;
 			utils.ajax(url, (data) => {

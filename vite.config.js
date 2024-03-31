@@ -9,7 +9,7 @@ import vue from '@vitejs/plugin-vue'
 const copyJSToSymfony = () => ({
   name: 'output-plugin-stats',
   closeBundle: async () => {
-    const oldFiles = await fg(['../symfony/public/assets/**.*']);
+    const oldFiles = await fg(['../tools/public/assets/**.*']);
     oldFiles.forEach( f => fs.unlinkSync(f) );
 
     const entries = await fg(['dist/assets/**.*']);
@@ -21,9 +21,9 @@ const copyJSToSymfony = () => ({
 
       if( fileName.includes('index-') ) version = fileName;
 
-      fs.writeFileSync( `../symfony/public/assets/${fileName}` , file );
+      fs.writeFileSync( `../tools/public/assets/${fileName}` , file );
     })
-    fs.writeFileSync( '../symfony/templates/base-vue-script.twig' , version );
+    fs.writeFileSync( '../tools/templates/base-vue-script.twig' , version );
   }
 })
 

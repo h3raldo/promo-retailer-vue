@@ -4,7 +4,6 @@ export default {
 
 	data(){
 		return {
-			url: 'https://preview.promoretailer.dev/api/upload-image/',
 			fileInput: '',
 			pastedInput: '',
 			loading: false,
@@ -12,7 +11,7 @@ export default {
 		}
 	},
 
-	inject: ['alert'],
+	inject: ['alert', 'symfony'],
 
 	computed: {
 		formClasses(){
@@ -52,7 +51,7 @@ export default {
 
 			for (const name in data) formData.append(name, data[name]);
 
-			fetch(this.url, {method: 'POST', body: formData})
+			fetch(this.symfony.images.upload, {method: 'POST', body: formData})
 				.then(res => res.json())
 				.then(res => cb(res))
 				.catch(error => {

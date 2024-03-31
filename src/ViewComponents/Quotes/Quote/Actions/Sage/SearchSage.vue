@@ -21,7 +21,7 @@ export default {
 		}
 	},
 
-	inject: ['quote', 'vendors', 'updatePricing', 'addQuoteItem'],
+	inject: ['quote', 'vendors', 'updatePricing', 'addQuoteItem', 'symfony'],
 
 	computed: {
 		loadingClass() {
@@ -44,7 +44,7 @@ export default {
 		search(e) {
 			e.preventDefault();
 			let formData = new FormData(e.target);
-			let url = 'https://preview.promoretailer.dev/quote/lookup/?' + new URLSearchParams(formData).toString();
+			let url = this.symfony.sage.search+'?' + new URLSearchParams(formData).toString();
 			let self = this;
 
 			self.loading = true;
@@ -105,7 +105,7 @@ export default {
 			this.view = 'results';
 		},
 		getResult(id, callback) {
-			let url = `https://preview.promoretailer.dev/quote/lookup/${id}/`;
+			let url = this.symfony.sage.item.replace(':id', id);
 			let self = this;
 
 			self.loading = true;

@@ -6,7 +6,17 @@ import {RouterLink} from "vue-router";
 export default {
 	data() {
 		return {
-			links: [
+
+		}
+	},
+
+	inject: ['symfony'],
+
+	computed: {
+		nav(){
+			let self = this;
+
+			return [
 				{
 					title: 'Websites',
 					icon: 'bi bi-box-arrow-up-left',
@@ -14,40 +24,62 @@ export default {
 					type: 'external'
 				},
 				{
-					title: 'Quotes',
+					title: 'Sales',
 					icon: 'bi bi-receipt-cutoff',
-					url: '/quotes/',
-					type: 'vue'
+					children: [
+						{
+							title: 'Quotes',
+							icon: 'bi bi-calculator',
+							url: self.symfony.views.quotes,
+							type: 'vue'
+						},
+						{
+							title: 'Orders',
+							icon: 'bi bi-table',
+							url: self.symfony.views.orders,
+							type: 'vue'
+						},
+						{
+							title: 'Purchase Orders',
+							icon: 'bi bi-table',
+							url: self.symfony.views.purchase_orders,
+							type: 'vue'
+						},
+					]
 				},
 				{
 					title: 'Global Sheets',
 					icon: 'bi bi-database',
-					url: '/global-sheets/',
+					url: self.symfony.views.global_sheets,
 					type: 'vue'
 				},
 				{
-					title: 'Upload Image',
+					title: 'Images',
 					icon: 'bi bi-images',
-					url: '/upload-image/',
-					type: 'vue'
-				},
-				{
-					title: 'Refresh Images',
-					icon: 'bi bi-images',
-					url: '/update-cdn-images/',
-					type: 'vue'
+					children: [
+						{
+							title: 'Upload Image',
+							icon: 'bi bi-cloud-arrow-up',
+							url: self.symfony.views.images_upload,
+							type: 'vue'
+						},
+						{
+							title: 'Update CDN Images',
+							icon: 'bi bi-arrow-clockwise',
+							url: self.symfony.views.images_update,
+							type: 'vue'
+						},
+					]
 				},
 				{
 					title: 'Reports',
 					icon: 'bi-bar-chart-line-fill',
-					url: '/reports/magento/',
+					url: self.symfony.views.reports_orders,
 					type: 'vue'
 				}
 			]
 		}
 	},
-
-	inject: ['symfony'],
 
 	methods: {
 
@@ -69,7 +101,7 @@ export default {
 				<nav class="navbar navbar-expand-lg bg-body-tertiary">
 					<div class="container-fluid">
 
-						<RouterLink class="navbar-brand d-flex align-items-center text-dark text-decoration-none" to="/">
+						<RouterLink class="navbar-brand d-flex align-items-center text-dark text-decoration-none" :to="symfony.views.dashboard">
 							<img class="pe-2" src="https://cdn.globalhealing.com/web/img/vendor/pr/pr-logo.png?w=80" width="40" alt="">
 						</RouterLink>
 
@@ -79,12 +111,20 @@ export default {
 
 						<div class="collapse navbar-collapse" id="navbarNav">
 							<ul class="navbar-nav flex-fill justify-content-center gap-4">
-								<li v-for="link in links" class="nav-item">
-									<template v-if="link.type === 'external'">
-										<a class="nav-link" :href="link.url"><i :class="link.icon"></i> {{ link.title }}</a>
+								<li v-for="link in nav" class="nav-item dropdown">
+									<template v-if="link.children">
+										<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i :class="link.icon"></i> {{ link.title }}</a>
+										<ul class="dropdown-menu">
+											<li v-for="child in link.children"><RouterLink class="dropdown-item" :to="child.url"><i :class="child.icon"></i> {{ child.title }}</RouterLink></li>
+										</ul>
 									</template>
-									<template v-if="link.type === 'vue'">
-										<RouterLink class="nav-link" :to="link.url"><i :class="link.icon"></i> {{ link.title }}</RouterLink>
+									<template v-else>
+										<template v-if="link.type === 'external'">
+											<a class="nav-link" :href="link.url"><i :class="link.icon"></i> {{ link.title }}</a>
+										</template>
+										<template v-if="link.type === 'vue'">
+											<RouterLink class="nav-link" :to="link.url"><i :class="link.icon"></i> {{ link.title }}</RouterLink>
+										</template>
 									</template>
 								</li>
 							</ul>

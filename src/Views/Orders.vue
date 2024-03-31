@@ -1,7 +1,7 @@
 <script setup>
 	import Loader from "@/components/globals/Loader.vue";
 	import Modal from "@/components/globals/bootstrap/Modal.vue";
-	import Search from "@/ViewComponents/Quotes/Search.vue";
+	import Search from "@/ViewComponents/Orders/Search.vue";
 </script>
 
 <script>
@@ -21,21 +21,21 @@ export default {
 			return utils.pricing.format(price);
 		},
 		viewQuote( id ){
-			this.$router.push( this.symfony.views.quotes_quote.replace(':id', id) )
+			this.$router.push( this.symfony.views.orders_order.replace(':id', id) );
 		},
 		getDuplicateUrl( id )
 		{
-			return this.symfony.quotes.quote.duplicate.replace(':id', id);
+			return `/orders/duplicate/${id}/`
 		},
 		getDeleteUrl( id )
 		{
-			return this.symfony.quotes.quote.delete.replace(':id', id);
+			return `/orders/delete/${id}/`
 		},
-		getQuotes( params ){
+		getEntities( params ){
 			let self = this;
 			if( !params ) params = '';
 
-			let url = this.symfony.quotes.search+'?' + params ?? ''
+			let url = this.symfony.orders.search +'?' + params ?? ''
 
 			self.loading = true;
 			utils.ajax(url, (data) => {
@@ -62,13 +62,13 @@ export default {
 
 	mounted() {
 		if( this.quotes.length > 0 ) return;
-		this.getQuotes()
+		this.getEntities()
 	}
 }
 </script>
 
 <template>
-	<Search :getQuotes="getQuotes" />
+	<Search :getEntities="getEntities" />
 
 	<br>
 

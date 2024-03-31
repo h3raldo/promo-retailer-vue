@@ -11,7 +11,7 @@ export default {
 		}
 	},
 
-	inject: ['logos'],
+	inject: ['logos', 'symfony'],
 
 	methods: {
 		addLogo(logo){
@@ -22,7 +22,7 @@ export default {
 
 		search(e) {
 			e.preventDefault();
-			let url = `https://preview.promoretailer.dev/prismic/lookup/logo/${this.name}/`;
+			let url = this.symfony.logos.search.replace(':name', this.name);
 			let self = this;
 			this.loading = true;
 			utils.ajax(url, (data) => {

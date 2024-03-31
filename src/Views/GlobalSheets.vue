@@ -12,6 +12,9 @@ export default {
 			data: {}
 		}
 	},
+
+	inject: ['symfony'],
+
 	methods: {
 		multi(e){
 			utils.ajaxButtons.multi.click(e.target);
@@ -29,7 +32,7 @@ export default {
 		if( this.data.globals ) return;
 		let self = this;
 
-		utils.ajax('https://preview.promoretailer.dev/api/prismic/global-sheets/', (data) => {
+		utils.ajax(this.symfony.sources.globals, (data) => {
 			self.data = data;
 			self.loading = false;
 		})
