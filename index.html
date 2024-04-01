@@ -17,15 +17,16 @@
             logoutUrl: '/',
             views: {
                 dashboard: '/admin/',
-                quotes: '/quotes/',
-                quotes_quote: '/quotes/quote/:id/',
-                orders: '/orders/',
-                orders_order: '/orders/order/:id/',
-                global_sheets: '/global-sheets/',
-                images_update: '/update-cdn-images/',
-                images_upload: '/upload-image/',
-                reports_orders: '/reports/magento/',
-                purchase_orders: '/purchase-orders/'
+                quotes: '/admin/quotes/',
+                quotes_quote: '/admin/quotes/quote/:id/',
+                orders: '/admin/orders/',
+                orders_order: '/admin/orders/order/:id/',
+                global_sheets: '/admin/global-sheets/',
+                images_update: '/admin/update-cdn-images/',
+                images_upload: '/admin/upload-image/',
+                reports_orders: '/admin/reports/magento/',
+                purchase_orders: '/admin/purchase-orders/',
+                purchase_orders_purchase_order: '/admin/purchase-orders/order/:id/',
             },
             quotes: {
                 search: 'https://tools.promoretailer.dev/api/quotes/',
@@ -42,6 +43,12 @@
             },
             orders: {
                 search: 'https://preview.promoretailer.dev/api/orders/'
+            },
+            purchase_orders: {
+                search: 'https://tools.promoretailer.dev/api/purchase-orders/',
+                order: {
+                    get: 'https://tools.promoretailer.dev/api/purchase-orders/po/:id/',
+                }
             },
             reports: {
                 orders: 'https://preview.promoretailer.dev/api/reports/magento/'

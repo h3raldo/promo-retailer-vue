@@ -33,15 +33,15 @@ export default {
 							url: self.symfony.views.quotes,
 							type: 'vue'
 						},
-						{
+						/*{
 							title: 'Orders',
 							icon: 'bi bi-table',
 							url: self.symfony.views.orders,
 							type: 'vue'
-						},
+						},*/
 						{
 							title: 'Purchase Orders',
-							icon: 'bi bi-table',
+							icon: 'bi bi-cash-coin',
 							url: self.symfony.views.purchase_orders,
 							type: 'vue'
 						},

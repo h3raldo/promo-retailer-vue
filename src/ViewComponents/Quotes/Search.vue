@@ -4,6 +4,7 @@ import utils from "@/js/utils.js";
 
 export default {
 	props: ['getQuotes'],
+	inject: ['symfony'],
 	methods: {
 		search(e){
 			e.preventDefault();
@@ -122,14 +123,14 @@ export default {
 							<button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i> Search</button>
 						</div>
 						<div>
-							<a href="/quotes/" class="btn btn-outline-secondary"><i class="bi bi-x-octagon"></i> Clear All</a>
+<!--							<a href="/quotes/" class="btn btn-outline-secondary"><i class="bi bi-x-octagon"></i> Clear All</a>-->
 						</div>
 					</div>
 				</div>
 			</form>
 		</div>
 		<div class="text-center pe-4">
-			<a class="btn btn-primary p-3" href="/quotes/create/"><i class="bi bi-plus-square-fill"></i> New Quote</a>
+			<a class="btn btn-primary p-3" :href="symfony.quotes.quote.new"><i class="bi bi-plus-square-fill"></i> New Quote</a>
 		</div>
 	</div>
 </template>
