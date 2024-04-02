@@ -68,21 +68,21 @@ export default {
 							<span class="h3">{{ spreadsheet.name }}</span>
 							<br>
 							<a :href="`https://docs.google.com/spreadsheets/d/${spreadsheet.google_sheet_id}/edit#gid=0`" target="_blank">View Sheet</a> |
-							<a :href="`/magento/import/products/generate/${spreadsheet.google_sheet_id}/${spreadsheet.zoho_id}/`" target="_blank">View Imports</a> |
-							<a :href="`/zoho/supplier/export/${spreadsheet.id}/`" target="_blank">View Zoho Exports</a>
+							<a :href="`https://preview.promoretailer.dev/magento/import/products/generate/${spreadsheet.google_sheet_id}/${spreadsheet.zoho_id}/`" target="_blank">View Imports</a> |
+							<a :href="`https://preview.promoretailer.dev/zoho/supplier/export/${spreadsheet.id}/`" target="_blank">View Zoho Exports</a>
 						</div>
 						<div class="col-auto">
 							<div class="btn-group">
 								<button class="btn btn-outline-primary multi-step" @click="multi">
 									<span>Refresh Groups</span>
-									<input type="hidden" name="Refreshing Groups..." :value="`/sheets/clear-cache/single/${spreadsheet.google_sheet_id}/groups`">
-									<input type="hidden" name="Importing Groups..." :value="`/import/supplier/groups/${spreadsheet.google_sheet_id}/${spreadsheet.zoho_id}/`">
+									<input type="hidden" name="Refreshing Groups..." :value="`https://preview.promoretailer.dev/sheets/clear-cache/single/${spreadsheet.google_sheet_id}/groups`">
+									<input type="hidden" name="Importing Groups..." :value="`https://preview.promoretailer.dev/import/supplier/groups/${spreadsheet.google_sheet_id}/${spreadsheet.zoho_id}/`">
 								</button>
 
 								<button class="btn btn-outline-success multi-step" @click="multi">
 									<span>Refresh SKUs</span>
-									<input type="hidden" name="Refreshing SKUs..." :value="`/sheets/clear-cache/single/${spreadsheet.google_sheet_id}/skus`">
-									<input type="hidden" name="Importing SKUs..." :value="`/import/supplier/skus/${spreadsheet.google_sheet_id}/${spreadsheet.id}/`">
+									<input type="hidden" name="Refreshing SKUs..." :value="`https://preview.promoretailer.dev/sheets/clear-cache/single/${spreadsheet.google_sheet_id}/skus`">
+									<input type="hidden" name="Importing SKUs..." :value="`https://preview.promoretailer.dev/import/supplier/skus/${spreadsheet.google_sheet_id}/${spreadsheet.id}/`">
 								</button>
 							</div>
 						</div>
@@ -106,14 +106,14 @@ export default {
 						<button class="btn btn-outline-primary multi-step" @click="multi">
 							<span>Refresh</span>
 
-							<input type="hidden" name="Refreshing Sheet..." :value="`/sheets/clear-cache/single/${global.id}/${global.sheet}`">
+							<input type="hidden" name="Refreshing Sheet..." :value="`https://preview.promoretailer.dev/sheets/clear-cache/single/${global.id}/${global.sheet}`">
 
 							<template v-if="global.type === 'Zoho Vendor Ids'">
-								<input type="hidden" name="Pushing..." value="/zoho/vendors/refresh/">
+								<input type="hidden" name="Pushing..." value="https://preview.promoretailer.dev/zoho/vendors/refresh/">
 							</template>
 
 							<template v-if="global.type === 'Input Fields'">
-								<input type="hidden" name="Pushing to Magento..." value="/magento/import/custom_fields/">
+								<input type="hidden" name="Pushing to Magento..." value="https://preview.promoretailer.dev/magento/import/custom_fields/">
 							</template>
 
 						</button>
@@ -128,7 +128,7 @@ export default {
 		<!-- prismic -->
 		<div class="tab-pane fade pt-4" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
 			<h3>Decorators</h3>
-			<button class="btn btn-primary single-step" data-url="/clear-cache/prismic/decorators" @click="single">Refresh Data</button>
+			<button class="btn btn-primary single-step" data-url="https://preview.promoretailer.dev/clear-cache/prismic/decorators" @click="single">Refresh Data</button>
 		</div>
 
 	</div>

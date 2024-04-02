@@ -33,8 +33,13 @@ export default {
             }
         }
     },
-    patchData( quote )
+    patchData( init )
     {
+        let quote = init.quote;
+
+        quote.id = init.id;
+        quote.info.status = init.status;
+
         if( typeof quote.info.notes === 'string' ){
             quote.info.notes = { public: '', private: init.quote.info.notes, flags: [] }
         }

@@ -57,7 +57,7 @@ export default {
 			if( !init.quote )
 				this.quote = entity.quote.create(init.new_quote_id);
 			else{
-				this.quote = entity.quote.patchData(init.quote);
+				this.quote = entity.quote.patchData(init);
 			}
 
 			if( init.logos ) this.logos = init.logos;

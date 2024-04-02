@@ -78,7 +78,7 @@ export default {
 					self.hasEdited(false);
 
 					self.ajaxUrl(
-					  self.symfony.quotes.quote.push,
+					  self.symfony.quotes.quote.push.replace(':id', self.quote.id),
 					  () => {
 						  self.alert('Quote Pushed to Zoho!');
 						  self.loading = false;
