@@ -2,7 +2,7 @@
 </script>
 
 <script>
-import pricing from "@/js/Quotes/Quote/pricing.js";
+import pricing from "@/js/pricing.js";
 
 export default {
 	data() {
@@ -12,7 +12,6 @@ export default {
 	},
 
 	props: ['tier', 'index','removeTier', 'showMargin'],
-	inject: ['item'],
 
 	computed:{
 		editableMargin(){
@@ -21,9 +20,6 @@ export default {
 	},
 
 	methods: {
-		itemMargin(){
-			return pricing.getTierMargin( this.item.cost.material.tiers, this.tier.qty );
-		},
 		calculateMargin(){
 			this.tier.margin = pricing.calculateMargin( this.tier.cost, this.tier.price )
 		},

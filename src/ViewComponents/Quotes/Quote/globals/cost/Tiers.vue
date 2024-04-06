@@ -3,9 +3,8 @@ import Tier from "@/ViewComponents/Quotes/Quote/globals/cost/Tier.vue";
 </script>
 
 <script>
-import entity from "@/js/Quotes/Quote/entity.js";
-import defaults from "@/js/Quotes/Quote/defaults.js";
-import pricing from "@/js/Quotes/Quote/pricing.js";
+import entity from "@/js/entity.js";
+import pricing from "@/js/pricing.js";
 
 export default {
 	data() {
@@ -24,7 +23,7 @@ export default {
 
 	methods: {
 		addTier() {
-			this.tiers.push(entity.item.tier.create())
+			this.tiers.push(entity.quote.item.tier.create())
 		},
 		removeTier(index) {
 			this.tiers.splice(index, 1);
@@ -39,7 +38,7 @@ export default {
 			pricing.tiers.applyPriceToAll(this.allPrice, this.tiers);
 		},
 		addDefaultTiers(){
-			let tiers = defaults.item.cost.tiers()
+			let tiers = entity.quote.item.tier.default.cost();
 			tiers.forEach( t => this.tiers.push(t) )
 		}
 	}

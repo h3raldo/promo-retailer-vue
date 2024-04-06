@@ -1,10 +1,30 @@
-import entity from "@/js/Quotes/Quote/entity.js";
-import pricing from "@/js/Quotes/Quote/pricing.js";
-import itemOption from "@/js/Quotes/Quote/entity/item.option.js";
+import entity from "@/js/entity.js";
+import pricing from "@/js/pricing.js";
+
+function create(){
+    return {
+        info: {
+            id: '',
+            zoho_id: '',
+            name: '',
+        },
+        sheets: [],
+    }
+}
+
+let sheet = {
+    create( d ) {
+        return {
+            name: '',
+            cost: [],
+            info: d.info
+        }
+    }
+}
 
 function createOrAddDecorator( decorator, item )
 {
-    let option = itemOption.getOption('Decoration', item)
+    let option = entity.order.item.option.getOption('Decoration', item)
     if( option === false ) {
         item.options.push( createOption([decorator]) );
         return;
@@ -14,15 +34,9 @@ function createOrAddDecorator( decorator, item )
     option.groups.push(group);
 }
 
-/**
- * Creates option from array of decorators
- *
- * @param decorators array
- * @returns {*}
- */
 function createOption(decorators)
 {
-    let option = entity.item.option.create();
+    let option = entity.order.item.option.create();
     option.name = 'Decoration';
     decorators.forEach( d => {
         let group = createGroup(d);
@@ -33,11 +47,11 @@ function createOption(decorators)
 
 function createGroup( d )
 {
-    let group = entity.item.option.group.create();
+    let group = entity.order.item.option.group.create();
     group.name = d.name;
 
     d.unit.forEach( u => {
-        let value = entity.item.option.group.value.create();
+        let value = entity.order.item.option.group.value.create();
         value.name = getPriceSheetName( u );
         value.value = `${d.id}:${value.name}`;
         value.cost = u.price;
@@ -63,7 +77,8 @@ function getPriceSheetName(sheet) {
     return names.join(' + ');
 }
 
-
 export default {
+    create: create,
+    sheet: sheet,
     createOptionOrAddDecorator: createOrAddDecorator
-};
+}

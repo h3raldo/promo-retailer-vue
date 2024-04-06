@@ -1,11 +1,10 @@
 <script setup>
 import SelectOrCustom from "@/ViewComponents/Quotes/Quote/globals/item/SelectOrCustom.vue";
-import defaults from "@/js/Quotes/Quote/defaults.js";
+import entity from "@/js/entity.js";
 </script>
 
 <script>
-
-import entity from "@/js/Quotes/Quote/entity.js";
+import entity from "@/js/entity.js";
 
 export default {
 	data() {
@@ -22,7 +21,7 @@ export default {
 
 	methods: {
 		add(){
-			this.item.decoration.placements.push( entity.item.decoration.placement.create() );
+			this.item.decoration.placements.push( entity.quote.item.decoration.placement.create() );
 		},
 		remove(index){
 			this.item.decoration.placements.splice(index, 1);
@@ -68,14 +67,14 @@ export default {
 
 		<div class="col-2">
 			<div class="form-floating">
-				<SelectOrCustom :array="defaults.item.decoration.logo.colors" v-model="placement.logo_color.name" />
+				<SelectOrCustom :array="entity.quote.item.decoration.default.logo.colors" v-model="placement.logo_color.name" />
 				<label>Logo Color</label>
 			</div>
 		</div>
 
 		<div class="col-2">
 			<div class="form-floating">
-				<SelectOrCustom :array="defaults.item.decoration.logo.locations" v-model="placement.location.name" />
+				<SelectOrCustom :array="entity.quote.item.decoration.default.logo.locations" v-model="placement.location.name" />
 				<label>Logo Location</label>
 			</div>
 		</div>

@@ -3,7 +3,7 @@ import Tiers from "@/ViewComponents/Quotes/Quote/globals/cost/Tiers.vue";
 </script>
 
 <script>
-import entity from "@/js/Quotes/Quote/entity.js";
+import entity from "@/js/entity.js";
 
 export default {
 	data() {
@@ -19,7 +19,7 @@ export default {
 
 	methods: {
 		addSheet(){
-			let sheet = entity.item.decoration.decorator.sheet.create(this.decorator);
+			let sheet = entity.quote.item.decoration.decorator.sheet.create(this.decorator);
 			sheet.name = 'New Sheet';
 			this.decorator.sheets.push(sheet);
 		},

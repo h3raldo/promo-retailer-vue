@@ -56,27 +56,35 @@ export default {
 
 <template>
 
-	<Nav />
+	<main class="d-flex">
 
-	<div class="container py-3">
-		<main>
-			<div v-if="alert.enabled" :class="'alert alert-dismissible alert-'+alert.type" role="alert">
-				<div>{{ alert.message }}</div>
-				<textarea v-if="alert.data" class="form-control" readonly>{{alert.data}}</textarea>
-				<button type="button" class="btn-close" aria-label="Close" @click="alert.enabled=false"></button>
-			</div>
+		<aside class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark">
+			<Nav />
+		</aside>
 
-			<RouterView />
+		<div class="container py-3">
+			<main>
+				<div v-if="alert.enabled" :class="'alert alert-dismissible alert-'+alert.type" role="alert">
+					<div>{{ alert.message }}</div>
+					<textarea v-if="alert.data" class="form-control" readonly>{{alert.data}}</textarea>
+					<button type="button" class="btn-close" aria-label="Close" @click="alert.enabled=false"></button>
+				</div>
 
-			<div class="d-flex justify-content-center align-items-center gap-2 pt-5">
-				<div><img class="d-block" src="https://cdn.promoretailer.com/logos/promo-retailer-purple.png" alt="" height="30"></div>
-				<div class="fst-italic">PR ProVue v{{ version }}</div>
-			</div>
-		</main>
-	</div>
+				<RouterView />
+
+				<div class="d-flex justify-content-center align-items-center gap-2 pt-5">
+					<div><img class="d-block" src="https://cdn.promoretailer.com/logos/promo-retailer-purple.png" alt="" height="30"></div>
+					<div class="fst-italic">PR ProVue v{{ version }}</div>
+				</div>
+			</main>
+		</div>
+
+	</main>
 
 </template>
 
 <style scoped>
-
+	.container{
+		min-height: 100vh;
+	}
 </style>

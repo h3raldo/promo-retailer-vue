@@ -1,9 +1,9 @@
 <script setup>
-import pricing from "@/js/Quotes/Quote/pricing.js";
+import pricing from "@/js/pricing.js";
 </script>
 
 <script>
-import pricing from "@/js/Quotes/Quote/pricing.js";
+import pricing from "@/js/pricing.js";
 
 export default {
 	data() {

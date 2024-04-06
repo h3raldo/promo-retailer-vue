@@ -3,9 +3,7 @@ import Option from "@/ViewComponents/Quotes/Quote/Items/Item/Options/Option.vue"
 </script>
 
 <script>
-
-import data from "@/js/Quotes/Quote/entity.js";
-import defaults from "@/js/Quotes/Quote/defaults.js";
+import entity from "@/js/entity.js";
 
 export default {
 	data() {
@@ -38,10 +36,10 @@ export default {
 			this.item.options.splice(i, 1);
 		},
 		addOption() {
-			this.item.options.push(data.item.option.create(true))
+			this.item.options.push( entity.quote.item.option.create(true) )
 		},
 		addDecoratorsOption( decorator, e ){
-			defaults.item.option.decorators.createOptionOrAddDecorator( decorator, this.item );
+			entity.order.item.decoration.decorator.createOptionOrAddDecorator( decorator, this.item );
 			e.target.disabled = true;
 		}
 	}

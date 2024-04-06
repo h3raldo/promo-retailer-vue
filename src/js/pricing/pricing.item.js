@@ -1,4 +1,4 @@
-import pricingUtils from "@/js/Quotes/Quote/pricing.js";
+import pricingUtils from "@/js/pricing.js";
 
 function updateItemPricing( item, items )
 {

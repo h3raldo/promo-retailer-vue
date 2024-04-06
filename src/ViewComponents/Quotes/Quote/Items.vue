@@ -6,7 +6,7 @@ import Fee from "@/ViewComponents/Quotes/Quote/Items/Fee.vue";
 </script>
 
 <script>
-import pricing from "@/js/Quotes/Quote/pricing.js";
+import pricing from "@/js/pricing.js";
 
 export default {
 	data() {

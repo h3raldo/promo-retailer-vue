@@ -1,12 +1,12 @@
-import pricing from "@/js/Quotes/Quote/pricing.js";
-import entity from "@/js/Quotes/Quote/entity.js";
-import utils from "@/js/Quotes/Quote/utils.js";
+import pricing from "@/js/pricing.js";
+import entity from "@/js/entity.js";
+import utils from "@/js/utils.js";
 export default
 {
     toQuoteItem( sageItem )
     {
         sageItem = structuredClone(sageItem);
-        let item = entity.item.create();
+        let item = entity.order.item.create();
         item.id = sageItem.prodEid;
         item.info.sku = sageItem.itemNum;
         item.info.name = sageItem.prName;
@@ -34,7 +34,7 @@ export default
 
         if( sageItem.pics && sageItem.pics.length > 0 ){
             sageItem.pics.forEach( p => {
-                let img = entity.item.image.create();
+                let img = entity.order.item.image.create();
                 img.url = p.url;
                 img.caption = p.caption;
                 images.push(img);
@@ -55,7 +55,7 @@ export default
             if( option.Name.toLowerCase() === 'sizes' || option.Name.toLowerCase() === 'size' ){
 
                 option.Values.forEach( value => {
-                    let size = entity.item.size.create();
+                    let size = entity.order.item.size.create();
                     size.name = value.Value;
                     size.cost = this.matchPriceToQty( sageItem.qty, value.Net );
                     sizes.push(size);
@@ -64,16 +64,16 @@ export default
                 return;
             }
 
-            let new_option = entity.item.option.create();
+            let new_option = entity.order.item.option.create();
             new_option.type = 'sage';
             new_option.name = option.Name;
 
-            let group = entity.item.option.group.create();
+            let group = entity.order.item.option.group.create();
             group.name = option.Name;
 
             option.Values.forEach( value => {
 
-                let v = entity.item.option.group.value.create();
+                let v = entity.order.item.option.group.value.create();
                 v.name = value.Value;
                 v.value = value.Value;
                 v.cost = this.matchPriceToQty( sageItem.qty, value.Net );
@@ -88,7 +88,7 @@ export default
         })
 
         sageItem.colors.split(',').forEach( color => {
-            let c = entity.item.color.create();
+            let c = entity.order.item.color.create();
             c.name = color;
             colors.push(c);
         })
@@ -111,7 +111,7 @@ export default
         qty = qty.filter( q => parseInt(q) > 0);
 
         qty.forEach( (q, i) => {
-            let tier = entity.item.tier.create();
+            let tier = entity.order.item.tier.create();
             tier.qty = parseInt(q);
             if( prices && prices[i] ) {
                 tier.cost = parseFloat(prices[i]) || 0;
@@ -136,7 +136,7 @@ export default
             return;
         }
 
-        let new_vendor =entity.vendor.create();
+        let new_vendor =entity.order.vendor.create();
         new_vendor.sage_id = item.info.supplier.sage_id;
         new_vendor.name = item.info.supplier.name;
 

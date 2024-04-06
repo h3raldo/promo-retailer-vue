@@ -1,4 +1,4 @@
-let vendors = [
+let default_vendors = [
     { name: 'None', id: '' },
     { name: 'Airline Graphics', id: '4141623000000122080' },
     { name: 'Compass Industries', id: '4141623000000122431' },
@@ -14,6 +14,30 @@ let vendors = [
     { name: 'Stanco', id: '4141623000000524113' },
 ]
 
-export default{
-    list: vendors
+function create(){
+    return {
+        name: 'New Vendor',
+        id: '',
+        sage_id: 0,
+    }
+}
+
+function getAll(){
+    let vendors = [];
+
+    default_vendors.forEach( v => {
+        let vendor = this.create()
+        vendor.name = v.name;
+        vendor.id = v.id;
+        if( v.sage_id ) vendor.sage_id = v.sage_id;
+        vendors.push(vendor);
+    })
+
+    return vendors;
+}
+
+
+export default {
+    create: create,
+    getAll: getAll
 }

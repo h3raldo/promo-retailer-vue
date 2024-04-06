@@ -6,7 +6,7 @@ import Modal from "@/components/globals/bootstrap/Modal.vue";
 </script>
 
 <script>
-import pricing from "@/js/Quotes/Quote/pricing.js";
+import pricing from "@/js/pricing.js";
 import {computed, toRaw} from "vue";
 
 export default {

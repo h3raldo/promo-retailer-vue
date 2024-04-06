@@ -1,32 +1,17 @@
 <script setup>
-import SearchSage from "@/ViewComponents/Quotes/Quote/Actions/Sage/SearchSage.vue";
-</script>
+import { inject } from 'vue'
 
-<script>
-import entity from "@/js/Quotes/Quote/entity.js";
-import defaults from "@/js/Quotes/Quote/defaults.js";
+import entity from "@/js/entity.js";
 
-export default {
-	data() {
-		return {}
-	},
+const addQuoteItem = inject('addQuoteItem')
 
-	inject: ['quote', 'addQuoteItem'],
-
-	computed: {
-
-	},
-
-	methods: {
-		add() {
-			let item = entity.item.create();
-			item.sizes = defaults.item.sizes();
-			this.addQuoteItem(item);
-		}
-	},
-
-	mounted() {}
+function add(){
+	let item = entity.quote.item.create();
+	item.sizes = entity.quote.item.defaults.sizes();
+	addQuoteItem(item);
 }
+
+import SearchSage from "@/ViewComponents/Quotes/Quote/Actions/Sage/SearchSage.vue";
 </script>
 
 <template>

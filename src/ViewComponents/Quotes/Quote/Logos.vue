@@ -4,7 +4,7 @@ import Modal from "@/components/globals/bootstrap/Modal.vue";
 </script>
 
 <script>
-import defaults from "@/js/Quotes/Quote/defaults.js";
+import entity from "@/js/entity.js";
 
 export default {
 	data() {
@@ -15,7 +15,7 @@ export default {
 
 	methods: {
 		addCustomLogo(){
-			let logo = defaults.logos.list()[0];
+			let logo = entity.quote.logo.default()[0];
 			logo.id += Math.floor(Math.random() * 500)
 			this.logos.push( logo )
 		},

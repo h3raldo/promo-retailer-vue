@@ -9,7 +9,7 @@ import Info from "@/ViewComponents/Quotes/Quote/Items/Item/Info.vue";
 </script>
 
 <script>
-import entity from "@/js/Quotes/Quote/entity.js";
+import entity from "@/js/entity.js";
 export default {
 	data() {
 		return {
@@ -93,12 +93,12 @@ export default {
 			<div v-if="activeTab==='colors'">
 				<h5>Colors</h5>
 				<div class="bg-light p-3">
-					<ListEditor :list="item.colors" :textAttributes="['name']" :newItem="entity.item.color.create" :minimum="1" />
+					<ListEditor :list="item.colors" :textAttributes="['name']" :newItem="entity.quote.item.color.create" :minimum="1" />
 				</div>
 
 				<h5 class="mt-4">Sizes</h5>
 				<div class="bg-light p-3">
-					<ListEditor :list="item.sizes" :textAttributes="['name']" :newItem="entity.item.size.create" :minimum="1" :deleted="sizeDeleted" :editedName="sizeNameEdited" />
+					<ListEditor :list="item.sizes" :textAttributes="['name']" :newItem="entity.quote.item.size.create" :minimum="1" :deleted="sizeDeleted" :editedName="sizeNameEdited" />
 				</div>
 			</div>
 

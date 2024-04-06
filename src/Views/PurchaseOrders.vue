@@ -1,50 +1,42 @@
 <script setup>
+import utils from "@/js/utils.js";
+import { useRouter } from 'vue-router';
+import { inject, ref, reactive, onMounted } from 'vue'
+const router = useRouter();
+
+let loading = ref(true);
+let data = reactive({});
+
+const symfony = inject('symfony').value;
+
+function formatPricing(price){
+	return utils.pricing.format(price);
+}
+
+function viewSingle( id ){
+	router.push( symfony.views.purchase_orders_purchase_order.replace(':id', id) )
+}
+
+function get( params ){
+	if( !params ) params = '';
+
+	let url = symfony.purchase_orders.search+'?' + params ?? ''
+
+	loading.value = true;
+	utils.ajax(url, (response) => {
+		data = response;
+		loading.value = false;
+	})
+}
+
+onMounted(() => {
+	if( data.length > 0 ) return;
+	get()
+})
+
 import Loader from "@/components/globals/Loader.vue";
 import Search from "@/ViewComponents/PurchaseOrders/Search.vue";
-</script>
-
-<script>
-import utils from "@/js/utils.js";
-export default {
-	data() {
-		return {
-			loading: true,
-			data: {},
-		}
-	},
-
-	inject: ['symfony'],
-
-	methods: {
-		formatPricing(price){
-			return utils.pricing.format(price);
-		},
-		viewSingle( id ){
-			this.$router.push( this.symfony.views.purchase_orders_purchase_order.replace(':id', id) )
-		},
-		get( params ){
-			let self = this;
-			if( !params ) params = '';
-
-			let url = this.symfony.purchase_orders.search+'?' + params ?? ''
-
-			self.loading = true;
-			utils.ajax(url, (data) => {
-				self.data = data;
-				self.loading = false;
-			})
-		}
-	},
-
-	created() {
-
-	},
-
-	mounted() {
-		if( this.data.length > 0 ) return;
-		this.get()
-	}
-}
+import Totals from "@/ViewComponents/PurchaseOrders/Totals.vue";
 </script>
 
 <template>
@@ -54,6 +46,8 @@ export default {
 	<br>
 
 	<Loader v-if="loading" :align="'center'" />
+
+	<Totals v-if="data.totals" :totals="data.totals" />
 
 	<table class="table align-middle table-hover" v-if="data.totals">
 		<thead>

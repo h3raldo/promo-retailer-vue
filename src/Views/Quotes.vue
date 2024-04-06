@@ -11,6 +11,7 @@ export default {
 		return {
 			loading: true,
 			quotes: {},
+			search: ''
 		}
 	},
 
@@ -33,9 +34,10 @@ export default {
 		},
 		getQuotes( params ){
 			let self = this;
-			if( !params ) params = '';
+			if( params ) this.search = params;
+			console.log(this.search);
 
-			let url = this.symfony.quotes.search+'?' + params ?? ''
+			let url = this.symfony.quotes.search+'?' + this.search
 
 			self.loading = true;
 			utils.ajax(url, (data) => {

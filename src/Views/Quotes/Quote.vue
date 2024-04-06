@@ -9,8 +9,8 @@ import Loader from "@/components/globals/Loader.vue";
 <script>
 import {computed} from "vue";
 import utils from "@/js/utils.js";
-import pricing from "@/js/Quotes/Quote/pricing.js";
-import entity from "@/js/Quotes/Quote/entity.js";
+import pricing from "@/js/pricing.js";
+import entity from "@/js/entity.js";
 
 export default {
 	data(){
@@ -106,7 +106,7 @@ export default {
 		utils.ajax(this.symfony.quotes.decorators, (data) => {
 			self.decorators = data;
 		})
-		entity.vendor.getAll().forEach(v => self.vendors.push(v))
+		entity.quote.vendor.getAll().forEach(v => self.vendors.push(v))
 
 		window.addEventListener('beforeunload', function (e)
 		{

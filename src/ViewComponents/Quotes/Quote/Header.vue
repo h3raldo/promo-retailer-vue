@@ -1,7 +1,7 @@
 <script>
 import LogoSearch from "@/ViewComponents/Quotes/Quote/Logos/Search.vue";
 import Modal from "@/components/globals/bootstrap/Modal.vue";
-import utils from "@/js/Quotes/Quote/utils.js";
+import utils from "@/js/utils.js";
 
 export default {
 	components: {Modal, LogoSearch},

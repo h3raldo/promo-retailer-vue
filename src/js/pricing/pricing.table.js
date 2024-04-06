@@ -1,5 +1,5 @@
-import pricing from "@/js/Quotes/Quote/pricing.js";
-import entity from "@/js/Quotes/Quote/entity.js";
+import pricing from "@/js/pricing.js";
+import entity from "@/js/entity.js";
 
 
 function combineCostWithDecoration( item )
@@ -36,7 +36,7 @@ function getItemAndDecorationTiers( item, quantities )
             })
         }
 
-        let tier = entity.item.tier.create();
+        let tier = entity.order.item.tier.create();
         tier.qty = qty;
         tier.price = item_price + placement_price;
         placement_cost.push(tier);
@@ -60,7 +60,7 @@ function getItemTiers( key, item, quantities )
         if( property.cost.length < 1 ) return;
 
         quantities.forEach( qty => {
-            let tier = entity.item.tier.create();
+            let tier = entity.order.item.tier.create();
             tier.price = pricing.getTierPrice(property.cost, qty, item);
             total += tier.price;
             propertyTier.tiers.push(tier);

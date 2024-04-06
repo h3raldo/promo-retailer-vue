@@ -2,7 +2,7 @@
 </script>
 
 <script>
-import entity from "@/js/Quotes/Quote/entity.js";
+import entity from "@/js/entity.js";
 
 export default {
 	data() {
@@ -18,7 +18,7 @@ export default {
 
 	methods: {
 		addFee( isShipping ) {
-			let fee = entity.fee.create();
+			let fee = entity.quote.fee.create();
 
 			if( isShipping ){
 				fee.name = 'Estimated Shipping';

@@ -6,7 +6,8 @@ import Replace from "@/ViewComponents/Quotes/Quote/Actions/Sage/Replace.vue";
 
 <script>
 import {toRaw} from "vue";
-import utils from "@/js/Quotes/Quote/utils.js";
+import utils from "@/js/utils.js";
+import api from "@/js/api.js";
 
 export default {
 
@@ -63,8 +64,8 @@ export default {
 			let self = this;
 
 			let addItem = () => {
-				let item = utils.sage.toQuoteItem(toRaw(self.result));
-				utils.sage.postCreation(item, self.vendors);
+				let item = api.sage.toQuoteItem(toRaw(self.result));
+				api.sage.postCreation(item, self.vendors);
 				self.addQuoteItem(item);
 				self.closeModal();
 			}
@@ -83,9 +84,9 @@ export default {
 		replaceResult( itemIndex, e )
 		{
 			let item = this.quote.items[itemIndex];
-			let sageItem = utils.sage.toQuoteItem(toRaw(this.result));
+			let sageItem = api.sage.toQuoteItem(toRaw(this.result));
 			console.log(sageItem);
-			utils.sage.postCreation(sageItem, this.vendors);
+			api.sage.postCreation(sageItem, this.vendors);
 			item.info.name = sageItem.info.name;
 			item.info.sku = sageItem.info.sku;
 			item.info.supplier = sageItem.info.supplier;

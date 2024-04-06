@@ -2,8 +2,6 @@
 </script>
 
 <script>
-import defaults from "@/js/Quotes/Quote/defaults.js";
-
 export default {
 	data() {
 		return {}
@@ -28,7 +26,18 @@ export default {
 			this.item.notes.flags.push(value);
 		},
 		getNoteFlags(){
-			return defaults.item.notes.flags();
+			return [
+				{
+					name: 'Require Proof',
+					value: 'RP',
+					selected: false,
+				},
+				{
+					name: 'Needs Package',
+					value: 'NP',
+					selected: false,
+				}
+			];
 		}
 	}
 }

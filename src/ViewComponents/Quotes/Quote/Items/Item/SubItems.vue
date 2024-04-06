@@ -4,8 +4,8 @@ import SubItem from "@/ViewComponents/Quotes/Quote/Items/Item/SubItems/SubItem.v
 </script>
 
 <script>
-import dataStructure from "@/js/Quotes/Quote/entity.js";
-import pricing from "@/js/Quotes/Quote/pricing.js";
+import entity from "@/js/entity.js";
+import pricing from "@/js/pricing.js";
 import {toRaw} from "vue";
 
 export default {
@@ -25,7 +25,7 @@ export default {
 
 	methods: {
 		addSubItem(){
-			this.item.subitems.push( dataStructure.item.subitem.create() );
+			this.item.subitems.push( entity.quote.item.subitem.create() );
 			this.updatePricing();
 		},
 		removeSubItem(index) {

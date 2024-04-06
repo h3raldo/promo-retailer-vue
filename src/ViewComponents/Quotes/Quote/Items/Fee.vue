@@ -5,7 +5,7 @@ import VendorSelect from "@/ViewComponents/Quotes/Quote/globals/item/VendorSelec
 </script>
 
 <script>
-import pricing from "@/js/Quotes/Quote/pricing.js";
+import pricing from "@/js/pricing.js";
 
 export default {
 	data() {

@@ -1,6 +1,6 @@
 <script>
-import dataStructure from "@/js/Quotes/Quote/entity.js";
-import utils from "@/js/Quotes/Quote/utils.js";
+import dataStructure from "@/js/entity.js";
+import utils from "@/js/utils.js";
 
 export default {
 	data() {
@@ -31,7 +31,7 @@ export default {
 				data.forEach( l => {
 					Object.keys(l.logos).forEach( key => {
 						let v = l.logos[key];
-						let logo = dataStructure.logo.create();
+						let logo = dataStructure.order.logo.create()
 						logo.id = v.uid;
 						logo.variation = v.apply_to;
 						logo.name = `${l.name}`;

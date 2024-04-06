@@ -1,3 +1,5 @@
+import pricing from "@/js/pricing.js";
+
 export default
 {
     ajax: ( url, callback, errorCallback, data ) => {
@@ -102,15 +104,17 @@ export default
 
     },
 
-    pricing: {
-        format( price ){
-            let USDollar = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-            });
+    pricing: pricing,
 
-            return USDollar.format(price)
-        },
+    tiers: {
+        sort( tiers ){
+            let compare = ( a, b ) => {
+                if( a.qty < b.qty ) return -1;
+                if( a.qty > b.qty ) return 1;
+                return 0
+            }
+            return tiers.sort(compare);
+        }
     },
 
     form: {

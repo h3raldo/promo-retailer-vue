@@ -2,7 +2,7 @@
 </script>
 
 <script>
-import entity from "@/js/Quotes/Quote/entity.js";
+import entity from "@/js/entity.js";
 
 export default {
 	data() {
@@ -13,7 +13,7 @@ export default {
 
 	methods: {
 		add(){
-			this.vendors.push( entity.vendor.create() );
+			this.vendors.push( entity.quote.vendor.create() );
 		},
 		remove(index) {
 			this.vendors.splice(index, 1);

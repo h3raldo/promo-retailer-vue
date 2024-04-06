@@ -1,8 +1,7 @@
-import entity from "@/js/Quotes/Quote/entity.js";
-import pricingTiers from "@/js/Quotes/Quote/pricing/pricing.tiers.js";
-import pricingTable from "@/js/Quotes/Quote/pricing/pricing.table.js";
-import pricingItem from "@/js/Quotes/Quote/pricing/pricing.item.js";
-import defaults from "@/js/Quotes/Quote/defaults.js";
+import entity from "@/js/entity.js";
+import pricingTiers from "@/js/pricing/pricing.tiers.js";
+import pricingTable from "@/js/pricing/pricing.table.js";
+import pricingItem from "@/js/pricing/pricing.item.js";
 
 export default
 {
@@ -53,7 +52,7 @@ export default
 
     getTier( tiers, qty )
     {
-        let matched = entity.item.tier.create();
+        let matched = entity.order.item.tier.create();
         matched.margin = 0;
 
         if( !tiers || !tiers.length ) return matched;
@@ -66,7 +65,7 @@ export default
     },
 
     addMargin( cost, margin ) {
-        if( typeof margin === 'undefined' ) margin = defaults.item.margin;
+        if( typeof margin === 'undefined' ) margin = entity.order.item.defaults.margin;
         return parseFloat( ( cost / ( (100 - margin) / 100 ) ).toFixed(2) );
     },
 
@@ -88,8 +87,8 @@ export default
     applyDefaultMarginToTiers( tiers )
     {
         tiers.forEach( tier => {
-            tier.price = this.addMargin(tier.cost, defaults.item.margin);
-            tier.margin = defaults.item.margin;
+            tier.price = this.addMargin(tier.cost, entity.order.item.defaults.margin);
+            tier.margin = entity.order.item.defaults.margin;
         })
         return tiers;
     },

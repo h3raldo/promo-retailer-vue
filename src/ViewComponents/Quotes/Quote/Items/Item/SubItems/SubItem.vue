@@ -4,8 +4,8 @@ import Option from "@/ViewComponents/Quotes/Quote/Items/Item/Options/Option.vue"
 </script>
 
 <script>
-import pricing from "@/js/Quotes/Quote/pricing.js";
-import entity from "@/js/Quotes/Quote/entity.js";
+import pricing from "@/js/pricing.js";
+import entity from "@/js/entity.js";
 
 export default {
 	data() {
@@ -44,7 +44,7 @@ export default {
 			let value = e.target.value.trim();
 			let qty = 0;
 			if( value !== '' ) qty = parseInt(e.target.value);
-			if( !this.subitem.sizes[size.name] ) this.subitem.sizes[size.name] = entity.item.subitem.size.create( size.name );
+			if( !this.subitem.sizes[size.name] ) this.subitem.sizes[size.name] = entity.quote.item.subitem.size.create( size.name );
 			console.log( size, qty, this.subitem.sizes[size.name] )
 			this.subitem.sizes[size.name].qty = qty;
 		},

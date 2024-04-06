@@ -3,7 +3,7 @@ import Decorator from "@/ViewComponents/Quotes/Quote/Items/Item/Decoration/Decor
 </script>
 
 <script>
-import entity from "@/js/Quotes/Quote/entity.js";
+import entity from "@/js/entity.js";
 
 export default {
 	data() {
@@ -27,7 +27,7 @@ export default {
 
 	methods: {
 		addDecoratorsOption(sheet, decorator, e) {
-			entity.item.decoration.addDecoratorSheet(sheet, decorator, this.item);
+			entity.quote.item.decoration.addDecoratorSheet(sheet, decorator, this.item);
 			e.target.disabled = true;
 		},
 		removeDecorator(index){
@@ -58,7 +58,7 @@ export default {
 									@click="addDecoratorsOption( sheet, prismicDecorator, $event )">Add</button>
 						</span>
 						<span>
-							{{ entity.item.decoration.getPriceSheetName((sheet)) }}
+							{{ entity.quote.item.decoration.getPriceSheetName((sheet)) }}
 						</span>
 					</div>
 				</details>
