@@ -19,3 +19,7 @@ img{
 .bg-gray{
     background: #f6f9fc;
 }
+
+main > .container{
+    min-height: 100vh;
+}

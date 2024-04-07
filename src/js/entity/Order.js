@@ -3,14 +3,16 @@ import OrderFee from "@/js/entity/Order/Order.Fee.js";
 import OrderLogo from "@/js/entity/Order/Order.Logo.js";
 import OrderVendor from "@/js/entity/Order/Order.Vendor.js";
 
-function create(){
+function create(id){
     let date = new Date();
     return {
         id: id,
         info: {
-            title: 'New Quote',
+            title: 'New Order',
             status: 'draft',
             category: 'standard',
+            reference_number: '',
+            source: 'quoting',
             notes: {
                 public: '',
                 private: '',

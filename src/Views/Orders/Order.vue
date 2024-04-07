@@ -11,7 +11,7 @@ import pricing from "@/js/pricing.js";
 import entity from "@/js/entity.js";
 
 export default {
-	data(){
+	data() {
 		return {
 			id: this.$route.params.id,
 			loading: true,
@@ -20,48 +20,48 @@ export default {
 			order: {},
 			logos: [],
 			decorators: [],
-			vendors: [],
+			vendors: []
 		}
 	},
 
 	inject: ['symfony'],
 
 	methods: {
-		addItem( item ){
-			this.order.items.push( item )
+		addItem(item) {
+			this.order.items.push(item)
 			this.updatePricing();
 		},
-		removeItem( index ){
+		removeItem(index) {
 			this.order.items.splice(index, 1);
 		},
-		optionUpdated( item ){
-			pricing.updateCombinedPriceTable( item );
+		optionUpdated(item) {
+			pricing.updateCombinedPriceTable(item);
 			this.hasEdited();
 		},
-		updatePricing(){
-			pricing.updateAllPricing( this.order );
+		updatePricing() {
+			pricing.updateAllPricing(this.order);
 			this.hasEdited();
 		},
-		updateTotals(){
-			pricing.updateQuoteTotals( this.order );
+		updateTotals() {
+			pricing.updateQuoteTotals(this.order);
 			this.hasEdited();
 		},
 
-		hasEdited( status ){
-			this.edited = ( status !== false );
+		hasEdited(status) {
+			this.edited = (status !== false);
 		},
 
-		setup( init ){
-			if( !init.quote )
-				this.order = entity.quote.create(init.new_quote_id);
-			else{
-				this.order = entity.quote.patchData(init);
+		setup(init) {
+			if (!init.order)
+				this.order = entity.order.create(init.new_order_id);
+			else {
+				this.order = entity.order.patchData(init);
 			}
 
-			if( init.logos ) this.logos = init.logos;
-			if( init.decorators ) this.logos = init.decorators;
+			if (init.logos) this.logos = init.logos;
+			if (init.decorators) this.logos = init.decorators;
 
-			pricing.updateAllPricing( this.order );
+			pricing.updateAllPricing(this.order);
 		}
 	},
 
@@ -69,7 +69,7 @@ export default {
 		return {
 			hasEdited: this.hasEdited,
 			decorators: computed(() => this.decorators),
-			edited: computed(() => this.edited ),
+			edited: computed(() => this.edited),
 			order: computed(() => this.order),
 			logos: computed(() => this.logos),
 			vendors: computed(() => this.vendors),
@@ -86,14 +86,13 @@ export default {
 		}
 	},
 
-	created()
-	{
+	created() {
 		let self = this;
-		self.urls = symfony.quotes.quote;
+		self.urls = symfony.orders.order;
 
 		let url = self.urls.get.replace(':id', this.id);
 		utils.ajax(url, (data) => {
-			self.setup( data );
+			self.setup(data);
 			self.loading = false;
 		})
 
@@ -102,15 +101,14 @@ export default {
 	mounted() {
 		let self = this;
 
-		if( this.vendors.length > 0 ) return;
+		if (this.vendors.length > 0) return;
 		utils.ajax(this.symfony.quotes.decorators, (data) => {
 			self.decorators = data;
 		})
-		entity.quote.vendor.getAll().forEach(v => self.vendors.push(v))
+		entity.order.vendor.getAll().forEach(v => self.vendors.push(v))
 
-		window.addEventListener('beforeunload', function (e)
-		{
-			if( !self.edited ) return;
+		window.addEventListener('beforeunload', function (e) {
+			if (!self.edited) return;
 			e.preventDefault();
 			e.returnValue = true;
 		});
@@ -120,11 +118,11 @@ export default {
 
 <template>
 
-	<Loader v-if="loading" />
+	<Loader v-if="loading"/>
 
 	<template v-if="!loading">
-		<Header />
-		<Order />
+		<Header/>
+		<Order/>
 	</template>
 
 </template>

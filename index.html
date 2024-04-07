@@ -33,17 +33,26 @@
                 search: 'https://tools.promoretailer.dev/api/quotes/',
                 quote: {
                     new: 'https://tools.promoretailer.dev/quotes/create/',
-                    save: 'https://tools.promoretailer.dev/quotes/save/:id/',
+                    save: 'https://tools.promoretailer.dev/quotes/save/',
                     duplicate: 'https://tools.promoretailer.dev/quotes/duplicate/:id/',
                     delete: 'https://tools.promoretailer.dev/quotes/delete/:id/',
-                    push: 'https://preview.promoretailer.dev/quotes/push/:id/',
+                    push: 'https://preview.promoretailer.dev/quotes/push/',
                     public: 'https://tools.promoretailer.dev/quote/public/view/:id/',
                     get: 'https://tools.promoretailer.dev/api/quotes/quote/:id/',
                 },
                 decorators: 'https://preview.promoretailer.dev/quote/decorators/'
             },
             orders: {
-                search: 'https://preview.promoretailer.dev/api/orders/'
+                search: 'https://tools.promoretailer.dev/api/orders/',
+                order: {
+                    get: 'https://tools.promoretailer.dev/api/orders/order/:id/',
+                    new: 'https://tools.promoretailer.dev/orders/create/',
+                    save: 'https://tools.promoretailer.dev/orders/save/',
+                    duplicate: 'https://tools.promoretailer.dev/orders/duplicate/:id/',
+                    delete: 'https://tools.promoretailer.dev/orders/delete/:id/',
+                    push: 'https://preview.promoretailer.dev/orders/push/',
+                    public: 'https://tools.promoretailer.dev/orders/public/view/:id/',
+                }
             },
             purchase_orders: {
                 search: 'https://tools.promoretailer.dev/api/purchase-orders/',

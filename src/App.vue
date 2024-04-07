@@ -9,7 +9,7 @@ import {computed} from "vue";
 export default {
 	data() {
 		return {
-			version: '1.1.13',
+			version: '1.2.0',
 			symfony: window.symfony,
 			alert: {
 				enabled: false,
@@ -82,9 +82,3 @@ export default {
 	</main>
 
 </template>
-
-<style scoped>
-	.container{
-		min-height: 100vh;
-	}
-</style>

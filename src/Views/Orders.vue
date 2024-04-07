@@ -91,7 +91,7 @@ export default {
 		</tr>
 		</thead>
 		<tbody>
-		<template v-for="quote in quotes.quotes">
+		<template v-for="quote in quotes.results">
 		<tr class="quote-row">
 			<td @click="viewQuote(quote.id)">{{ quote.id }}</td>
 			<td @click="viewQuote(quote.id)">{{ quote.author }}</td>
