@@ -22,7 +22,7 @@ export default {
 		}
 	},
 
-	inject: ['order', 'vendors', 'updatePricing', 'addQuoteItem', 'symfony'],
+	inject: ['symfony', 'fn'],
 
 	computed: {
 		loadingClass() {
@@ -64,9 +64,7 @@ export default {
 			let self = this;
 
 			let addItem = () => {
-				let item = api.sage.toQuoteItem(toRaw(self.result));
-				api.sage.postCreation(item, self.vendors);
-				self.addQuoteItem(item);
+				self.fn.item.addSageItem( toRaw(self.result) );
 				self.closeModal();
 			}
 
@@ -83,15 +81,7 @@ export default {
 		},
 		replaceResult( itemIndex, e )
 		{
-			let item = this.order.items[itemIndex];
-			let sageItem = api.sage.toQuoteItem(toRaw(this.result));
-			console.log(sageItem);
-			api.sage.postCreation(sageItem, this.vendors);
-			item.info.name = sageItem.info.name;
-			item.info.sku = sageItem.info.sku;
-			item.info.supplier = sageItem.info.supplier;
-			item.info.image.primary = sageItem.info.image.primary;
-			item.info.image.available = sageItem.info.image.available;
+			this.fn.item.replaceWithSageItem( itemIndex, toRaw(this.result) );
 			e.target.disabled = true;
 			e.target.innerText = 'Replaced!';
 		},

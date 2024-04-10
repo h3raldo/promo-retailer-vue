@@ -11,18 +11,7 @@ export default {
 		return {}
 	},
 
-	inject: ['logos'],
-
-	methods: {
-		addCustomLogo(){
-			let logo = entity.order.logo.default()[0];
-			logo.id += Math.floor(Math.random() * 500)
-			this.logos.push( logo )
-		},
-		removeLogo(index) {
-			this.logos.splice(index, 1);
-		},
-	},
+	inject: ['logos', 'fn'],
 }
 </script>
 
@@ -58,7 +47,7 @@ export default {
 			</div>
 		</div>
 		<div class="col-1">
-			<button class="btn btn-outline-danger" @click="removeLogo(i)"><i class="bi bi-trash"></i></button>
+			<button class="btn btn-outline-danger" @click="fn.logo.remove(i)"><i class="bi bi-trash"></i></button>
 		</div>
 
 	</div>
@@ -67,7 +56,7 @@ export default {
 		<Modal :id="'quote-logo-search'" :title="'Logo Search'" :buttonText="'Add Logo'" :buttonClasses="'btn btn-primary'" :icon="'bi-plus-circle'">
 			<LogoSearch />
 		</Modal>
-		<button class="btn btn-outline-primary ms-3" @click="addCustomLogo"><i class="bi bi-plus-circle"></i> Add Custom Logo</button>
+		<button class="btn btn-outline-primary ms-3" @click="fn.logo.addCustomLogo"><i class="bi bi-plus-circle"></i> Add Custom Logo</button>
 	</div>
 
 

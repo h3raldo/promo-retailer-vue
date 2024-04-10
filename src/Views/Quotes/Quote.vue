@@ -2,127 +2,87 @@
 import Header from "@/Views/Quotes/Quote/Header.vue";
 import Loader from "@/components/globals/Loader.vue";
 import Order from "@/EntityComponents/Order/Order.vue";
-</script>
 
-<script>
-import {computed} from "vue";
-import utils from "@/js/utils.js";
+import {provide, inject, computed, reactive} from "vue";
+import {onBeforeRouteLeave, useRoute} from "vue-router";
+const route = useRoute();
+import {useQuoteStore} from "@/stores/Quote.js";
+const quoteStore = useQuoteStore();
 import pricing from "@/js/pricing.js";
 import entity from "@/js/entity.js";
+import utils from "@/js/utils.js";
 
-export default {
-	data(){
-		return {
-			id: this.$route.params.id,
-			loading: true,
-			urls: {},
-			edited: false,
-			order: {},
-			logos: [],
-			decorators: [],
-			vendors: [],
+const data = reactive({
+	id: route.params.id,
+	loading: true,
+	urls: inject('symfony').value.quotes.quote,
+})
+
+function setup()
+{
+	let url = data.urls.get.replace(':id', data.id);
+	utils.ajax(url, (d) => {
+
+		let entity_data = JSON.parse(d.data);
+		let init = d.init;
+
+		if( !entity_data.quote )
+			quoteStore.order.id = entity_data.new_quote_id;
+		else{
+			quoteStore.$patch({order: entity.quote.patchData(entity_data, init)});
 		}
-	},
 
-	inject: ['symfony'],
+		if( entity_data.logos ) quoteStore.fn.logo.set( entity_data.logos )
+		if( entity_data.vendors ) quoteStore.fn.vendor.set( entity_data.vendors )
+		else quoteStore.fn.vendor.set( entity.quote.vendor.getAll() )
 
-	methods: {
-		addItem( item ){
-			this.order.items.push( item )
-			this.updatePricing();
-		},
-		removeItem( index ){
-			this.order.items.splice(index, 1);
-		},
-		optionUpdated( item ){
-			pricing.updateCombinedPriceTable( item );
-			this.hasEdited();
-		},
-		updatePricing(){
-			pricing.updateAllPricing( this.order );
-			this.hasEdited();
-		},
-		updateTotals(){
-			pricing.updateQuoteTotals( this.order );
-			this.hasEdited();
-		},
+		quoteStore.updatePricing(false);
 
-		hasEdited( status ){
-			this.edited = ( status !== false );
-		},
-
-		setup( init ){
-			if( !init.quote )
-				this.order = entity.quote.create(init.new_quote_id);
-			else{
-				this.order = entity.quote.patchData(init);
-			}
-
-			if( init.logos ) this.logos = init.logos;
-			if( init.decorators ) this.logos = init.decorators;
-
-			pricing.updateAllPricing( this.order );
-		}
-	},
-
-	provide() {
-		return {
-			hasEdited: this.hasEdited,
-			decorators: computed(() => this.decorators),
-			edited: computed(() => this.edited ),
-			order: computed(() => this.order),
-			logos: computed(() => this.logos),
-			vendors: computed(() => this.vendors),
-			urls: computed(() => this.urls),
-			updatePricing: this.updatePricing,
-			updateTotals: this.updateTotals,
-			addQuoteItem: this.addItem,
-			removeQuoteItem: this.removeItem,
-			event: {
-				item: {
-					optionUpdated: this.optionUpdated
-				}
-			}
-		}
-	},
-
-	created()
-	{
-		let self = this;
-		self.urls = symfony.quotes.quote;
-
-		let url = self.urls.get.replace(':id', this.id);
-		utils.ajax(url, (data) => {
-			self.setup( data );
-			self.loading = false;
-		})
-
-	},
-
-	mounted() {
-		let self = this;
-
-		if( this.vendors.length > 0 ) return;
-		utils.ajax(this.symfony.quotes.decorators, (data) => {
-			self.decorators = data;
-		})
-		entity.quote.vendor.getAll().forEach(v => self.vendors.push(v))
-
-		window.addEventListener('beforeunload', function (e)
-		{
-			if( !self.edited ) return;
-			e.preventDefault();
-			e.returnValue = true;
-		});
-	}
+		data.loading = false;
+	})
 }
+setup();
+
+onBeforeRouteLeave(() => {
+	if( quoteStore.edited ){
+		const answer = window.confirm(
+		  'Do you really want to leave? You may have unsaved changes!'
+		)
+		// cancel the navigation and stay on the same page
+		if (!answer) return false
+		else quoteStore.hasEdited(false);
+	} else {
+		return true;
+	}
+})
+
+provide('edited', computed(() => quoteStore.edited ))
+provide('order', computed(() => quoteStore.order))
+provide('logos', computed(() => quoteStore.logos))
+provide('vendors', computed(() => quoteStore.vendors))
+provide('urls', computed(() => data.urls))
+
+provide('hasEdited', quoteStore.hasEdited)
+provide('updatePricing', quoteStore.updatePricing)
+provide('updateTotals', quoteStore.updateTotals)
+
+provide('fn', quoteStore.fn)
+
+provide('event', {
+	item: {
+		optionUpdated: (item) => {
+			pricing.updateCombinedPriceTable( item );
+			quoteStore.hasEdited();
+		}
+	}
+})
 </script>
 
 <template>
 
-	<Loader v-if="loading" />
+	<Loader v-if="data.loading" />
 
-	<template v-if="!loading">
+	<template v-if="!data.loading">
 		<Header />
 		<Order />
 	</template>

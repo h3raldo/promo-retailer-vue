@@ -106,7 +106,7 @@ export default {
 		<div class="flex-grow-1">
 			<div class="d-flex gap-3 align-items-center">
 				<div>
-					<RouterLink :to="symfony.views.quotes" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></RouterLink>
+					<button @click="$router.go(-1)" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></button>
 				</div>
 				<div>
 					<div class="form-floating">

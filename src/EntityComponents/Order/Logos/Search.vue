@@ -1,5 +1,5 @@
 <script>
-import dataStructure from "@/js/entity.js";
+import entity from "@/js/entity.js";
 import utils from "@/js/utils.js";
 
 export default {
@@ -11,12 +11,12 @@ export default {
 		}
 	},
 
-	inject: ['logos', 'symfony'],
+	inject: ['logos', 'symfony', 'fn'],
 
 	methods: {
-		addLogo(logo){
+		add(logo){
 			/* todo: do not add duplicates */
-			this.logos.push( logo )
+			this.fn.logo.add( logo )
 			logo.added = true;
 		},
 
@@ -31,7 +31,7 @@ export default {
 				data.forEach( l => {
 					Object.keys(l.logos).forEach( key => {
 						let v = l.logos[key];
-						let logo = dataStructure.order.logo.create()
+						let logo = entity.order.logo.create()
 						logo.id = v.uid;
 						logo.variation = v.apply_to;
 						logo.name = `${l.name}`;
@@ -75,7 +75,7 @@ export default {
 			<div class="bg-light border p-2 d-inline-block"><img :src="logo.url" width="100" alt="" /></div>
 		</div>
 		<div class="col">
-			<button class="btn btn-outline-primary" @click="addLogo(logo)" :disabled="logo.added"><i class="bi bi-plus"></i> Add Logo</button>
+			<button class="btn btn-outline-primary" @click="add(logo)" :disabled="logo.added"><i class="bi bi-plus"></i> Add Logo</button>
 		</div>
 
 	</div>

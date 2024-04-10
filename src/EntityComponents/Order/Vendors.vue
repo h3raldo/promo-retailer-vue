@@ -9,14 +9,14 @@ export default {
 		return {}
 	},
 
-	inject: ['vendors'],
+	inject: ['vendors', 'fn'],
 
 	methods: {
 		add(){
-			this.vendors.push( entity.order.vendor.create() );
+			this.fn.vendor.add();
 		},
 		remove(index) {
-			this.vendors.splice(index, 1);
+			this.fn.vendor.remove(index);
 		},
 	},
 }

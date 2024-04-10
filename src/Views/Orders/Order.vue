@@ -1,10 +1,14 @@
 <script setup>
-import Header from "@/Views/Quotes/Quote/Header.vue";
+import Header from "@/Views/Orders/Order/Header.vue";
 import Loader from "@/components/globals/Loader.vue";
 import Order from "@/EntityComponents/Order/Order.vue";
 </script>
 
 <script>
+import { mapWritableState } from 'pinia'
+import {useOrderStore} from "@/stores/Order.js";
+const orderStore = useOrderStore();
+
 import {computed} from "vue";
 import utils from "@/js/utils.js";
 import pricing from "@/js/pricing.js";
@@ -17,14 +21,14 @@ export default {
 			loading: true,
 			urls: {},
 			edited: false,
-			order: {},
-			logos: [],
-			decorators: [],
-			vendors: []
 		}
 	},
 
 	inject: ['symfony'],
+
+	computed: {
+		...mapWritableState(useOrderStore, ['order','logos', 'decorators', 'vendors'])
+	},
 
 	methods: {
 		addItem(item) {
@@ -52,10 +56,10 @@ export default {
 		},
 
 		setup(init) {
-			if (!init.order)
-				this.order = entity.order.create(init.new_order_id);
-			else {
-				this.order = entity.order.patchData(init);
+			if (!init.order) {
+				orderStore.order.id = init.new_order_id;
+			} else {
+				orderStore.$patch( { order: entity.order.patchData(init) } );
 			}
 
 			if (init.logos) this.logos = init.logos;
@@ -68,11 +72,11 @@ export default {
 	provide() {
 		return {
 			hasEdited: this.hasEdited,
-			decorators: computed(() => this.decorators),
 			edited: computed(() => this.edited),
-			order: computed(() => this.order),
-			logos: computed(() => this.logos),
-			vendors: computed(() => this.vendors),
+			decorators: computed(() => orderStore.decorators),
+			order: computed(() => orderStore.order),
+			logos: computed(() => orderStore.logos),
+			vendors: computed(() => orderStore.vendors),
 			urls: computed(() => this.urls),
 			updatePricing: this.updatePricing,
 			updateTotals: this.updateTotals,

@@ -1,7 +1,9 @@
 import { createApp } from 'vue'
+import { createWebHistory, createRouter } from 'vue-router'
+import { createPinia } from 'pinia'
 import App from './App.vue'
 
-import { createWebHistory, createRouter } from 'vue-router'
+const pinia = createPinia()
 
 const routes = [
     { path: window.symfony.views.dashboard, component: () => import('@/Views/Home.vue') },
@@ -24,4 +26,5 @@ const router = createRouter({
 
 createApp(App)
     .use(router)
+    .use(pinia)
     .mount('#app')

@@ -38,15 +38,15 @@ function create(id){
     }
 }
 
-function patchData( init )
+function patchData( data, init )
 {
-    let quote = init.quote;
+    let quote = data.quote;
 
     quote.id = init.id;
     quote.info.status = init.status;
 
     if( typeof quote.info.notes === 'string' ){
-        quote.info.notes = { public: '', private: init.quote.info.notes, flags: [] }
+        quote.info.notes = { public: '', private: data.quote.info.notes, flags: [] }
     }
 
     if( !quote.client.email )

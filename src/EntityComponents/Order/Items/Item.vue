@@ -16,7 +16,7 @@ export default {
 	},
 
 	props: ['item', 'itemIndex'],
-	inject: ['order', 'updatePricing', 'removeQuoteItem', 'addQuoteItem'],
+	inject: ['order', 'updatePricing', 'fn'],
 
 	provide() {
 		return {
@@ -72,27 +72,13 @@ export default {
 
 	methods: {
 		duplicate(){
-			this.addQuoteItem( JSON.parse(JSON.stringify(toRaw(this.item))) );
+			this.fn.item.duplicate(this.itemIndex);
 		},
 		remove() {
-			this.removeQuoteItem(this.itemIndex);
+			this.fn.item.remove(this.itemIndex);
 		},
 		move(fromIndex, direction) {
-			let array = this.order.items;
-			let toIndex = fromIndex;
-
-			switch (direction){
-				case 'up':
-					toIndex--;
-					break;
-				case 'down':
-					toIndex++;
-					break;
-			}
-
-			let element = this.order.items[fromIndex];
-			array.splice(fromIndex, 1);
-			array.splice(toIndex, 0, element);
+			this.fn.item.move(fromIndex, direction);
 		}
 	}
 }

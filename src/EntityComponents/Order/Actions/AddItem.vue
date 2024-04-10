@@ -1,14 +1,10 @@
 <script setup>
 import { inject } from 'vue'
 
-import entity from "@/js/entity.js";
-
-const addQuoteItem = inject('addQuoteItem')
+const fn = inject('fn')
 
 function add(){
-	let item = entity.order.item.create();
-	item.sizes = entity.order.item.defaults.sizes();
-	addQuoteItem(item);
+	fn.item.add();
 }
 
 import SearchSage from "@/EntityComponents/Order/Actions/Sage/SearchSage.vue";

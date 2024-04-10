@@ -12,7 +12,7 @@ export default {
 		}
 	},
 
-	inject: ['item', 'itemIndex', 'decorators'],
+	inject: ['item', 'itemIndex'],
 
 	watch: {
 
@@ -23,11 +23,6 @@ export default {
 	},
 
 	methods: {
-		getDecoratorsOption(){
-			let options = this.item.options.filter( o => o.name === 'Decoration');
-			if( options.length >= 1 ) return options[0];
-			return false;
-		},
 		removeOption(i) {
 			let option = this.item.options[i];
 			this.item.subitems.forEach( subitem => {
@@ -37,10 +32,6 @@ export default {
 		},
 		addOption() {
 			this.item.options.push( entity.order.item.option.create(true) )
-		},
-		addDecoratorsOption( decorator, e ){
-			entity.order.item.decoration.decorator.createOptionOrAddDecorator( decorator, this.item );
-			e.target.disabled = true;
 		}
 	}
 }

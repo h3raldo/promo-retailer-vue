@@ -15,7 +15,7 @@ export default {
 		}
 	},
 
-	inject: ['order', 'vendors', 'updateTotals'],
+	inject: ['order', 'vendors', 'updateTotals', 'fn'],
 	props: ['fee', 'feeIndex'],
 
 	watch: {
@@ -38,7 +38,7 @@ export default {
 
 	methods: {
 		remove(index) {
-			this.order.fees.splice(index, 1);
+			this.fn.fee.remove(index);
 		},
 		addItemNameToFee(event){
 			if( !event.target.value ) return;

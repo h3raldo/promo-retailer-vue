@@ -2,29 +2,23 @@
 </script>
 
 <script>
-import entity from "@/js/entity.js";
-
 export default {
 	data() {
 		return {
 		}
 	},
 
-	inject: ['order'],
+	inject: ['order', 'fn'],
 
 	computed: {
 
 	},
 
 	methods: {
-		addFee( isShipping ) {
-			let fee = entity.order.fee.create();
-
-			if( isShipping ){
-				fee.name = 'Estimated Shipping';
-			}
-
-			this.order.fees.push(fee);
+		add( isShipping ) {
+			let fee = {};
+			if( isShipping ) fee.name = 'Estimated Shipping';
+			this.fn.fee.add(fee)
 		}
 	},
 
@@ -35,8 +29,8 @@ export default {
 <template>
 
 	<div class="d-flex gap-2">
-		<button class="btn btn-outline-primary btn-sm" @click="addFee(true)"><i class="bi bi-plus-square"></i> Add Shipping</button>
-		<button class="btn btn-primary btn-sm" @click="addFee(false)"><i class="bi bi-plus-square"></i> Add Setup / Fee</button>
+		<button class="btn btn-outline-primary btn-sm" @click="add(true)"><i class="bi bi-plus-square"></i> Add Shipping</button>
+		<button class="btn btn-primary btn-sm" @click="add(false)"><i class="bi bi-plus-square"></i> Add Setup / Fee</button>
 	</div>
 
 </template>
