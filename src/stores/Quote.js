@@ -1,4 +1,4 @@
-import {defineStore} from "pinia";
+import {defineStore, acceptHMRUpdate} from "pinia";
 import {reactive, ref, toRaw} from "vue";
 import api from "@/js/api.js";
 import entity from "@/js/entity.js";
@@ -147,3 +147,7 @@ export const useQuoteStore = defineStore('quote', () => {
     }
 
 })
+
+if (import.meta.hot) {
+    import.meta.hot.accept(acceptHMRUpdate(useQuoteStore, import.meta.hot))
+}

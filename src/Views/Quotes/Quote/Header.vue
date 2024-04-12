@@ -2,6 +2,7 @@
 import LogoSearch from "@/EntityComponents/Order/Logos/Search.vue";
 import Modal from "@/components/globals/bootstrap/Modal.vue";
 import utils from "@/js/utils.js";
+import entity from "@/js/entity.js";
 
 export default {
 	components: {Modal, LogoSearch},
@@ -96,6 +97,27 @@ export default {
 			}
 
 			this.ajaxUrl( this.saveUrl, callback.success, callback.error );
+		},
+		toOrder(){
+			let data = this.getData();
+			data.order = entity.order.convertFromQuote( data.quote );
+			delete data.quote;
+
+			let self = this;
+
+			utils.ajax( this.symfony.orders.order.new, (data) => {
+
+				if( !data || !data.id || data.error === true ){
+					self.alert('Error converting to order: '+data.message, 'danger')
+					return;
+				}
+
+				self.alert('Created New Order! ID: ' + data.id);
+
+			}, (error)=> {
+				self.alert('Error converting to order!', 'danger');
+				console.log(error)
+			}, data )
 		}
 	}
 }
@@ -192,7 +214,8 @@ export default {
 		<div class="text-end d-flex gap-2">
 			<a :href="publicUrl" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Public Version</a>
 			<button class="btn btn-primary" :disabled="loading" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
-			<button class="btn btn-danger me-2 btn-push-to-zoho" :disabled="loading" @click="push"><i class="bi bi-cloud-arrow-up-fill"></i> Push</button>
+			<button class="btn btn-danger btn-push-to-zoho" :disabled="loading" @click="push"><i class="bi bi-cloud-arrow-up-fill"></i> Push</button>
+			<button class="btn btn-danger btn-push-to-zoho" :disabled="loading" @click="toOrder"><i class="bi bi-send"></i> Order</button>
 		</div>
 	</div>
 </template>

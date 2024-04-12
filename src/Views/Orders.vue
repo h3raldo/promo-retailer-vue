@@ -11,6 +11,7 @@ export default {
 		return {
 			loading: true,
 			quotes: {},
+			search: {},
 		}
 	},
 
@@ -25,11 +26,11 @@ export default {
 		},
 		getDuplicateUrl( id )
 		{
-			return `/orders/duplicate/${id}/`
+			return this.symfony.orders.order.duplicate.replace(':id', id);
 		},
 		getDeleteUrl( id )
 		{
-			return `/orders/delete/${id}/`
+			return this.symfony.orders.order.delete.replace(':id', id);
 		},
 		getEntities( params ){
 			let self = this;
@@ -39,6 +40,7 @@ export default {
 
 			self.loading = true;
 			utils.ajax(url, (data) => {
+				self.search = data.search;
 				self.quotes = data;
 				self.loading = false;
 			})
@@ -68,7 +70,7 @@ export default {
 </script>
 
 <template>
-	<Search :getEntities="getEntities" />
+	<Search :getEntities="getEntities" :searchParams="search" />
 
 	<br>
 

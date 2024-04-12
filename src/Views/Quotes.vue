@@ -11,7 +11,8 @@ export default {
 		return {
 			loading: true,
 			quotes: {},
-			search: ''
+			search: '',
+			searchParams: {},
 		}
 	},
 
@@ -41,6 +42,7 @@ export default {
 
 			self.loading = true;
 			utils.ajax(url, (data) => {
+				self.searchParams = data.search;
 				self.quotes = data;
 				self.loading = false;
 			})
@@ -70,7 +72,7 @@ export default {
 </script>
 
 <template>
-	<Search :getQuotes="getQuotes" />
+	<Search :getQuotes="getQuotes" :searchParams="searchParams" />
 
 	<br>
 
@@ -151,8 +153,3 @@ export default {
 	</table>
 
 </template>
-<style scoped>
-tr{
-	cursor: pointer;
-}
-</style>

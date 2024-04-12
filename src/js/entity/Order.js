@@ -9,10 +9,10 @@ function create(id){
         id: id,
         info: {
             title: 'New Order',
-            status: 'draft',
+            status: 'new',
             category: 'standard',
             reference_number: '',
-            source: 'quoting',
+            source: 'quote',
             notes: {
                 public: '',
                 private: '',
@@ -40,9 +40,9 @@ function create(id){
     }
 }
 
-function patchData( init )
+function patchData( data, init )
 {
-    let order = init.order;
+    let order = data.order;
 
     order.id = init.id;
     order.info.status = init.status;
@@ -50,9 +50,17 @@ function patchData( init )
     return order;
 }
 
+function convertFromQuote( quote )
+{
+    quote.info.reference_number = quote.id;
+    quote.info.status = 'new';
+    return quote;
+}
+
 export default {
-    create: create,
-    patchData: patchData,
+    create,
+    patchData,
+    convertFromQuote,
     item: OrderItem,
     fee: OrderFee,
     logo: OrderLogo,

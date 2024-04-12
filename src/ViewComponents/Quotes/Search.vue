@@ -3,7 +3,7 @@
 import utils from "@/js/utils.js";
 
 export default {
-	props: ['getQuotes'],
+	props: ['getQuotes', 'searchParams'],
 	inject: ['symfony'],
 	methods: {
 		search(e){
@@ -27,7 +27,7 @@ export default {
 						<!-- quote search -->
 						<div class="pb-2">
 							<div class="form-floating">
-								<input class="form-control" type="text" name="data_string" id="data_string" placeholder="Search anything in quote" value="">
+								<input class="form-control" type="text" name="data_string" id="data_string" placeholder="Search anything in quote" v-model="searchParams.data_string">
 								<label class="form-label" for="data_string">Quote Search</label>
 							</div>
 						</div>
@@ -35,7 +35,7 @@ export default {
 						<!-- client -->
 						<div class="pb-2">
 							<div class="form-floating">
-								<input class="form-control" type="text" name="client" id="client" placeholder="Client" value="">
+								<input class="form-control" type="text" name="client" id="client" placeholder="Client" v-model="searchParams.client">
 								<label class="form-label" for="client">Client</label>
 							</div>
 						</div>
@@ -44,7 +44,7 @@ export default {
 						<!-- from -->
 						<div class="pb-2">
 							<div class="form-floating">
-								<input class="form-control" type="date" name="date_from" id="date_from" value="">
+								<input class="form-control" type="date" name="date_from" id="date_from" v-model="searchParams.date_from">
 								<label class="form-label" for="date_from">From</label>
 							</div>
 						</div>
@@ -52,7 +52,7 @@ export default {
 						<!-- to -->
 						<div class="pb-2">
 							<div class="form-floating">
-								<input class="form-control" type="date" name="date_to" id="date_to" value="">
+								<input class="form-control" type="date" name="date_to" id="date_to" v-model="searchParams.date_to">
 								<label class="form-label" for="date_to">To</label>
 							</div>
 						</div>
@@ -62,31 +62,31 @@ export default {
 							<label class="fw-bold">Status</label>
 							<div>
 								<label class="form-check-label">
-									<input class="form-check-input me-1" type="checkbox" name="status[]" value="draft" checked="">
+									<input class="form-check-input me-1" type="checkbox" name="status[]" value="draft" v-model="searchParams.status">
 									<span>Draft</span>
 								</label>
 							</div>
 							<div>
 								<label class="form-check-label">
-									<input class="form-check-input me-1" type="checkbox" name="status[]" value="sent" checked="">
+									<input class="form-check-input me-1" type="checkbox" name="status[]" value="sent" v-model="searchParams.status">
 									<span>Sent</span>
 								</label>
 							</div>
 							<div>
 								<label class="form-check-label">
-									<input class="form-check-input me-1" type="checkbox" name="status[]" value="confirmed" checked="">
+									<input class="form-check-input me-1" type="checkbox" name="status[]" value="confirmed" v-model="searchParams.status">
 									<span>Confirmed</span>
 								</label>
 							</div>
 							<div>
 								<label class="form-check-label">
-									<input class="form-check-input me-1" type="checkbox" name="status[]" value="pushed">
+									<input class="form-check-input me-1" type="checkbox" name="status[]" value="pushed" v-model="searchParams.status">
 									<span>Pushed</span>
 								</label>
 							</div>
 							<div>
 								<label class="form-check-label">
-									<input class="form-check-input me-1" type="checkbox" name="status[]" value="closed">
+									<input class="form-check-input me-1" type="checkbox" name="status[]" value="closed" v-model="searchParams.status">
 									<span>Closed</span>
 								</label>
 							</div>
@@ -99,19 +99,19 @@ export default {
 							<label class="fw-bold">Category</label>
 							<div>
 								<label class="form-check-label">
-									<input class="form-check-input me-1" type="checkbox" name="category[]" value="standard" checked="">
+									<input class="form-check-input me-1" type="checkbox" name="category[]" value="standard" v-model="searchParams.category">
 									<span>Standard</span>
 								</label>
 							</div>
 							<div>
 								<label class="form-check-label">
-									<input class="form-check-input me-1" type="checkbox" name="category[]" value="bid" checked="">
+									<input class="form-check-input me-1" type="checkbox" name="category[]" value="bid" v-model="searchParams.category">
 									<span>Bid</span>
 								</label>
 							</div>
 							<div>
 								<label class="form-check-label">
-									<input class="form-check-input me-1" type="checkbox" name="category[]" value="idea" checked="">
+									<input class="form-check-input me-1" type="checkbox" name="category[]" value="idea" v-model="searchParams.category">
 									<span>Idea</span>
 								</label>
 							</div>

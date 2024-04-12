@@ -23,3 +23,7 @@ img{
 main > .container{
     min-height: 100vh;
 }
+
+.table-hover tr{
+    cursor: pointer;
+}

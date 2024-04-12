@@ -101,20 +101,33 @@ export default {
 </script>
 
 <template>
-	<div class="d-flex align-items-center p-3 bg-light">
+	<div class="d-flex justify-content-between align-items-center mb-2 bg-gray p-3">
+		<div class="d-flex gap-3">
+			<div>
+				<RouterLink :to="symfony.views.orders" class="btn btn-secondary"><i
+				  class="bi bi-arrow-bar-left"></i></RouterLink>
+			</div>
+			<div class="fw-bold fs-4">
+				ORDER #{{ order.id }}
+			</div>
+		</div>
+		<div>
+			<div class="text-end d-flex gap-2">
+				<button :data-href="publicUrl" class="btn btn-outline-primary" disabled><i class="bi bi-eye"></i> Public Version</button>
+				<button class="btn btn-primary" :disabled="loading" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="d-flex align-items-center">
 		<div class="flex-grow-1">
 			<div class="d-flex gap-3 align-items-center">
 				<div>
-					<RouterLink :to="symfony.views.orders" class="btn btn-secondary"><i
-					  class="bi bi-arrow-bar-left"></i></RouterLink>
-				</div>
-				<div>
 					<div class="form-floating">
 						<select class="form-select" id="status" v-model="order.info.status">
-							<option value="draft">Draft</option>
+							<option value="new">New</option>
 							<option value="sent">Sent</option>
 							<option value="confirmed">Confirmed</option>
-							<option value="pushed">Pushed</option>
 							<option value="closed">Closed</option>
 						</select>
 						<label for="status">Status</label>
@@ -123,8 +136,17 @@ export default {
 				<div class="col-5">
 					<div class="form-floating">
 						<input type="text" class="form-control" id="client" placeholder="Quote Name"
-							   v-model="order.info.title">
-						<label for="client">Quote Title</label>
+							   v-model="order.info.reference_number">
+						<label for="client">Reference Number</label>
+					</div>
+				</div>
+				<div class="col-2">
+					<div class="form-floating">
+						<select class="form-select" id="source" v-model="order.info.source">
+							<option value="quote">Quote</option>
+							<option value="magento">Magento</option>
+						</select>
+						<label for="source">Status</label>
 					</div>
 				</div>
 				<div>
@@ -132,17 +154,7 @@ export default {
 						   :buttonClasses="'btn btn-primary'" :icon="'bi-pencil'">
 						<div class="d-flex flex-column gap-3">
 							<div class="d-flex gap-4 align-items-center">
-								<label class="col-2 text-end">Category:</label>
-								<div>
-									<select class="form-select" id="status" v-model="order.info.category">
-										<option value="standard">Standard</option>
-										<option value="bid">Bid</option>
-										<option value="idea">Idea</option>
-									</select>
-								</div>
-							</div>
-							<div class="d-flex gap-4 align-items-center">
-								<label class="col-2 text-end">Quote Date:</label>
+								<label class="col-2 text-end">Date:</label>
 								<div class="col-2">
 									<input type="date" class="form-control" placeholder="Date"
 										   v-model="order.info.date">
@@ -192,14 +204,6 @@ export default {
 					</Modal>
 				</div>
 			</div>
-		</div>
-		<div class="text-end d-flex gap-2">
-			<a :href="publicUrl" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Public Version</a>
-			<button class="btn btn-primary" :disabled="loading" @click="save"><i class="bi bi-floppy-fill"></i> Save
-			</button>
-			<button class="btn btn-danger me-2 btn-push-to-zoho" :disabled="loading" @click="push"><i
-			  class="bi bi-cloud-arrow-up-fill"></i> Push
-			</button>
 		</div>
 	</div>
 </template>
