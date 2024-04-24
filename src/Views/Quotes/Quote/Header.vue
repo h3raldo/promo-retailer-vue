@@ -83,6 +83,8 @@ export default {
 					  () => {
 						  self.alert('Quote Pushed to Zoho!');
 						  self.loading = false;
+
+						  self.toOrder();
 					  },
 					  () => {
 						  self.alert('Error pushing quote, see console.', 'danger');
@@ -112,7 +114,7 @@ export default {
 					return;
 				}
 
-				self.alert('Created New Order! ID: ' + data.id);
+				self.alert('Created New Order + Pushed to ZOho! Order ID: ' + data.id);
 
 			}, (error)=> {
 				self.alert('Error converting to order!', 'danger');
@@ -215,7 +217,7 @@ export default {
 			<a :href="publicUrl" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Public Version</a>
 			<button class="btn btn-primary" :disabled="loading" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
 			<button class="btn btn-danger btn-push-to-zoho" :disabled="loading" @click="push"><i class="bi bi-cloud-arrow-up-fill"></i> Push</button>
-			<button class="btn btn-danger btn-push-to-zoho" :disabled="loading" @click="toOrder"><i class="bi bi-send"></i> Order</button>
+<!--			<button class="btn btn-danger btn-push-to-zoho" :disabled="loading" @click="toOrder"><i class="bi bi-send"></i> Order</button>-->
 		</div>
 	</div>
 </template>

@@ -35,7 +35,8 @@ function create(){
         pricing: {
             totals: {
                 price: 0,
-                cost: 0
+                cost: 0,
+                tax: 0,
             },
             base: {
                 material: {
@@ -71,9 +72,9 @@ function create(){
 }
 
 let color = {
-    create(){
+    create(s){
         return {
-            name: 'OC',
+            name: s ?? 'OC',
             cost: []
         }
     }
@@ -107,11 +108,11 @@ let defaults = {
 }
 
 export default {
-    create: create,
-    defaults: defaults,
-    color: color,
-    size: size,
-    image: image,
+    create,
+    defaults,
+    color,
+    size,
+    image,
     subitem: OrderItemSubitem,
     tier: OrderItemTier,
     option: OrderItemOption,

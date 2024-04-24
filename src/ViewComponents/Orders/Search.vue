@@ -132,6 +132,12 @@ export default {
 									<span>Quotes</span>
 								</label>
 							</div>
+							<div>
+								<label class="form-check-label bg-gray px-2 rounded small">
+									<input class="form-check-input me-1" type="checkbox" name="source[]" value="order"  v-model="searchParams.source">
+									<span>Order</span>
+								</label>
+							</div>
 						</div>
 					</div>
 				</div>

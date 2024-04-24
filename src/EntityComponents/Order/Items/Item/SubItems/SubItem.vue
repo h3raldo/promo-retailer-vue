@@ -44,9 +44,7 @@ export default {
 			let value = e.target.value.trim();
 			let qty = 0;
 			if( value !== '' ) qty = parseInt(e.target.value);
-			if( !this.subitem.sizes[size.name] ) this.subitem.sizes[size.name] = entity.order.item.subitem.size.create( size.name );
-			console.log( size, qty, this.subitem.sizes[size.name] )
-			this.subitem.sizes[size.name].qty = qty;
+			entity.order.item.subitem.setQtyForSize( qty, size, this.subitem);
 		},
 		removeSize( size ){
 			delete this.subitem.sizes[size];

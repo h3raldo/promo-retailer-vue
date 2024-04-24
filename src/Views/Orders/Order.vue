@@ -18,6 +18,23 @@ const data = reactive({
 	urls: inject('symfony').value.orders.order,
 })
 
+function afterDataRetrieval( entity_data )
+{
+	if( !entity_data.order ) {
+		orderStore.order.id = entity_data.new_order_id;
+	} else{
+		orderStore.$patch({order: entity_data.order});
+	}
+
+	if( entity_data.logos ) orderStore.fn.logo.set( entity_data.logos )
+	if( entity_data.vendors ) orderStore.fn.vendor.set( entity_data.vendors )
+	else orderStore.fn.vendor.set( entity.order.vendor.getAll() )
+
+	orderStore.updatePricing(false);
+
+	data.loading = false;
+}
+
 function setup()
 {
 	let url = data.urls.get.replace(':id', data.id);
@@ -26,21 +43,24 @@ function setup()
 		let entity_data = JSON.parse(d.data);
 		let init = d.init;
 
-		if( !entity_data.order )
-			orderStore.order.id = entity_data.new_order_id;
-		else{
-			orderStore.$patch({order: entity.order.patchData(entity_data, init)});
+		if( entity_data.source ) {
+			entity.order.convertFromSource(d, (order, logos) => {
+				console.log('patching after conversion', order);
+				entity_data.order = order;
+				entity_data.logos = logos;
+				afterDataRetrieval(entity_data);
+			})
+			return;
 		}
 
-		if( entity_data.logos ) orderStore.fn.logo.set( entity_data.logos )
-		if( entity_data.vendors ) orderStore.fn.vendor.set( entity_data.vendors )
-		else orderStore.fn.vendor.set( entity.order.vendor.getAll() )
+		if( entity_data.order ){
+			entity_data.order = entity.order.patchData(entity_data, init);
+		}
 
-		orderStore.updatePricing(false);
-
-		data.loading = false;
+		afterDataRetrieval(entity_data);
 	})
 }
+
 setup();
 
 onBeforeRouteLeave(() => {

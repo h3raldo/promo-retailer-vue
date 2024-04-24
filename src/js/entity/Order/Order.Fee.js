@@ -1,17 +1,15 @@
+import entity from "@/js/entity.js";
+
 function create(){
+
+    let tier = entity.order.item.tier.create();
+    tier.fixed = true;
+
     return {
         name: 'Service Charge',
         vendor: {},
         qty: 1,
-        price: 0,
-        cost: 0,
-        margin: 35,
-        tier: {
-            qty: 1,
-            price: 0,
-            cost: 0,
-            margin: 35,
-        },
+        tier: tier,
         pricing: {
             price: {
                 subtotal: 0

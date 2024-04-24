@@ -16,6 +16,7 @@ function create(id){
                 private: '',
                 flags: []
             },
+            tax: false,
             date: date.toISOString().split('T')[0],
             deliver_by: date.toISOString().split('T')[0],
             deliver_by_strict: false
@@ -34,6 +35,7 @@ function create(id){
             cost: 0,
             margin: 0,
             qty: 0,
+            tax: 0,
         }
     }
 }
@@ -54,6 +56,10 @@ function patchData( data, init )
 
     if( !quote.client.ship_to )
         quote.client.ship_to = '';
+
+    if( typeof quote.info.tax === 'undefined' ) quote.info.tax = false;
+    if( typeof quote.totals.tax === 'undefined' ) quote.totals.tax = 0;
+    if( typeof quote.totals.paid === 'undefined' ) quote.totals.paid = 0;
 
     return quote;
 }

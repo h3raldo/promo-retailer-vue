@@ -121,7 +121,18 @@ export default
         quote.totals.qty = total_qty;
         quote.totals.margin = total_margin;
         quote.totals.cost = this.round(total_cost);
+
+        if( quote.info.tax )
+            quote.totals.tax = this.round( this.calculateTax(total_price) );
+        else
+            quote.totals.tax = 0;
+
         quote.totals.total = this.round(total_price);
+    },
+
+    calculateTax( price, tax=8.25 )
+    {
+        return price * (tax / 100);
     },
 
     updateAllPricing( quote )

@@ -37,7 +37,7 @@ export default {
 					type: 'vue'
 				},
 				{
-					title: 'Orders',
+					title: 'Sales Orders',
 					icon: 'bi bi-table',
 					url: self.symfony.views.orders,
 					type: 'vue'

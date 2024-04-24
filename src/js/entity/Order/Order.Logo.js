@@ -19,7 +19,19 @@ function getDefault()
     return [logo]
 }
 
+function createFromLogoId( id )
+{
+    let logo = create();
+    logo.id = id;
+    logo.url = `https://res.cloudinary.com/promo-retailer/image/upload/logos/${id}.png`;
+    logo.variation = id.split('--')[1];
+    logo.name = id;
+
+    return logo;
+}
+
 export default {
-    create: create,
+    create,
+    createFromLogoId,
     default: getDefault
 }

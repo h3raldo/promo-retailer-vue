@@ -15,6 +15,12 @@ export default {
 
 	inject: ['order', 'updateTotals', 'updatePricing'],
 
+	watch: {
+		'order.info.tax'(){
+			this.updatePricing();
+		},
+	},
+
 	computed: {
 	},
 
@@ -51,8 +57,34 @@ export default {
 	</div>
 
 	<div class="d-flex gap-3 justify-content-end align-items-center pt-2">
-		<div class="text-end">Total:</div>
+		<div class="text-end">Subtotal:</div>
 		<div class="col-1 text-end">{{ pricing.format(order.totals.total) }}</div>
+		<div class="col-1 text-end"></div>
+	</div>
+
+	<div class="d-flex gap-3 justify-content-end pt-2">
+		<div class="text-end">
+			<div class="form-check form-switch">
+				<input class="form-check-input" type="checkbox" role="switch" v-model="order.info.tax">
+				<label class="form-check-label">Tax:</label>
+			</div>
+		</div>
+		<div class="col-1 text-end">
+			<span v-if="order.info.tax">{{ pricing.format(order.totals.tax) }}</span>
+			<span v-else>$0.00</span>
+		</div>
+		<div class="col-1"><!-- actions --></div>
+	</div>
+
+	<div class="d-flex gap-3 justify-content-end align-items-center pt-2">
+		<div class="text-end">Total:</div>
+		<div class="col-1 text-end">{{ pricing.format(order.totals.total + order.totals.tax) }}</div>
+		<div class="col-1 text-end"></div>
+	</div>
+
+	<div class="d-flex gap-3 justify-content-end align-items-center pt-2">
+		<div class="text-end">Paid:</div>
+		<div class="col-1 text-end">{{ pricing.format(order.totals.paid) }}</div>
 		<div class="col-1 text-end"></div>
 	</div>
 

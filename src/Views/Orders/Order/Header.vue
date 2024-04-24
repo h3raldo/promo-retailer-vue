@@ -110,6 +110,7 @@ export default {
 			<div class="fw-bold fs-4">
 				ORDER #{{ order.id }}
 			</div>
+			<span class="badge text-bg-secondary align-self-center">{{ order.info.source }}</span>
 		</div>
 		<div>
 			<div class="text-end d-flex gap-2">
@@ -133,20 +134,28 @@ export default {
 						<label for="status">Status</label>
 					</div>
 				</div>
-				<div class="col-5">
+				<div class="col-4">
 					<div class="form-floating">
-						<input type="text" class="form-control" id="client" placeholder="Quote Name"
-							   v-model="order.info.reference_number">
-						<label for="client">Reference Number</label>
+						<input type="text" class="form-control" id="client" placeholder="Quote Name" v-model="order.info.title">
+						<label for="client">Quote Title</label>
 					</div>
 				</div>
+					<!--
 				<div class="col-2">
 					<div class="form-floating">
 						<select class="form-select" id="source" v-model="order.info.source">
 							<option value="quote">Quote</option>
 							<option value="magento">Magento</option>
 						</select>
-						<label for="source">Status</label>
+						<label for="source">Source</label>
+					</div>
+				</div>
+				-->
+				<div class="col-2">
+					<div class="form-floating">
+						<input type="text" class="form-control" id="client" placeholder="Quote Name"
+							   v-model="order.info.reference_number">
+						<label for="client">Reference Number</label>
 					</div>
 				</div>
 				<div>

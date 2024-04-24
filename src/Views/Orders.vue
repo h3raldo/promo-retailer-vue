@@ -79,11 +79,11 @@ export default {
 	<table class="table align-middle table-hover" v-if="quotes.totals">
 		<thead>
 		<tr>
-			<th style="width: 5%">ID</th>
-			<th>Author</th>
+<!--			<th style="width: 5%">ID</th>-->
+<!--			<th>Author</th>-->
 			<th>Status</th>
-			<th>Category</th>
-			<th>Title</th>
+			<th>Reference Number</th>
+			<th>Client</th>
 			<th style="width: 9%">Date</th>
 			<th>Totals</th>
 			<th>Total</th>
@@ -95,19 +95,20 @@ export default {
 		<tbody>
 		<template v-for="quote in quotes.results">
 		<tr class="quote-row">
-			<td @click="viewQuote(quote.id)">{{ quote.id }}</td>
-			<td @click="viewQuote(quote.id)">{{ quote.author }}</td>
 			<td @click="viewQuote(quote.id)">
 				<span :class="getStatusColor(quote.status)">
 					{{ quote.status }}
 				</span>
 			</td>
-			<td @click="viewQuote(quote.id)">{{ quote.category }}</td>
 			<td @click="viewQuote(quote.id)">
-				<span class="badge text-bg-secondary rounded-pill">{{ quote.client }}</span><br>
-				{{ quote.title }}
+				{{ quote.source.toUpperCase() }}-{{ quote.reference_number }}
 			</td>
-			<td @click="viewQuote(quote.id)">{{ quote.created }}</td>
+<!--			<td @click="viewQuote(quote.id)">{{ quote.id }}</td>-->
+<!--			<td @click="viewQuote(quote.id)">{{ quote.author }}</td>-->
+			<td @click="viewQuote(quote.id)">
+				{{ quote.client }}
+			</td>
+			<td @click="viewQuote(quote.id)">{{ quote.date }}</td>
 			<td @click="viewQuote(quote.id)">{{ formatPricing(quote.total_cost) }}</td>
 			<td @click="viewQuote(quote.id)">{{ formatPricing(quote.total) }}</td>
 			<td @click="viewQuote(quote.id)">{{ formatPricing(quote.profit) }}</td>
