@@ -35,8 +35,8 @@ onMounted(() => {
 })
 
 import Loader from "@/components/globals/Loader.vue";
-import Search from "@/ViewComponents/PurchaseOrders/Search.vue";
-import Totals from "@/ViewComponents/PurchaseOrders/Totals.vue";
+import Search from "@/Views/PurchaseOrders/PurchaseOrders.Search.vue";
+import Totals from "@/Views/PurchaseOrders/PurchaseOrders.Totals.vue";
 </script>
 
 <template>

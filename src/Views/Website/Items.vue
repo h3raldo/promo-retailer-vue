@@ -1,5 +1,5 @@
 <script setup>
-import Item from "@/ViewComponents/Website/Items/Item.vue";
+import Item from "@/Views/Website/Items/Item.vue";
 </script>
 
 <script>

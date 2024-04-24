@@ -1,5 +1,5 @@
 <script setup>
-import Search from "@/ViewComponents/Reports/Search.vue";
+import Search from "@/Views/Reports/Magento.Search.vue";
 import Loader from "@/components/globals/Loader.vue";
 </script>
 

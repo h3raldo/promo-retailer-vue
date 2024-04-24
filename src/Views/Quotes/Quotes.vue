@@ -1,7 +1,7 @@
 <script setup>
 	import Loader from "@/components/globals/Loader.vue";
 	import Modal from "@/components/globals/bootstrap/Modal.vue";
-	import Search from "@/ViewComponents/Quotes/Search.vue";
+	import Search from "@/Views/Quotes/Quotes.Search.vue";
 </script>
 
 <script>
