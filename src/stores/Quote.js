@@ -6,7 +6,7 @@ import pricing from "@/js/pricing.js";
 
 export const useQuoteStore = defineStore('quote', () => {
 
-    const order = reactive(
+    let order = reactive(
         entity.quote.create( false )
     );
 
@@ -19,7 +19,7 @@ export const useQuoteStore = defineStore('quote', () => {
             add( new_item = {} )
             {
                 let item = Object.assign( entity.quote.item.create(), new_item)
-                if( item.sizes.length === 1 ) item.sizes = entity.order.item.defaults.sizes();
+                // if( item.sizes.length === 1 ) item.sizes = entity.order.item.defaults.sizes();
                 order.items.push(item);
 
                 updatePricing();
@@ -135,15 +135,22 @@ export const useQuoteStore = defineStore('quote', () => {
         hasEdited();
     }
 
+    function $reset()
+    {
+        Object.assign(order, JSON.parse(JSON.stringify(entity.quote.create(false))));
+        hasEdited(false);
+    }
+
     return {
         order,
         logos,
         vendors,
         edited,
-        fn: fn,
+        fn,
         updatePricing,
         updateTotals,
         hasEdited,
+        $reset
     }
 
 })

@@ -1,7 +1,7 @@
 <script setup>
 	import Loader from "@/components/globals/Loader.vue";
 	import Modal from "@/components/globals/bootstrap/Modal.vue";
-	import Search from "@/Views/Orders/Orders.Search.vue";
+	import Search from "@/Views/Orders/Search.vue";
 </script>
 
 <script>
@@ -84,7 +84,8 @@ export default {
 			<th>Status</th>
 			<th>Reference Number</th>
 			<th>Client</th>
-			<th style="width: 9%">Date</th>
+			<th style="width: 9%">Order Date</th>
+			<th style="width: 9%">Origin Date</th>
 			<th>Totals</th>
 			<th>Total</th>
 			<th>Profit</th>
@@ -101,13 +102,15 @@ export default {
 				</span>
 			</td>
 			<td @click="viewQuote(quote.id)">
-				{{ quote.source.toUpperCase() }}-{{ quote.reference_number }}
+				<span :class="'fw-normal badge source-'+quote.source">{{ quote.source.charAt(0).toUpperCase() }}</span>
+				{{ quote.reference_number }}
 			</td>
 <!--			<td @click="viewQuote(quote.id)">{{ quote.id }}</td>-->
 <!--			<td @click="viewQuote(quote.id)">{{ quote.author }}</td>-->
 			<td @click="viewQuote(quote.id)">
 				{{ quote.client }}
 			</td>
+			<td @click="viewQuote(quote.id)">{{ quote.created }}</td>
 			<td @click="viewQuote(quote.id)">{{ quote.date }}</td>
 			<td @click="viewQuote(quote.id)">{{ formatPricing(quote.total_cost) }}</td>
 			<td @click="viewQuote(quote.id)">{{ formatPricing(quote.total) }}</td>
@@ -155,5 +158,11 @@ export default {
 <style scoped>
 tr{
 	cursor: pointer;
+}
+.source-magento{
+	background-color: #f46f25;
+}
+.source-quote{
+	background-color: green;
 }
 </style>

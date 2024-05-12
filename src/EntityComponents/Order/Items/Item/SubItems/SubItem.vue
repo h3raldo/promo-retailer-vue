@@ -105,7 +105,7 @@ export default {
 		<td class="align-middle">
 			<div class="text-center d-flex gap-2 align-items-center">
 				<button class="btn btn-outline-primary btn-sm" @click="duplicate(subitem)"><i class="bi bi-copy"></i></button>
-				<button class="btn btn-outline-primary btn-sm" @click="editOptions = !editOptions"><i class="bi bi-sliders2"></i></button>
+				<button class="btn btn-outline-primary btn-sm" @click="editOptions = !editOptions"><i class="bi bi-sliders2"></i> Options</button>
 			</div>
 		</td>
 

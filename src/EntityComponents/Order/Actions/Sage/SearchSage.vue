@@ -2,12 +2,12 @@
 import Result from "@/EntityComponents/Order/Actions/Sage/Result.vue";
 import Results from "@/EntityComponents/Order/Actions/Sage/Results.vue";
 import Replace from "@/EntityComponents/Order/Actions/Sage/Replace.vue";
+import Modal from "@/components/globals/bootstrap/Modal.vue";
 </script>
 
 <script>
 import {toRaw} from "vue";
 import utils from "@/js/utils.js";
-import api from "@/js/api.js";
 
 export default {
 
@@ -58,7 +58,7 @@ export default {
 			})
 		},
 		closeModal() {
-			this.$refs.closeModalButton.click();
+			this.$refs.modal.$refs.closeModalButton.click();
 		},
 		selectResult(result) {
 			let self = this;
@@ -117,98 +117,79 @@ export default {
 
 <template>
 
-	<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#search_modal" data-item-index="0" ref="openModalButton">
-		+ Add Sage Product
-	</button>
+	<Modal :id="'sage-product-search'" :title="'Product Lookup'" :buttonText="'Add Sage Product'" :icon="'bi-plus-circle'" :buttonClasses="'btn btn-primary btn-sm'" ref="modal">
 
-	<div class="modal modal-xl fade text-start" id="search_modal" tabindex="-1" aria-labelledby="search_modalLabel"
-		 aria-hidden="true" ref="modal">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="search_modalLabel">Product Lookup</h1>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<div id="search-form" class="p-3 bg-light border">
-						<form @submit="search($event)">
-							<div class="row">
-								<div class="col mb-3">
-									<div class="form-floating">
-										<input type="text" class="form-control" id="keywords" name="keywords">
-										<label for="keywords" class="form-label">Keywords</label>
-									</div>
-								</div>
-								<div class="col mb-3">
-									<div class="form-floating">
-										<input type="text" class="form-control" id="categories" name="categories">
-										<label for="categories" class="form-label">Categories</label>
-									</div>
-								</div>
-
-								<div class="col mb-3">
-									<div class="form-floating">
-										<input type="text" class="form-control" id="itemNum" name="itemNum">
-										<label for="itemNum" class="form-label">Item Number</label>
-									</div>
-								</div>
-
-								<div class="col mb-3">
-									<div class="form-floating">
-										<input type="text" class="form-control" id="colors" name="colors">
-										<label for="colors" class="form-label">Colors</label>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col">
-									<div class="form-floating">
-										<input type="number" class="form-control" id="qty" name="qty">
-										<label for="qty" class="form-label">Qty</label>
-									</div>
-								</div>
-
-								<div class="col">
-									<div class="form-floating">
-										<input type="number" class="form-control" id="priceLow" name="priceLow">
-										<label for="priceLow" class="form-label">From Price</label>
-									</div>
-								</div>
-
-								<div class="col">
-									<div class="form-floating">
-										<input type="number" class="form-control" id="priceHigh" name="priceHigh">
-										<label for="priceHigh" class="form-label">To Price</label>
-									</div>
-								</div>
-
-								<div class="col">
-									<button class="btn btn-outline-primary" type="submit">Search</button>
-								</div>
-							</div>
-							<div class="lookup-list"></div>
-						</form>
+		<div id="search-form" class="p-3 bg-light border">
+			<form @submit="search($event)">
+				<div class="row">
+					<div class="col mb-3">
+						<div class="form-floating">
+							<input type="text" class="form-control" id="keywords" name="keywords">
+							<label for="keywords" class="form-label">Keywords</label>
+						</div>
 					</div>
-
-					<div id="search-loader" :class="'text-center mt-4 ' + loadingClass">
-						<div class="spinner-border text-primary" role="status">
-							<span class="visually-hidden">Loading...</span>
+					<div class="col mb-3">
+						<div class="form-floating">
+							<input type="text" class="form-control" id="categories" name="categories">
+							<label for="categories" class="form-label">Categories</label>
 						</div>
 					</div>
 
-					<Results v-if="showResults" :results="results" :previewResult="previewResult" :selectResult="selectResult" :replaceResult="prepareReplaceResult" :loading="loading"/>
-					<Result v-if="showPreview" :result="result" :closePreview="closePreview"/>
-					<Replace v-if="showReplace" :replaceResult="replaceResult" :closePreview="closePreview" />
+					<div class="col mb-3">
+						<div class="form-floating">
+							<input type="text" class="form-control" id="itemNum" name="itemNum">
+							<label for="itemNum" class="form-label">Item Number</label>
+						</div>
+					</div>
+
+					<div class="col mb-3">
+						<div class="form-floating">
+							<input type="text" class="form-control" id="colors" name="colors">
+							<label for="colors" class="form-label">Colors</label>
+						</div>
+					</div>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" ref="closeModalButton">Close</button>
+				<div class="row">
+					<div class="col">
+						<div class="form-floating">
+							<input type="number" class="form-control" id="qty" name="qty">
+							<label for="qty" class="form-label">Qty</label>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="form-floating">
+							<input type="number" class="form-control" id="priceLow" name="priceLow">
+							<label for="priceLow" class="form-label">From Price</label>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="form-floating">
+							<input type="number" class="form-control" id="priceHigh" name="priceHigh">
+							<label for="priceHigh" class="form-label">To Price</label>
+						</div>
+					</div>
+
+					<div class="col">
+						<button class="btn btn-outline-primary" type="submit">Search</button>
+					</div>
 				</div>
+				<div class="lookup-list"></div>
+			</form>
+		</div>
+
+		<div id="search-loader" :class="'text-center mt-4 ' + loadingClass">
+			<div class="spinner-border text-primary" role="status">
+				<span class="visually-hidden">Loading...</span>
 			</div>
 		</div>
-	</div>
+
+		<Results v-if="showResults" :results="results" :previewResult="previewResult" :selectResult="selectResult" :replaceResult="prepareReplaceResult" :loading="loading"/>
+		<Result v-if="showPreview" :result="result" :closePreview="closePreview"/>
+		<Replace v-if="showReplace" :replaceResult="replaceResult" :closePreview="closePreview" />
+
+	</Modal>
+
 
 </template>
-
-<style scoped>
-
-</style>

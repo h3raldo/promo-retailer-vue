@@ -8,7 +8,13 @@ export default {
 		return {}
 	},
 
-	inject: ['item', 'itemIndex'],
+	inject: ['item', 'itemIndex', 'updatePricing'],
+
+	watch: {
+		'item.info.taxable'() {
+			this.updatePricing();
+		}
+	},
 
 	computed: {
 	},

@@ -45,6 +45,10 @@ export default {
 				subitem.sizes[newSizeName] = size;
 				delete subitem.sizes[oldSizeName];
 			})
+		},
+		addDefaultSizes()
+		{
+			entity.order.item.defaults.sizes().forEach( s => this.item.sizes.push(s) );
 		}
 	}
 }
@@ -98,7 +102,7 @@ export default {
 
 				<h5 class="mt-4">Sizes</h5>
 				<div class="bg-light p-3">
-					<ListEditor :list="item.sizes" :textAttributes="['name']" :newItem="entity.order.item.size.create" :minimum="1" :deleted="sizeDeleted" :editedName="sizeNameEdited" />
+					<ListEditor :list="item.sizes" :textAttributes="['name']" :newItem="entity.order.item.size.create" :minimum="1" :deleted="sizeDeleted" :editedName="sizeNameEdited" :addDefaults="addDefaultSizes" />
 				</div>
 			</div>
 

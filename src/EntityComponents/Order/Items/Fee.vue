@@ -21,8 +21,6 @@ export default {
 	watch: {
 		fee: {
 			handler(){
-				this.fee.pricing.price.subtotal = parseFloat( ( this.fee.tier.qty * this.fee.tier.price ).toFixed(2) );
-				this.fee.pricing.cost.subtotal = parseFloat( ( this.fee.tier.qty * this.fee.tier.cost ).toFixed(2) );
 				this.updateTotals();
 			},
 			deep: true
@@ -77,6 +75,11 @@ export default {
 						</div>
 					</div>
 					<Tier :tier="fee.tier" :index="feeIndex" :removeTier="remove" />
+
+					<div class="form-check form-switch pt-3">
+						<input class="form-check-input" type="checkbox" role="switch" v-model="fee.config.tax.enabled">
+						<label class="form-check-label">Taxable</label>
+					</div>
 				</Modal>
 				<span>
 					<span v-if="fee.vendor.name" class="badge text-bg-secondary me-1">{{fee.vendor.name}}</span>

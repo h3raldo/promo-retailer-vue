@@ -49,6 +49,18 @@ export default {
 					type: 'vue'
 				},
 				{
+					title: 'Companies/Vendors',
+					icon: 'bi bi-building',
+					url: self.symfony.views.companies,
+					type: 'vue'
+				},
+				{
+					title: 'Contacts',
+					icon: 'bi bi-person',
+					url: self.symfony.views.contacts,
+					type: 'vue'
+				},
+				{
 					title: 'Global Sheets',
 					icon: 'bi bi-database',
 					url: self.symfony.views.global_sheets,
@@ -61,7 +73,7 @@ export default {
 					type: 'vue'
 				},
 				{
-					title: 'Update CDN Images',
+					title: 'Refresh CDN Images',
 					icon: 'bi bi-arrow-clockwise',
 					url: self.symfony.views.images_update,
 					type: 'vue'

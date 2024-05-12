@@ -10,11 +10,19 @@ function create(){
         vendor: {},
         qty: 1,
         tier: tier,
+        config: {
+            tax: {
+                enabled: true
+            },
+        },
         pricing: {
             price: {
                 subtotal: 0
             },
             cost: {
+                subtotal: 0
+            },
+            tax: {
                 subtotal: 0
             }
         }

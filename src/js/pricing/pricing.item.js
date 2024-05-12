@@ -26,6 +26,8 @@ function updateItemPricing( item, items )
 
     item.pricing.totals.cost = pricingUtils.round(item_pricing.cost);
     item.pricing.totals.price = pricingUtils.round(item_pricing.price);
+    if( item.info.taxable ) item.pricing.totals.tax = pricingUtils.calculateTax( item.pricing.totals.price )
+    else item.pricing.totals.tax = 0;
 
     pricingUtils.updateCombinedPriceTable(item);
 }

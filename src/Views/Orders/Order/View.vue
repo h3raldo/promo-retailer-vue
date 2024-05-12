@@ -4,8 +4,9 @@ import Loader from "@/components/globals/Loader.vue";
 import Order from "@/EntityComponents/Order/Order.vue";
 
 import {provide, inject, computed, reactive} from "vue";
-import {onBeforeRouteLeave, useRoute} from "vue-router";
+import {onBeforeRouteLeave, useRoute, useRouter} from "vue-router";
 const route = useRoute();
+const router = useRouter();
 import {useOrderStore} from "@/stores/Order.js";
 const orderStore = useOrderStore();
 import pricing from "@/js/pricing.js";
@@ -15,6 +16,7 @@ import utils from "@/js/utils.js";
 const data = reactive({
 	id: route.params.id,
 	loading: true,
+	references: [],
 	urls: inject('symfony').value.orders.order,
 })
 
@@ -29,6 +31,27 @@ function afterDataRetrieval( entity_data )
 	if( entity_data.logos ) orderStore.fn.logo.set( entity_data.logos )
 	if( entity_data.vendors ) orderStore.fn.vendor.set( entity_data.vendors )
 	else orderStore.fn.vendor.set( entity.order.vendor.getAll() )
+
+
+	if( entity_data.order.info.source && entity_data.order.info.reference_number ) {
+		let { info } = entity_data.order;
+		let ref = {
+			source: info.source,
+			reference_number: info.reference_number,
+		}
+		if( info.source === 'quote' ){
+			ref.action = {
+				title: `View Quote`,
+				  click: () => {
+					router.push({
+						name: 'quotes_quote',
+						params: {id: info.reference_number}
+					});
+				}
+			}
+		}
+		data.references.push(ref)
+	}
 
 	orderStore.updatePricing(false);
 
@@ -81,6 +104,7 @@ provide('order', computed(() => orderStore.order))
 provide('logos', computed(() => orderStore.logos))
 provide('vendors', computed(() => orderStore.vendors))
 provide('urls', computed(() => data.urls))
+provide('references', computed(() => data.references))
 
 provide('hasEdited', orderStore.hasEdited)
 provide('updatePricing', orderStore.updatePricing)

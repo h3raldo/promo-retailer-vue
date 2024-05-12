@@ -27,7 +27,29 @@
                 reports_orders: '/admin/reports/magento/',
                 purchase_orders: '/admin/purchase-orders/',
                 purchase_orders_purchase_order: '/admin/purchase-orders/order/:id/',
+                companies: '/admin/companies/',
+                companies_company: '/admin/companies/company/:id/',
+                contacts: '/admin/contacts/',
+                contacts_contact: '/admin/contacts/contact/:id/',
                 website: '/admin/website/',
+            },
+            api: {
+                companies: {
+                    search: 'https://tools.promoretailer.dev/api/companies/',
+                    company: {
+                        get: 'https://tools.promoretailer.dev/api/companies/company/:id/',
+                        save: 'https://tools.promoretailer.dev/api/companies/save/',
+                        new: 'https://tools.promoretailer.dev/api/companies/create/'
+                    }
+                },
+                contacts: {
+                    search: 'https://tools.promoretailer.dev/api/contacts/',
+                    contact: {
+                        get: 'https://tools.promoretailer.dev/api/contacts/contact/:id/',
+                        new: 'https://tools.promoretailer.dev/admin/contacts/create/',
+                        save: 'https://tools.promoretailer.dev/admin/contacts/save/'
+                    }
+                }
             },
             quotes: {
                 search: 'https://tools.promoretailer.dev/api/quotes/',
@@ -58,6 +80,7 @@
                 search: 'https://tools.promoretailer.dev/api/purchase-orders/',
                 order: {
                     get: 'https://tools.promoretailer.dev/api/purchase-orders/po/:id/',
+                    public: 'https://tools.promoretailer.dev/orders/public/view/:id/',
                 }
             },
             reports: {

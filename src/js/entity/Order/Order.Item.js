@@ -12,6 +12,10 @@ function create(){
             sku: '',
             hidden: false,
             taxable: true,
+            tax: {
+                enabled: true,
+                rate: 8.25
+            },
             image: {
                 primary: '',
                 available: []

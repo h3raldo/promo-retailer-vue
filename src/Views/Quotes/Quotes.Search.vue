@@ -4,12 +4,29 @@ import utils from "@/js/utils.js";
 
 export default {
 	props: ['getQuotes', 'searchParams'],
-	inject: ['symfony'],
+	inject: ['symfony', 'alert'],
 	methods: {
 		search(e){
 			e.preventDefault();
 			let params = utils.form.toGetParams(e.target);
 			this.getQuotes(params);
+		},
+		createNew()
+		{
+			let self = this;
+
+			utils.ajax( this.symfony.quotes.quote.new, (data) => {
+
+				if( data.error === true || !data.id ){
+					self.alert(data.message, 'danger');
+					return;
+				}
+
+				self.$router.push( self.symfony.views.quotes_quote.replace(':id', data.id) )
+
+			}, (error) => {
+				this.alert('Error creating new quote', 'danger');
+			})
 		}
 	}
 }
@@ -130,7 +147,7 @@ export default {
 			</form>
 		</div>
 		<div class="text-center pe-4">
-			<a class="btn btn-primary p-3" :href="symfony.quotes.quote.new"><i class="bi bi-plus-square-fill"></i> New Quote</a>
+			<button class="btn btn-primary p-3" @click="createNew"><i class="bi bi-plus-square-fill"></i> New Quote</button>
 		</div>
 	</div>
 </template>

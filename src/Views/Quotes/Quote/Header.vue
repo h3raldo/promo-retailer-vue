@@ -185,6 +185,10 @@ export default {
 								</div>
 							</div>
 							<div class="d-flex gap-4">
+								<label class="form-label col-2 text-end pt-2">PO Number:</label>
+								<input class="form-control" type="text" v-model="order.info.po_number" />
+							</div>
+							<div class="d-flex gap-4">
 								<label class="form-label col-2 text-end pt-2">Client Name:</label>
 								<input class="form-control" type="text" v-model="order.client.name" />
 							</div>

@@ -16,7 +16,7 @@ export default {
 	inject: ['order', 'updateTotals', 'updatePricing'],
 
 	watch: {
-		'order.info.tax'(){
+		'order.config.tax.enabled'(){
 			this.updatePricing();
 		},
 	},
@@ -65,12 +65,12 @@ export default {
 	<div class="d-flex gap-3 justify-content-end pt-2">
 		<div class="text-end">
 			<div class="form-check form-switch">
-				<input class="form-check-input" type="checkbox" role="switch" v-model="order.info.tax">
+				<input class="form-check-input" type="checkbox" role="switch" v-model="order.config.tax.enabled">
 				<label class="form-check-label">Tax:</label>
 			</div>
 		</div>
 		<div class="col-1 text-end">
-			<span v-if="order.info.tax">{{ pricing.format(order.totals.tax) }}</span>
+			<span v-if="order.config.tax.enabled">{{ pricing.format(order.totals.tax) }}</span>
 			<span v-else>$0.00</span>
 		</div>
 		<div class="col-1"><!-- actions --></div>

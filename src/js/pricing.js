@@ -104,16 +104,28 @@ export default
         let total_price = 0;
         let total_cost = 0;
         let total_margin = 0;
+        let total_tax = 0
 
         quote.items.forEach(i => {
             total_qty += i.qty;
             total_price += i.pricing.totals.price;
             total_cost += i.pricing.totals.cost
+            total_tax += i.pricing.totals.tax;
         })
 
         quote.fees.forEach( f => {
+            f.pricing.price.subtotal = parseFloat( ( f.tier.qty * f.tier.price ).toFixed(2) );
+            f.pricing.cost.subtotal = parseFloat( ( f.tier.qty * f.tier.cost ).toFixed(2) );
+            if( f.config.tax.enabled ){
+                f.pricing.tax.subtotal = this.calculateTax( f.pricing.price.subtotal );
+            } else{
+                f.pricing.tax.subtotal = 0;
+            }
+
+
             total_price += f.pricing.price.subtotal
             total_cost += f.pricing.cost.subtotal
+            total_tax += f.pricing.tax.subtotal
         });
 
         total_margin = this.calculateMargin( total_cost, total_price )
@@ -122,8 +134,9 @@ export default
         quote.totals.margin = total_margin;
         quote.totals.cost = this.round(total_cost);
 
-        if( quote.info.tax )
-            quote.totals.tax = this.round( this.calculateTax(total_price) );
+
+        if( quote.config.tax.enabled )
+            quote.totals.tax = total_tax;
         else
             quote.totals.tax = 0;
 

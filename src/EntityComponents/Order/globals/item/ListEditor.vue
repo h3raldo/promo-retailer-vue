@@ -9,7 +9,7 @@ export default {
 		return {}
 	},
 
-	props: ['list', 'textAttributes', 'newItem', 'minimum', 'deleted', 'editedName'],
+	props: ['list', 'textAttributes', 'newItem', 'minimum', 'deleted', 'editedName', 'addDefaults'],
 
 	methods: {
 		add(){
@@ -33,8 +33,9 @@ export default {
 
 	<ListEditorItem v-for="(item, i) in list" :item="item" :itemIndex="i" :textAttributes="textAttributes" :editedName="editedName" :remove="remove" :isRemovable="isRemovable(i)" />
 
-	<div class="pt-2">
+	<div class="pt-2 d-flex gap-2">
 		<button class="btn btn-primary" @click="add"><i class="bi bi-plus-square"></i> Add</button>
+		<button v-if="addDefaults" class="btn btn-outline-primary" @click="addDefaults"><i class="bi bi-plus-square"></i> Add Defaults</button>
 	</div>
 
 </template>

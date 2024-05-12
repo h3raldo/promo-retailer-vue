@@ -14,16 +14,22 @@ function create(id){
             status: 'new',
             category: 'standard',
             reference_number: '',
+            po_number: '',
             source: 'quote',
+            date: date.toISOString().split('T')[0],
+            deliver_by: date.toISOString().split('T')[0],
+            deliver_by_strict: false,
+            attributes: [],
             notes: {
                 public: '',
                 private: '',
                 flags: []
             },
-            tax: true,
-            date: date.toISOString().split('T')[0],
-            deliver_by: date.toISOString().split('T')[0],
-            deliver_by_strict: false
+        },
+        config: {
+            tax: {
+                enabled: true
+            }
         },
         client: {
             name: 'New Client',
@@ -52,9 +58,16 @@ function patchData( data, init )
     order.id = init.id;
     order.info.status = init.status;
 
+    if( typeof order.info.po_number === 'undefined' ) order.info.po_number = '';
+    if( typeof order.info.attributes === 'undefined' ) order.info.attributes = [];
+    if( typeof order.config === 'undefined' ) order.config = { tax: { enabled: false } }
     if( typeof order.info.tax === 'undefined' ) order.info.tax = false;
     if( typeof order.totals.tax === 'undefined' ) order.totals.tax = 0;
     if( typeof order.totals.paid === 'undefined' ) order.totals.paid = 0;
+
+    order.fees.forEach( f => {
+        if( typeof f.config === 'undefined' ) f.config = {tax: {enabled: true}}
+    })
 
     return order;
 }
@@ -86,8 +99,8 @@ function convertFromSource( data, cb )
             order.info.date = magento_order.date;
             order.client.name = magento_order.extra.customer.name.first + ' ' + magento_order.extra.customer.name.last;
             order.client.email = magento_order.extra.customer.email;
-            order.info.notes.public = magento_order.notes;
-            order.info.notes.private = 'Store: ' + magento_order.store;
+            // order.info.notes.public = magento_order.notes; // moved to attributes
+            // order.info.notes.private = 'Store: ' + magento_order.store;  // moved to attributes
             order.totals.paid = magento_order.paid;
 
             if( magento_order.extra.customer.address.shipping.text ){
@@ -95,6 +108,15 @@ function convertFromSource( data, cb )
             }
 
             order.info.reference_number = magento_order.reference_number;
+
+            magento_order.order_attributes.forEach( attribute => {
+                let attr = entity.order.attribute.create();
+                attr.name = attribute.label;
+                attr.value = attribute.value;
+                order.info.attributes.push(attr);
+            })
+
+
             // order.client.ship_to = magento_order.extra.customer.shipping
             // let shipping_fee order.fees.create()
 
@@ -104,6 +126,16 @@ function convertFromSource( data, cb )
                 item.info.sku = magento_item.configuration.group;
                 item.notes.public = magento_item.options_text;
                 item.info.image.primary = magento_item.configuration.image;
+
+                let supplier = false;
+                if( magento_item.zoho_supplier_id ){
+                    supplier = entity.order.vendor.findByZohoID( magento_item.zoho_supplier_id );
+                }
+
+                if( supplier ){
+                    item.info.supplier = supplier
+                }
+
 
                 addPricing( magento_item, item, logos );
                 addSubitem( magento_item, item );
@@ -133,15 +165,16 @@ function addPricing( magento_item, item, logos )
         let costs = magento_item.configuration.item_code.split(':');
         supplier_cost = parseFloat( costs[0] );
         decorator_cost = parseFloat( costs[1] );
-        cost += parseFloat( (decorator_cost + supplier_cost).toFixed(2) );
     } else{
-        cost = magento_item.price;
+        tier.cost = supplier_cost;
     }
 
-    tier.cost = cost;
+    tier.cost = supplier_cost;
     tier.price = magento_item.price;
 
     addDecorator( decorator_cost, magento_item, item, logos );
+
+    if( parseFloat(magento_item.tax_amount) === 0 ) item.info.taxable = false;
 
     item.pricing.base.material.overwrites.decoration = true;
     item.cost.material.tiers.push(tier);
@@ -165,7 +198,7 @@ function addSubitem( magento_item, item )
     let subitem = entity.order.item.subitem.create(color);
     item.subitems.push(subitem);
 
-    entity.order.item.subitem.setQtyForSize( subitem.qty, size, subitem );
+    entity.order.item.subitem.setQtyForSize( magento_item.qty, size, subitem );
 }
 
 function addDecorator( decorator_cost, magento_item, item, logos )
@@ -196,7 +229,6 @@ function addDecorator( decorator_cost, magento_item, item, logos )
 
     item.decoration.available.push(decorator);
 
-    // @todo: cost per placement?? how is that going to work
     decoration.placements.forEach( p => {
         let placement = entity.order.item.decoration.placement.create();
         placement.decorator = sheet;
@@ -282,6 +314,14 @@ export default {
     patchData,
     convertFromQuote,
     convertFromSource,
+    attribute: {
+        create(){
+            return {
+                name: '',
+                value: ''
+            }
+        }
+    },
     item: OrderItem,
     fee: OrderFee,
     logo: OrderLogo,

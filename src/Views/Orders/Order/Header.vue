@@ -2,6 +2,7 @@
 import LogoSearch from "@/EntityComponents/Order/Logos/Search.vue";
 import Modal from "@/components/globals/bootstrap/Modal.vue";
 import utils from "@/js/utils.js";
+import entity from "@/js/entity.js";
 
 export default {
 	components: {Modal, LogoSearch},
@@ -23,6 +24,10 @@ export default {
 	},
 
 	methods: {
+		addAttribute()
+		{
+			this.order.info.attributes.push( entity.order.attribute.create() );
+		},
 		getData() {
 			this.updatePricing();
 			return {
@@ -137,7 +142,7 @@ export default {
 				<div class="col-4">
 					<div class="form-floating">
 						<input type="text" class="form-control" id="client" placeholder="Quote Name" v-model="order.info.title">
-						<label for="client">Quote Title</label>
+						<label for="client">Title</label>
 					</div>
 				</div>
 					<!--
@@ -186,6 +191,10 @@ export default {
 								</div>
 							</div>
 							<div class="d-flex gap-4">
+								<label class="form-label col-2 text-end pt-2">PO Number:</label>
+								<input class="form-control" type="text" v-model="order.info.po_number" />
+							</div>
+							<div class="d-flex gap-4">
 								<label class="form-label col-2 text-end pt-2">Client Name:</label>
 								<input class="form-control" type="text" v-model="order.client.name"/>
 							</div>
@@ -208,6 +217,21 @@ export default {
 							<div class="d-flex gap-4">
 								<label class="form-label col-2 text-end pt-2">Order Notes (Private):</label>
 								<textarea class="form-control" v-model="order.info.notes.private"></textarea>
+							</div>
+
+							<div v-for="attribute in order.info.attributes" class="d-flex gap-2 align-items-center">
+								<div class="col-2">
+									<input class="form-control text-end" type="text" placeholder="Name" v-model="attribute.name">
+								</div>
+								<div>:</div>
+								<input class="form-control" type="text" placeholder="Value" v-model="attribute.value">
+							</div>
+
+							<div class="d-flex gap-4">
+								<div class="col-2"></div>
+								<div>
+									<button class="btn btn-primary" @click="addAttribute"><i class="bi bi-plus-circle"></i> Add Attribute</button>
+								</div>
 							</div>
 						</div>
 					</Modal>

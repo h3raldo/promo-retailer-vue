@@ -35,8 +35,8 @@ onMounted(() => {
 })
 
 import Loader from "@/components/globals/Loader.vue";
-import Search from "@/Views/PurchaseOrders/PurchaseOrders.Search.vue";
-import Totals from "@/Views/PurchaseOrders/PurchaseOrders.Totals.vue";
+import Search from "@/Views/PurchaseOrders/Search.vue";
+import Totals from "@/Views/PurchaseOrders/Totals.vue";
 </script>
 
 <template>
@@ -56,10 +56,7 @@ import Totals from "@/Views/PurchaseOrders/PurchaseOrders.Totals.vue";
 			<th>Status</th>
 			<th>Vendor</th>
 			<th>Created</th>
-			<th>Totals</th>
 			<th>Total</th>
-			<th>Profit</th>
-			<th style="width: 50px">Margin</th>
 			<th style="width: 120px"></th>
 		</tr>
 		</thead>
@@ -70,10 +67,7 @@ import Totals from "@/Views/PurchaseOrders/PurchaseOrders.Totals.vue";
 				<td @click="viewSingle(quote.id)">{{ quote.status }}</td>
 				<td @click="viewSingle(quote.id)">{{ quote.vendor }}</td>
 				<td @click="viewSingle(quote.id)">{{ quote.created }}</td>
-				<td @click="viewSingle(quote.id)">{{ formatPricing(quote.total_cost) }}</td>
 				<td @click="viewSingle(quote.id)">{{ formatPricing(quote.total) }}</td>
-				<td @click="viewSingle(quote.id)">{{ formatPricing(quote.profit) }}</td>
-				<td @click="viewSingle(quote.id)">{{ quote.margin }}%</td>
 				<td class="delete text-end"></td>
 			</tr>
 		</template>
@@ -90,14 +84,6 @@ import Totals from "@/Views/PurchaseOrders/PurchaseOrders.Totals.vue";
 					<tr class="text-warning">
 						<td class="pe-3">Cost:</td>
 						<td class="text-start">{{ formatPricing(data.totals.cost) }}</td>
-					</tr>
-					<tr class="text-success">
-						<td class="pe-3">Profit:</td>
-						<td class="text-start">{{ formatPricing(data.totals.profit) }}</td>
-					</tr>
-					<tr>
-						<td class="pe-3">Margin:</td>
-						<td class="text-start">{{ data.totals.margin }}%</td>
 					</tr>
 				</table>
 			</th>

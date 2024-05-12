@@ -3,6 +3,19 @@
 
 	<h2>Changelog</h2>
 
+	<h4>1.3.0</h4>
+	<ul>
+		<li>Companies Setup!</li>
+		<li>Sub-Stores and relationships setup!</li>
+	</ul>
+
+	<h4>1.2.5</h4>
+	<ul>
+		<li>Sales Orders Setup!</li>
+		<li>Transformer from Magento</li>
+		<li>Now pushed when Quotes are pushed to Zoho</li>
+	</ul>
+
 	<h4>v1.2.0</h4>
 	<ul>
 		<li>Major changes to look, moved to sidebar to allow for more space when adding more pages</li>
