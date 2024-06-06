@@ -9,14 +9,15 @@ import {computed} from "vue";
 export default {
 	data() {
 		return {
-			version: '1.4.2',
+			version: '1.5.0',
 			symfony: window.symfony,
 			alert: {
 				enabled: false,
 				message: '',
 				type: 'success',
 				data: '',
-			}
+			},
+			search: {},
 		}
 	},
 
@@ -25,7 +26,8 @@ export default {
 	},
 
 	methods: {
-		showAlert(message, type, data){
+		showAlert(message, type, data)
+		{
 			if( typeof data === 'object' ) data = JSON.stringify(data);
 			this.alert.message = message;
 
@@ -34,6 +36,11 @@ export default {
 
 			if( typeof data === 'string' ) this.alert.data = data;
 			this.alert.enabled = true;
+
+			let self = this;
+			setTimeout( () => {
+				self.alert.enabled = false;
+			}, 4000)
 		},
 	},
 
@@ -41,6 +48,7 @@ export default {
 		return {
 			alert: this.showAlert,
 			symfony: computed(() => this.symfony),
+			search: computed(() => this.search),
 		}
 	},
 
@@ -64,10 +72,21 @@ export default {
 
 		<div class="container py-3">
 			<main>
-				<div v-if="alert.enabled" :class="'alert alert-dismissible alert-'+alert.type" role="alert">
-					<div>{{ alert.message }}</div>
-					<textarea v-if="alert.data" class="form-control" readonly>{{alert.data}}</textarea>
-					<button type="button" class="btn-close" aria-label="Close" @click="alert.enabled=false"></button>
+				<div v-if="alert.enabled" class="toast-container position-fixed bottom-0 end-0 p-4">
+					<div id="liveToast" :class="'toast show text-bg-'+alert.type" role="alert" aria-live="assertive" aria-atomic="true">
+						<div class="toast-header">
+							<strong class="me-auto">
+								<span v-if="alert.type === 'success'">Success!</span>
+								<span v-else>Alert!</span>
+							</strong>
+							<small>Just now</small>
+							<button type="button" class="btn-close" @click="alert.enabled=false"></button>
+						</div>
+						<div class="toast-body">
+							<div>{{ alert.message }}</div>
+							{{ alert.data }}
+						</div>
+					</div>
 				</div>
 
 				<RouterView />

@@ -56,7 +56,7 @@ export default {
 <template>
 
 	<div class="text-end pb-3 bg-gray p-3 mb-2 d-flex justify-content-between align-items-center">
-		<h1 class="m-0">All Contacts</h1>
+		<h3 class="m-0"><i class="bi bi-person"></i> Contacts</h3>
 		<button class="btn btn-primary p-3" @click="createNew"><i class="bi bi-plus-square-fill"></i> Create New
 		</button>
 	</div>

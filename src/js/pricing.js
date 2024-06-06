@@ -122,7 +122,6 @@ export default
                 f.pricing.tax.subtotal = 0;
             }
 
-
             total_price += f.pricing.price.subtotal
             total_cost += f.pricing.cost.subtotal
             total_tax += f.pricing.tax.subtotal
@@ -133,7 +132,6 @@ export default
         quote.totals.qty = total_qty;
         quote.totals.margin = total_margin;
         quote.totals.cost = this.round(total_cost);
-
 
         if( quote.config.tax.enabled )
             quote.totals.tax = total_tax;
@@ -151,10 +149,18 @@ export default
     updateAllPricing( quote )
     {
         quote.items.forEach( item => {
-            this.item.updateItemPricing( item, quote.items );
+            this.item.updateItemPricing( item, quote );
             this.item.updateItemQty( item );
         })
         this.updateQuoteTotals( quote );
+    },
+
+    showPrice( quote )
+    {
+        if( !quote.config || typeof quote.config.price == 'undefined' )
+            return true;
+
+        return ( quote.config.price )
     },
 
     item: pricingItem,

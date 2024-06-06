@@ -1,7 +1,8 @@
 import pricingUtils from "@/js/pricing.js";
 
-function updateItemPricing( item, items )
+function updateItemPricing( item, quote )
 {
+    let {items} = quote;
     let decorationPricing = getDecorationPricing(item, items);
     item.pricing.base.decoration.cost = decorationPricing.cost.each;
     item.pricing.base.decoration.price = decorationPricing.price.each;
@@ -251,10 +252,9 @@ function getSubItemQty( s )
     return subitemQty;
 }
 
-export default{
-
-    updateItemPricing: updateItemPricing,
-    updateItemQty: updateItemQty,
-    shouldAddPrice: shouldAddPrice
-    
+export default
+{
+    updateItemPricing,
+    updateItemQty,
+    shouldAddPrice
 }

@@ -1,7 +1,7 @@
 <script setup>
 	import Loader from "@/components/globals/Loader.vue";
 	import Modal from "@/components/globals/bootstrap/Modal.vue";
-	import Search from "@/Views/Quotes/Quotes.Search.vue";
+	import Search from "@/Views/Quotes/Search.vue";
 </script>
 
 <script>
@@ -11,12 +11,17 @@ export default {
 		return {
 			loading: true,
 			quotes: {},
-			search: '',
-			searchParams: {},
 		}
 	},
 
-	inject: ['symfony'],
+	inject: ['symfony', 'search'],
+
+	computed: {
+		searchState(){
+			if( typeof this.search.quotes === 'undefined' ) this.search.quotes = {}
+			return this.search.quotes;
+		}
+	},
 
 	methods: {
 		formatPricing(price){
@@ -34,15 +39,21 @@ export default {
 			return this.symfony.quotes.quote.delete.replace(':id', id);
 		},
 		getQuotes( params ){
-			let self = this;
-			if( params ) this.search = params;
-			console.log(this.search);
+			if( params )
+				this.searchState.urlParams = params;
+			else if( this.searchState.urlParams )
+				params = this.searchState.urlParams;
+			else
+				params = ''
 
-			let url = this.symfony.quotes.search+'?' + this.search
+			let self = this;
+			let url = this.symfony.quotes.search+'?' + params ?? ''
 
 			self.loading = true;
 			utils.ajax(url, (data) => {
-				self.searchParams = data.search;
+				self.search.quotes = data.search;
+				self.search.quotes.urlParams = params;
+
 				self.quotes = data;
 				self.loading = false;
 			})
@@ -72,7 +83,7 @@ export default {
 </script>
 
 <template>
-	<Search :getQuotes="getQuotes" :searchParams="searchParams" />
+	<Search :getQuotes="getQuotes" :searchParams="searchState" />
 
 	<br>
 
@@ -109,7 +120,7 @@ export default {
 				<span class="badge text-bg-secondary rounded-pill">{{ quote.client }}</span><br>
 				{{ quote.title }}
 			</td>
-			<td @click="viewQuote(quote.id)">{{ quote.created }}</td>
+			<td @click="viewQuote(quote.id)">{{ quote.updated }}</td>
 			<td @click="viewQuote(quote.id)">{{ formatPricing(quote.total_cost) }}</td>
 			<td @click="viewQuote(quote.id)">{{ formatPricing(quote.total) }}</td>
 			<td @click="viewQuote(quote.id)">{{ formatPricing(quote.profit) }}</td>

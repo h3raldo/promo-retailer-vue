@@ -4,6 +4,7 @@ import { inject } from 'vue'
 const fn = inject('fn')
 
 function add(){
+	console.log('fn', fn);
 	fn.item.add();
 }
 

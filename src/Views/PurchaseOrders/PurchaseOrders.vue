@@ -1,53 +1,53 @@
 <script setup>
-import utils from "@/js/utils.js";
-import { useRouter } from 'vue-router';
-import { inject, ref, reactive, onMounted } from 'vue'
-const router = useRouter();
-
-let loading = ref(true);
-let data = reactive({});
-
-const symfony = inject('symfony').value;
-
-function formatPricing(price){
-	return utils.pricing.format(price);
-}
-
-function viewSingle( id ){
-	router.push( symfony.views.purchase_orders_purchase_order.replace(':id', id) )
-}
-
-function get( params ){
-	if( !params ) params = '';
-
-	let url = symfony.purchase_orders.search+'?' + params ?? ''
-
-	loading.value = true;
-	utils.ajax(url, (response) => {
-		data = response;
-		loading.value = false;
-	})
-}
-
-onMounted(() => {
-	if( data.length > 0 ) return;
-	get()
-})
-
 import Loader from "@/components/globals/Loader.vue";
 import Search from "@/Views/PurchaseOrders/Search.vue";
 import Totals from "@/Views/PurchaseOrders/Totals.vue";
 </script>
 
+<script>
+import utils from "@/js/utils.js";
+export default {
+	inject: ['symfony'],
+	data(){
+		return {
+			data: {},
+			loading: true,
+		}
+	},
+	methods: {
+		get( params ){
+			let self = this;
+			if( !params ) params = '';
+
+			let url = self.symfony.api.purchase_orders.search+'?' + params ?? ''
+
+			self.loading = true;
+			utils.ajax(url, (response) => {
+				self.data = response;
+				self.loading = false;
+			})
+		},
+		viewSingle( id ){
+			this.$router.push( this.symfony.views.purchase_orders_purchase_order.replace(':id', id) )
+		},
+		formatPricing( price ){
+			return utils.pricing.format(price);
+		}
+	},
+	mounted() {
+		if( this.data.length > 0 ) return;
+		this.get()
+	}
+}
+</script>
+
 <template>
 
-	<Search :getEntities="get" />
+	<Search :getEntities="get" :searchParams="{}" />
 
 	<br>
 
 	<Loader v-if="loading" :align="'center'" />
-
-	<Totals v-if="data.totals" :totals="data.totals" />
 
 	<table class="table align-middle table-hover" v-if="data.totals">
 		<thead>
@@ -55,7 +55,10 @@ import Totals from "@/Views/PurchaseOrders/Totals.vue";
 			<th style="width: 5%">ID</th>
 			<th>Status</th>
 			<th>Vendor</th>
-			<th>Created</th>
+			<th>In-Hands</th>
+			<th>Follow-Up</th>
+			<th>Note</th>
+<!--			<th>Created</th>-->
 			<th>Total</th>
 			<th style="width: 120px"></th>
 		</tr>
@@ -66,7 +69,10 @@ import Totals from "@/Views/PurchaseOrders/Totals.vue";
 				<td @click="viewSingle(quote.id)">{{ quote.id }}</td>
 				<td @click="viewSingle(quote.id)">{{ quote.status }}</td>
 				<td @click="viewSingle(quote.id)">{{ quote.vendor }}</td>
-				<td @click="viewSingle(quote.id)">{{ quote.created }}</td>
+				<td>{{ JSON.parse(quote.data).po.info.deliver_by }}</td>
+				<td>{{ JSON.parse(quote.data).po.info.follow_up_date }}</td>
+				<td>{{ JSON.parse(quote.data).po.info.follow_up_note }}</td>
+<!--				<td @click="viewSingle(quote.id)">{{ quote.created }}</td>-->
 				<td @click="viewSingle(quote.id)">{{ formatPricing(quote.total) }}</td>
 				<td class="delete text-end"></td>
 			</tr>

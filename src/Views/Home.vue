@@ -3,6 +3,13 @@
 
 	<h2>Changelog</h2>
 
+	<h4>1.4.0 - 1.5.0</h4>
+	<ul>
+		<li>Contacts setup!</li>
+		<li>Purchase Orders Setup!</li>
+		<li>Can now create POs from orders</li>
+	</ul>
+
 	<h4>1.3.0</h4>
 	<ul>
 		<li>Companies Setup!</li>

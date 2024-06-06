@@ -12,10 +12,14 @@ export default {
 	},
 
 	props: ['tier', 'index','removeTier', 'showMargin'],
+	inject: ['order'],
 
 	computed:{
 		editableMargin(){
 			return this.showMargin
+		},
+		showPrice(){
+			return pricing.showPrice(this.order);
 		}
 	},
 
@@ -35,6 +39,11 @@ export default {
 		},
 		costChange()
 		{
+			if( !this.showPrice ){
+				this.tier.price = this.tier.cost;
+				return;
+			}
+
 			if( !this.editableMargin ) {
 				if (this.tier.fixed) return;
 				this.tier.price = 0;
@@ -64,6 +73,8 @@ export default {
 				</div>
 			</div>
 
+			<template v-if="showPrice">
+
 			<div v-if="editableMargin" class="col">
 				<label class="form-label">Margin</label> <a href="#" v-if="tier.fixed" @click="calculateMargin"><i class="bi bi-calculator"></i></a>
 				<div class="input-group">
@@ -85,6 +96,8 @@ export default {
 					<input type="number" class="form-control" v-model.number="tier.price" min="0" :disabled="!tier.fixed" @focus="onFocus('price')" @focusout="focusOut('price')">
 				</div>
 			</div>
+
+			</template>
 		</div>
 
 		<div>

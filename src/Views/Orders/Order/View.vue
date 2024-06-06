@@ -66,6 +66,14 @@ function setup()
 		let entity_data = JSON.parse(d.data);
 		let init = d.init;
 
+		init.references.forEach( r => {
+			data.references.push({
+				source: 'po',
+				reference_number: r.reference_number,
+				title: r.title
+			})
+		})
+
 		if( entity_data.source ) {
 			entity.order.convertFromSource(d, (order, logos) => {
 				console.log('patching after conversion', order);

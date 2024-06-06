@@ -31,7 +31,7 @@ function setup()
 		let init = d.init;
 		if( init.order ) {
 			data.references.push({
-				source: 'SALES ORDER',
+				source: 'order',
 				reference_number: init.order,
 				action: {
 					title: `View Order`,

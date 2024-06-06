@@ -1,6 +1,8 @@
 let default_vendors = [
     { name: 'None', id: '', company_id: '', sage_id: '' },
     { name: 'Airline Graphics', id: '4141623000000122080', company_id: '7', sage_id: '' },
+    { name: 'Ariel Premium Supply Inc', id: '20', company_id: '20', sage_id: '' },
+    { name: 'Digispec', id: '19', company_id: '19', sage_id: '' },
     { name: 'Compass Industries', id: '4141623000000122431', company_id: '8', sage_id: '' },
     { name: 'Fluid Threads', id: '4141623000000151009', company_id: '9', sage_id: '' },
     { name: 'Hit Promotional Products Inc', id: '4141623000000122700', company_id: '10', sage_id: '' },
@@ -14,12 +16,42 @@ let default_vendors = [
     { name: 'Stanco', id: '4141623000000524113', company_id: '16', sage_id: '' },
 ];
 
+let default_decorators = [
+        { id: 'proemba', company_id: '6' },
+        { id: 'proemb1', company_id: '6' },
+        { id: 'proscra', company_id: '6' },
+        { id: 'proemb', company_id: '6' },
+        { id: 'prolas', company_id: '6' },
+        { id: 'prouvp', company_id: '6' },
+        { id: 'provin', company_id: '6' },
+        { id: 'prodtg', company_id: '6' },
+        { id: 'proscr', company_id: '6' },
+        { id: 'pippp1', company_id: '11' },
+        { id: 'pipsp3', company_id: '11' },
+        { id: 'pipsp2', company_id: '11' },
+        { id: 'pipsp1', company_id: '11' },
+        { id: 'pippp2', company_id: '11' },
+        { id: 'pippp3', company_id: '11' },
+        { id: 'driimp', company_id: '26' },
+        { id: 'rtictmlas', company_id: '27' },
+        { id: 'fluemb', company_id: '25' },
+    ]
+;
+
 function create(){
     return {
         name: 'New Vendor',
         id: '',
         sage_id: 0,
     }
+}
+
+function getDecoratorCompanyID( decorator_id )
+{
+    let results = default_decorators.filter( d => d.id === decorator_id );
+    if( !results.length ) return false;
+
+    return results[0].company_id;
 }
 
 function getAll(){
@@ -50,5 +82,6 @@ function findByZohoID( id )
 export default {
     create,
     getAll,
-    findByZohoID
+    findByZohoID,
+    getDecoratorCompanyID
 }

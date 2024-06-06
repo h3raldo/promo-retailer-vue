@@ -18,9 +18,19 @@ export default {
 		}
 	},
 
-	inject: ['item', 'itemIndex', 'updatePricing'],
+	inject: ['item', 'itemIndex', 'updatePricing', 'order'],
 
 	computed: {
+		showPlacements(){
+			if( !this.order.config || !this.order.config.decoration ) return true;
+			return this.order.config.decoration.placements;
+		},
+		showPrice(){
+			if( !this.order.config )
+				return true;
+
+			return ( this.order.config.price )
+		}
 	},
 
 	methods: {

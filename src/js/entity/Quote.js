@@ -51,6 +51,11 @@ function patchData( data, init )
     quote.id = init.id;
     quote.info.status = init.status;
 
+    if( init.updated ){
+        let date = new Date(init.updated);
+        quote.info.date = date.toISOString().split('T')[0];
+    }
+
     if( typeof quote.info.notes === 'string' ){
         quote.info.notes = { public: '', private: data.quote.info.notes, flags: [] }
     }

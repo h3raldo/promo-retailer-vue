@@ -13,7 +13,7 @@ export default {
 		}
 	},
 
-	inject: ['po', 'edited', 'alert','urls'],
+	inject: ['po', 'edited', 'alert','urls', 'fn'],
 
 	computed: {
 		publicUrl(){
@@ -59,9 +59,9 @@ export default {
 
 			let callback = {
 				success(){
-					self.alert('Quote Saved!');
+					self.alert('Saved!');
 					self.loading = false;
-					self.edited(false);
+					self.fn.hasEdited(false);
 				},
 				error() {
 					self.alert('Error saving, see console.', 'danger');
@@ -82,17 +82,12 @@ export default {
 				<button @click="$router.go(-1)" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></button>
 			</div>
 			<div class="fw-bold fs-4">
-				PO #{{ po.id }}
+				PO #{{ po.id }} <span v-if="po.info.vendor.name">-- {{ po.info.vendor.name }}</span> <span class="text-capitalize"> -- {{ po.info.type }}</span>
 			</div>
-			<span>
-				<span class="badge text-bg-secondary align-self-center me-2" v-for="reference in po.info.created_from">
-					{{reference.source.toUpperCase()}}: {{ reference.id }}
-				</span>
-			</span>
 		</div>
 		<div>
 			<div class="text-end d-flex gap-2">
-				<button :data-href="publicUrl" class="btn btn-outline-primary" disabled><i class="bi bi-eye"></i> Public Version</button>
+				<a :href="publicUrl" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Public Version</a>
 				<button class="btn btn-primary" :disabled="loading" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
 			</div>
 		</div>
@@ -103,7 +98,7 @@ export default {
 			<div class="d-flex gap-3 align-items-center">
 
 				<div>
-					<Modal :id="'quote-info-edit'" :title="'Quote Info'" :buttonText="''" :buttonClasses="'btn btn-primary'" :icon="'bi-pencil'">
+					<Modal :id="'quote-info-edit'" :title="'Info'" :buttonText="''" :buttonClasses="'btn btn-primary'" :icon="'bi-pencil'">
 
 						<div class="d-flex flex-column gap-3">
 
@@ -115,18 +110,63 @@ export default {
 								</div>
 							</div>
 
+							<div class="d-flex gap-4 align-items-center">
+								<label class="col-2 text-end">In-Hands Date:</label>
+								<div class="col-2">
+									<input type="date" class="form-control" placeholder="Date"
+										   v-model="po.info.deliver_by">
+								</div>
+								<div>
+									Strict?
+								</div>
+								<div class="col-2">
+									<select class="form-select" id="status" v-model="po.info.deliver_by_strict">
+										<option :value="true">Yes</option>
+										<option :value="false">No</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="d-flex gap-4 align-items-center">
+								<label class="col-2 text-end">Follow-Up Date:</label>
+								<div class="col-2">
+									<input type="date" class="form-control" placeholder="Date"
+										   v-model="po.info.follow_up_date">
+								</div>
+								<div>
+									Note:
+								</div>
+								<div class="col">
+									<input class="form-control" type="text" v-model="po.info.follow_up_note"/>
+								</div>
+							</div>
+
 							<div class="d-flex gap-4">
 								<label class="form-label col-2 text-end pt-2">Vendor:</label>
 								<input class="form-control" type="text" v-model="po.info.vendor.name"/>
 							</div>
 
 							<div class="d-flex gap-4">
-								<label class="form-label col-2 text-end pt-2">Order Notes (Public):</label>
+								<label class="form-label col-2 text-end pt-2">Ship To:</label>
+								<div class="col-5">
+									<textarea class="form-control" v-model="po.info.ship_to"></textarea>
+								</div>
+							</div>
+
+							<div class="d-flex gap-4">
+								<label class="form-label col-2 text-end pt-2">Bill To:</label>
+								<div class="col-5">
+									<textarea class="form-control" v-model="po.info.bill_to"></textarea>
+								</div>
+							</div>
+
+							<div class="d-flex gap-4">
+								<label class="form-label col-2 text-end pt-2">Notes (Public):</label>
 								<textarea class="form-control" v-model="po.info.notes.public"></textarea>
 							</div>
 
 							<div class="d-flex gap-4">
-								<label class="form-label col-2 text-end pt-2">Order Notes (Private):</label>
+								<label class="form-label col-2 text-end pt-2">Notes (Private):</label>
 								<textarea class="form-control" v-model="po.info.notes.private"></textarea>
 							</div>
 						</div>
@@ -137,9 +177,7 @@ export default {
 				<div>
 					<div class="form-floating">
 						<select class="form-select" id="status" v-model="po.info.status">
-							<option value="draft">Draft</option>
-							<option value="sent">Sent</option>
-							<option value="confirmed">Confirmed</option>
+							<option value="open">Open</option>
 							<option value="closed">Closed</option>
 						</select>
 						<label for="status">Status</label>
@@ -153,6 +191,7 @@ export default {
 					</div>
 				</div>
 
+
 				<div class="col-2">
 					<div class="input-group">
 						<div class="form-floating">
@@ -161,6 +200,18 @@ export default {
 						</div>
 						<Search :on-select="onVendorSelect" :button-text="''" :button-icon="'bi-pencil'" />
 					</div>
+				</div>
+
+				<div>
+					<label class="form-check-label">
+						<input class="form-check-input me-1" type="checkbox" v-model="po.info.statuses.paid">
+						<span>Paid</span>
+					</label>
+					<br>
+					<label class="form-check-label">
+						<input class="form-check-input me-1" type="checkbox" v-model="po.info.statuses.sent">
+						<span>Sent</span>
+					</label>
 				</div>
 			</div>
 		</div>

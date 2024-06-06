@@ -2,7 +2,7 @@
 import Items from "@/EntityComponents/Order/Items.vue";
 import Logos from "@/EntityComponents/Order/Logos.vue";
 import Vendors from "@/EntityComponents/Order/Vendors.vue";
-import References from "@/EntityComponents/Order/References.vue";
+import References from "@/components/globals/References.vue";
 </script>
 
 <script>

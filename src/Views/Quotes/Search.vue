@@ -34,12 +34,19 @@ export default {
 
 <template>
 
-	<div class="d-flex align-items-center bg-gray">
+	<div class="text-end pb-3 bg-gray p-3 mb-2 d-flex justify-content-between align-items-center">
+		<div>
+			<h3 class="mb-0"><i class="bi bi-calculator"></i> Quotes</h3>
+		</div>
+		<button class="btn btn-primary p-3" @click="createNew"><i class="bi bi-plus-square-fill"></i> Create New</button>
+	</div>
+
+	<div class="d-flex pt-3">
 		<div class="flex-fill">
 
-			<form @submit="search" class="bg-gray p-3">
+			<form @submit="search" class="pt-1">
 
-				<div class="row">
+				<div class="row align-items-center">
 					<div class="col">
 						<!-- quote search -->
 						<div class="pb-2">
@@ -48,7 +55,8 @@ export default {
 								<label class="form-label" for="data_string">Quote Search</label>
 							</div>
 						</div>
-
+					</div>
+					<div class="col">
 						<!-- client -->
 						<div class="pb-2">
 							<div class="form-floating">
@@ -65,7 +73,8 @@ export default {
 								<label class="form-label" for="date_from">From</label>
 							</div>
 						</div>
-
+					</div>
+					<div class="col">
 						<!-- to -->
 						<div class="pb-2">
 							<div class="form-floating">
@@ -75,79 +84,73 @@ export default {
 						</div>
 					</div>
 					<div class="col">
-						<div>
+						<div class="align-self-center">
+							<button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i> Search</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="d-flex gap-4">
+					<div>
+						<div class="d-flex gap-2">
 							<label class="fw-bold">Status</label>
 							<div>
-								<label class="form-check-label">
+								<label class="form-check-label bg-gray px-2 rounded small">
 									<input class="form-check-input me-1" type="checkbox" name="status[]" value="draft" v-model="searchParams.status">
 									<span>Draft</span>
 								</label>
 							</div>
 							<div>
-								<label class="form-check-label">
+								<label class="form-check-label bg-gray px-2 rounded small">
 									<input class="form-check-input me-1" type="checkbox" name="status[]" value="sent" v-model="searchParams.status">
 									<span>Sent</span>
 								</label>
 							</div>
 							<div>
-								<label class="form-check-label">
+								<label class="form-check-label bg-gray px-2 rounded small">
 									<input class="form-check-input me-1" type="checkbox" name="status[]" value="confirmed" v-model="searchParams.status">
 									<span>Confirmed</span>
 								</label>
 							</div>
 							<div>
-								<label class="form-check-label">
+								<label class="form-check-label bg-gray px-2 rounded small">
 									<input class="form-check-input me-1" type="checkbox" name="status[]" value="pushed" v-model="searchParams.status">
 									<span>Pushed</span>
 								</label>
 							</div>
 							<div>
-								<label class="form-check-label">
+								<label class="form-check-label bg-gray px-2 rounded small">
 									<input class="form-check-input me-1" type="checkbox" name="status[]" value="closed" v-model="searchParams.status">
 									<span>Closed</span>
 								</label>
 							</div>
 						</div>
-
 					</div>
-
-					<div class="col">
-						<div>
+					<div>
+						<div class="d-flex gap-1">
 							<label class="fw-bold">Category</label>
 							<div>
-								<label class="form-check-label">
+								<label class="form-check-label bg-gray px-2 rounded small">
 									<input class="form-check-input me-1" type="checkbox" name="category[]" value="standard" v-model="searchParams.category">
 									<span>Standard</span>
 								</label>
 							</div>
 							<div>
-								<label class="form-check-label">
+								<label class="form-check-label bg-gray px-2 rounded small">
 									<input class="form-check-input me-1" type="checkbox" name="category[]" value="bid" v-model="searchParams.category">
 									<span>Bid</span>
 								</label>
 							</div>
 							<div>
-								<label class="form-check-label">
+								<label class="form-check-label bg-gray px-2 rounded small">
 									<input class="form-check-input me-1" type="checkbox" name="category[]" value="idea" v-model="searchParams.category">
 									<span>Idea</span>
 								</label>
 							</div>
 						</div>
 					</div>
-
-					<div class="col d-flex gap-4 flex-column justify-content-center ">
-						<div>
-							<button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i> Search</button>
-						</div>
-						<div>
-<!--							<a href="/quotes/" class="btn btn-outline-secondary"><i class="bi bi-x-octagon"></i> Clear All</a>-->
-						</div>
-					</div>
 				</div>
 			</form>
-		</div>
-		<div class="text-center pe-4">
-			<button class="btn btn-primary p-3" @click="createNew"><i class="bi bi-plus-square-fill"></i> New Quote</button>
 		</div>
 	</div>
 </template>

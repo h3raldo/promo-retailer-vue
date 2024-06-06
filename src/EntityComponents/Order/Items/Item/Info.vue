@@ -1,14 +1,17 @@
 <script setup>
 import VendorSelect from "@/EntityComponents/Order/globals/item/VendorSelect.vue";
+import Search from "@/EntityComponents/Company/Search.vue";
 </script>
 
 <script>
 export default {
 	data() {
-		return {}
+		return {
+			searchingCompanies: false,
+		}
 	},
 
-	inject: ['item', 'itemIndex', 'updatePricing'],
+	inject: ['item', 'itemIndex', 'updatePricing', 'order'],
 
 	watch: {
 		'item.info.taxable'() {
@@ -17,12 +20,24 @@ export default {
 	},
 
 	computed: {
+		showSupplier(){
+			if( !this.order.config || !this.order.config.decoration )
+				return true;
+
+			return this.order.config.decoration.supplier;
+		}
 	},
 
 	methods: {
 		setImage(e){
 			this.item.info.image.primary = e.target.value;
 		},
+		companySelected(company){
+			console.log('selected', company);
+			this.searchingCompanies = false;
+			this.item.info.supplier.name = company.name;
+			this.item.info.supplier.company_id = company.id;
+		}
 	}
 }
 </script>
@@ -47,9 +62,9 @@ export default {
 				</div>
 			</div>
 
-			<div class="form-floating">
+			<div class="border rounded p-2">
+				<span class="text-secondary mb-0">Supplier</span>
 				<VendorSelect v-model="item.info.supplier" />
-				<label>Supplier</label>
 			</div>
 
 			<div class="d-flex gap-3">

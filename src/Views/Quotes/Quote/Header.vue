@@ -114,7 +114,7 @@ export default {
 					return;
 				}
 
-				self.alert('Created New Order + Pushed to ZOho! Order ID: ' + data.id);
+				self.alert('Created New Order + Pushed to Zoho. Order ID: ' + data.id);
 
 			}, (error)=> {
 				self.alert('Error converting to order!', 'danger');

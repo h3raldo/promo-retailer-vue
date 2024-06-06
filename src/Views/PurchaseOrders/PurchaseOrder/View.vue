@@ -1,12 +1,15 @@
 <script setup>
 import Loader from "@/components/globals/Loader.vue";
 import Header from "@/Views/PurchaseOrders/PurchaseOrder/Header.vue";
-import Items from "@/Views/PurchaseOrders/PurchaseOrder/Items.vue";
+import Items from "@/EntityComponents/Order/Items.vue";
+import Tabs from "@/components/globals/Tabs.vue";
+import References from "@/components/globals/References.vue";
 </script>
 <script>
 import {computed} from "vue";
 import {usePurchaseOrderStore} from "@/stores/PurchaseOrder.js";
 import utils from "@/js/utils.js";
+import entity from "@/js/entity.js";
 const purchaseOrderStore = usePurchaseOrderStore();
 
 export default{
@@ -16,7 +19,9 @@ export default{
 		return {
 			id: this.$route.params.id,
 			loading: true,
-			urls: this.symfony.purchase_orders.order,
+			urls: this.symfony.api.purchase_orders.order,
+			po: purchaseOrderStore.po,
+			tabs: ['Items', 'Vendor', 'References']
 		}
 	},
 
@@ -25,7 +30,13 @@ export default{
 			edited: computed(() => purchaseOrderStore.edited ),
 			urls: computed(() => this.urls ),
 			po: computed(() => purchaseOrderStore.po ),
-			fn: computed(() => purchaseOrderStore.fn )
+			order: computed(() => purchaseOrderStore.po ),
+			fn: purchaseOrderStore.fn,
+			references: computed(() => purchaseOrderStore.po.info.references ),
+			vendors: purchaseOrderStore.vendors,
+			logos: purchaseOrderStore.logos,
+			updateTotals: purchaseOrderStore.updateTotals,
+			updatePricing: purchaseOrderStore.updatePricing
 		}
 	},
 
@@ -36,14 +47,37 @@ export default{
 	created() {
 		let self = this;
 		let url = self.urls.get.replace(':id', self.id);
+		purchaseOrderStore.$reset();
 		utils.ajax(url, (d) => {
-			self.loading = false;
 
 			let entity_data = d;
-			purchaseOrderStore.po.id = self.id;
-			// purchaseOrderStore.$patch({po: entity.purchaseOrder.patchData(entity_data, {})});
 
-			console.log(purchaseOrderStore.po);
+			if( entity_data.source && entity_data.source_id ) {
+				utils.ajax(self.symfony.orders.order.get.replace(':id', entity_data.source_id), r => {
+					const order = JSON.parse(r.data);
+					order.logos.forEach( l => purchaseOrderStore.logos.push(l));
+					let transformedOrder = entity.purchaseOrder.fromOrder(order.order, entity_data.company, entity_data.decorator_code);
+					purchaseOrderStore.$patch({po: transformedOrder});
+					purchaseOrderStore.po.id = self.id;
+					purchaseOrderStore.updatePricing();
+
+					purchaseOrderStore.po.info.references.push({
+						source: entity_data.source,
+						reference_number: entity_data.source_id,
+					})
+
+					utils.ajax(self.symfony.api.companies.company.get.replace(':id', entity_data.company), c => {
+						purchaseOrderStore.po.info.vendor.info = c;
+						purchaseOrderStore.po.info.vendor.name = c.entity.name;
+						purchaseOrderStore.po.info.vendor.id = entity_data.company;
+						self.loading = false;
+					})
+				});
+			} else{
+				self.loading = false;
+				purchaseOrderStore.po.id = entity_data.id;
+				purchaseOrderStore.$patch({po: entity_data.po});
+			}
 		})
 	},
 
@@ -68,7 +102,39 @@ export default{
 
 	<template v-if="!loading">
 		<Header />
-		<Items />
+
+		<Tabs :labels="tabs">
+
+			<template #Items>
+				<Items />
+			</template>
+
+			<template #Vendor>
+				<table class="table">
+					<thead>
+					<tr>
+						<th class="col-1"></th>
+						<th></th>
+					</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="text-end fw-bold">ID:</td>
+							<td>{{ po.info.vendor.id }}</td>
+						</tr>
+						<tr>
+							<td class="text-end fw-bold">Name:</td>
+							<td>{{ po.info.vendor.name }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</template>
+
+			<template #References>
+				<References />
+			</template>
+
+		</Tabs>
 	</template>
 
 </template>

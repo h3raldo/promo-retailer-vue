@@ -79,6 +79,13 @@ export default {
 		},
 		move(fromIndex, direction) {
 			this.fn.item.move(fromIndex, direction);
+		},
+		getPlacementLogoClasses( variation ){
+			let classes = 'p-1 text-center ';
+			if( variation.includes('dark') ) classes += 'bg-secondary';
+			else classes += 'bg-light'
+
+			return classes;
 		}
 	}
 }
@@ -89,22 +96,30 @@ export default {
 		<div class="col col-4">
 			<h5><i v-if="item.info.hidden" class="bi bi-eye-slash me-1"></i>{{ item.info.name }}</h5>
 
-			<div>
-				<img v-if="item.info.image.primary.length > 0" alt="" :src="item.info.image.primary" height="100" style="border-radius: 20px" />
-				<div v-for="placement in item.decoration.placements" class="d-flex gap-2 align-items-center p-1 bg-light mb-1">
-					<span>
-						{{ placement.location.name }}
+			<div class="mb-2">
+				<span class="badge text-bg-secondary me-1" v-if="item.info.sku">Item # {{ item.info.sku }}</span>
+				<span class="badge text-bg-secondary me-1" v-if="item.info.supplier.name">Supplier: {{ item.info.supplier.name }}</span>
+				<span v-if="!item.info.supplier || !item.info.supplier.company_id" class="text-danger">
+					<small><i class="bi bi-info-circle"></i> Supplier Unverified</small>
+				</span>
+			</div>
+
+			<div class="mb-2">
+
+				<div v-if="item.info.image.primary.length > 0">
+					<a :href="item.info.image.primary" target="_blank"><img :src="item.info.image.primary" height="100" style="border-radius: 20px" /></a>
+				</div>
+
+				<div v-for="placement in item.decoration.placements" class="d-flex gap-2 align-items-center p-1 mb-1 bg-light">
+					<span class="col-4 text-center">
+						{{ placement.location.name }}:
 					</span>
-					<span>
-						<img :src="placement.logo.url" width="100"  alt="" />
+					<span class="col-4" :class="getPlacementLogoClasses( placement.logo.variation )">
+						<a :href="placement.logo.url" target="_blank"><img :src="placement.logo.url" width="100"  alt="" /></a>
 					</span>
 				</div>
 			</div>
 
-			<div class="mb-2">
-				<span class="badge text-bg-secondary me-1" v-if="item.info.sku">Item # {{ item.info.sku }}</span>
-				<span class="badge text-bg-secondary me-1" v-if="item.info.supplier.name">Supplier: {{ item.info.supplier.name }}</span>
-			</div>
 
 			<div class="alert alert-light d-flex align-items-center mb-2" role="alert" v-if="item.notes.public.length">
 				<i class="bi bi-info-circle me-2"></i>

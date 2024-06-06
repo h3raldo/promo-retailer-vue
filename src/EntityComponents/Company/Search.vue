@@ -1,6 +1,7 @@
 <script setup>
 import Loader from "@/components/globals/Loader.vue";
 import Modal from "@/components/globals/bootstrap/Modal.vue";
+import SearchForm from "@/EntityComponents/Company/Search.Form.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -13,7 +14,13 @@ export default {
 		}
 	},
 	inject: ['symfony'],
-	props: ['onSelect', 'buttonText', 'buttonIcon'],
+	props: ['onSelect', 'buttonText', 'buttonIcon', 'type'],
+	computed: {
+		getType(){
+			if( typeof this.type === 'undefined' ) return 'modal';
+			return this.type;
+		}
+	},
 	methods: {
 		search(e){
 			e.preventDefault();
@@ -29,44 +36,28 @@ export default {
 		},
 		selected( company ){
 			this.onSelect(company)
-			this.$refs.modal.$refs.closeModalButton.click();
+
+			if( this.getType === 'modal' )
+				this.$refs.modal.$refs.closeModalButton.click();
 		}
 	}
 }
 </script>
 <template>
 
-	<Modal :id="'company-search'" :title="'Search Companies'" :buttonText="buttonText" :icon="buttonIcon" :buttonClasses="'btn btn-primary'" ref="modal">
-
-		<form @submit="search">
-			<div class="input-group mb-3">
-				<input type="text" class="form-control" placeholder="Search Companies" v-model="query">
-				<button class="btn btn-outline-secondary" type="submit">Search</button>
-			</div>
-		</form>
-
-		<Loader v-if="loading" />
-
-		<table v-if="!loading && results.length" class="table">
-			<thead>
-			<tr>
-				<th class="col-1"></th>
-				<th>Name</th>
-			</tr>
-			</thead>
-			<tbody>
-			<tr v-for="company in results">
-				<td>
-					<button class="btn btn-sm btn-primary" @click="selected(company)">Select</button>
-				</td>
-				<td class="align-middle">
-					{{ company.name }}
-				</td>
-			</tr>
-			</tbody>
-		</table>
-
-	</Modal>
-
+	<template v-if="getType === 'modal'">
+		<Modal :id="'company-search'" :title="'Search Companies'" :buttonText="buttonText" :icon="buttonIcon" :buttonClasses="'btn btn-primary'" ref="modal">
+			<SearchForm :selected="selected" />
+		</Modal>
+	</template>
+	<template v-else-if="getType === 'details'">
+		<details>
+			<summary>Search</summary>
+			<SearchForm :selected="selected" />
+		</details>
+	</template>
+	<template v-else>
+		<SearchForm :selected="selected" />
+	</template>
 
 </template>

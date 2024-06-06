@@ -131,7 +131,7 @@ export default {
 				<strong>{{ symfony.user }}</strong>
 			</a>
 			<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-				<li><a class="dropdown-item" href="#">Settings</a></li>
+				<li><a class="dropdown-item" :href="symfony.api.quickbooks.connect">QuickBooks Connect</a></li>
 				<li><hr class="dropdown-divider"></li>
 				<li><a class="dropdown-item" :href="symfony.logoutUrl">Sign out</a></li>
 			</ul>

@@ -11,11 +11,17 @@ export default {
 		return {
 			loading: true,
 			quotes: {},
-			search: {},
 		}
 	},
 
-	inject: ['symfony'],
+	inject: ['symfony', 'search'],
+
+	computed: {
+		searchState(){
+			if( typeof this.search.orders === 'undefined' ) this.search.orders = {}
+			return this.search.orders;
+		}
+	},
 
 	methods: {
 		formatPricing(price){
@@ -33,14 +39,20 @@ export default {
 			return this.symfony.orders.order.delete.replace(':id', id);
 		},
 		getEntities( params ){
-			let self = this;
-			if( !params ) params = '';
+			if( params )
+				this.searchState.urlParams = params;
+			else if( this.searchState.urlParams )
+				params = this.searchState.urlParams;
+			else
+				params = ''
 
+			let self = this;
 			let url = this.symfony.orders.search +'?' + params ?? ''
 
 			self.loading = true;
 			utils.ajax(url, (data) => {
-				self.search = data.search;
+				self.search.orders = data.search;
+				self.search.orders.urlParams = params;
 				self.quotes = data;
 				self.loading = false;
 			})
@@ -70,7 +82,7 @@ export default {
 </script>
 
 <template>
-	<Search :getEntities="getEntities" :searchParams="search" />
+	<Search :getEntities="getEntities" :searchParams="searchState" />
 
 	<br>
 

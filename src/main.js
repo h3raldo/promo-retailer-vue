@@ -11,7 +11,7 @@ const routes = [
     {
         name: 'quotes_quote',
         path: window.symfony.views.quotes_quote,
-        component: () => import('@/Views/Quotes/Quote.vue')
+        component: () => import('@/Views/Quotes/Quote/View.vue')
     },
     { path: window.symfony.views.orders, component: () => import('@/Views/Orders/Orders.vue') },
     {
@@ -21,7 +21,11 @@ const routes = [
     },
     { path: window.symfony.views.website, component: () => import('@/Views/Website/Website.vue') },
     { path: window.symfony.views.purchase_orders, component: () => import('@/Views/PurchaseOrders/PurchaseOrders.vue') },
-    { path: window.symfony.views.purchase_orders_purchase_order, component: () => import('@/Views/PurchaseOrders/PurchaseOrder/View.vue') },
+    {
+        name: 'purchase_orders_purchase_order',
+        path: window.symfony.views.purchase_orders_purchase_order,
+        component: () => import('@/Views/PurchaseOrders/PurchaseOrder/View.vue')
+    },
     { path: window.symfony.views.reports_orders, component: () => import('@/Views/Reports/Magento.vue') },
     { path: window.symfony.views.images_upload, component: () => import('@/Views/Images/UploadImage.vue') },
     { path: window.symfony.views.images_update, component: () => import('@/Views/Images/UpdateImages.vue') },

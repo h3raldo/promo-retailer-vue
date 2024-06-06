@@ -49,7 +49,19 @@
                         new: 'https://tools.promoretailer.dev/admin/contacts/create/',
                         save: 'https://tools.promoretailer.dev/admin/contacts/save/'
                     }
-                }
+                },
+				purchase_orders: {
+					search: 'https://tools.promoretailer.dev/api/purchase-orders/',
+					order: {
+						get: 'https://tools.promoretailer.dev/api/purchase-orders/po/:id/',
+						save: 'https://tools.promoretailer.dev/api/purchase-orders/po/',
+						new: 'https://tools.promoretailer.dev/purchase-orders/create/',
+						public: 'https://tools.promoretailer.dev/orders/public/view/:id/',
+					}
+				},
+				quickbooks: {
+					connect: 'https://tools.promoretailer.dev/'
+				}
             },
             quotes: {
                 search: 'https://tools.promoretailer.dev/api/quotes/',
@@ -73,13 +85,6 @@
                     duplicate: 'https://tools.promoretailer.dev/orders/duplicate/:id/',
                     delete: 'https://tools.promoretailer.dev/orders/delete/:id/',
                     push: 'https://preview.promoretailer.dev/orders/push/',
-                    public: 'https://tools.promoretailer.dev/orders/public/view/:id/',
-                }
-            },
-            purchase_orders: {
-                search: 'https://tools.promoretailer.dev/api/purchase-orders/',
-                order: {
-                    get: 'https://tools.promoretailer.dev/api/purchase-orders/po/:id/',
                     public: 'https://tools.promoretailer.dev/orders/public/view/:id/',
                 }
             },

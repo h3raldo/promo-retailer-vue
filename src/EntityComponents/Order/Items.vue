@@ -7,13 +7,14 @@ import Fee from "@/EntityComponents/Order/Items/Fee.vue";
 
 <script>
 import pricing from "@/js/pricing.js";
+import entity from "@/js/entity.js";
 
 export default {
 	data() {
 		return {}
 	},
 
-	inject: ['order', 'updateTotals', 'updatePricing'],
+	inject: ['order', 'updateTotals', 'updatePricing', 'order'],
 
 	watch: {
 		'order.config.tax.enabled'(){
@@ -22,6 +23,9 @@ export default {
 	},
 
 	computed: {
+		showPrice(){
+			return pricing.showPrice(this.order);
+		}
 	},
 
 	methods: {
@@ -82,29 +86,33 @@ export default {
 		<div class="col-1 text-end"></div>
 	</div>
 
-	<div class="d-flex gap-3 justify-content-end align-items-center pt-2">
-		<div class="text-end">Paid:</div>
-		<div class="col-1 text-end">{{ pricing.format(order.totals.paid) }}</div>
-		<div class="col-1 text-end"></div>
-	</div>
+	<template v-if="showPrice">
 
-	<div class="d-flex gap-3 justify-content-end pt-2">
-		<div class="text-end"><i class="bi bi-eye-slash"></i> Cost:</div>
-		<div class="col-1 text-end">{{ pricing.format(order.totals.cost) }}</div>
-		<div class="col-1"><!-- actions --></div>
-	</div>
+		<div class="d-flex gap-3 justify-content-end align-items-center pt-2">
+			<div class="text-end">Paid:</div>
+			<div class="col-1 text-end">{{ pricing.format(order.totals.paid) }}</div>
+			<div class="col-1 text-end"></div>
+		</div>
 
-	<div class="d-flex gap-3 justify-content-end pt-2">
-		<div class="text-end"><i class="bi bi-eye-slash"></i> Margin:</div>
-		<div class="col-1 text-end">{{ order.totals.margin }}%</div>
-		<div class="col-1"><!-- actions --></div>
-	</div>
+		<div class="d-flex gap-3 justify-content-end pt-2">
+			<div class="text-end"><i class="bi bi-eye-slash"></i> Cost:</div>
+			<div class="col-1 text-end">{{ pricing.format(order.totals.cost) }}</div>
+			<div class="col-1"><!-- actions --></div>
+		</div>
 
-	<div class="d-flex gap-3 justify-content-end pt-2">
-		<div class="text-end"><i class="bi bi-eye-slash"></i> Profit:</div>
-		<div class="col-1 text-end">{{ pricing.format(order.totals.total - order.totals.cost) }}</div>
-		<div class="col-1"><!-- actions --></div>
-	</div>
+		<div class="d-flex gap-3 justify-content-end pt-2">
+			<div class="text-end"><i class="bi bi-eye-slash"></i> Margin:</div>
+			<div class="col-1 text-end">{{ order.totals.margin }}%</div>
+			<div class="col-1"><!-- actions --></div>
+		</div>
+
+		<div class="d-flex gap-3 justify-content-end pt-2">
+			<div class="text-end"><i class="bi bi-eye-slash"></i> Profit:</div>
+			<div class="col-1 text-end">{{ pricing.format(order.totals.total - order.totals.cost) }}</div>
+			<div class="col-1"><!-- actions --></div>
+		</div>
+
+	</template>
 
 	<div class="d-flex gap-3 justify-content-end pt-2">
 		<div class="text-end"><button class="btn btn-outline-primary btn-sm" @click="updatePricing"><i class="bi bi-calculator"></i> Recalculate Pricing</button></div>

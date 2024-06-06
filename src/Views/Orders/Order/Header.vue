@@ -1,11 +1,14 @@
+<script setup>
+</script>
 <script>
 import LogoSearch from "@/EntityComponents/Order/Logos/Search.vue";
 import Modal from "@/components/globals/bootstrap/Modal.vue";
+import CreatePOs from "@/Views/Orders/Order/CreatePOs.vue"
 import utils from "@/js/utils.js";
 import entity from "@/js/entity.js";
 
 export default {
-	components: {Modal, LogoSearch},
+	components: {Modal, LogoSearch, CreatePOs},
 	data() {
 		return {
 			loading: false
@@ -100,6 +103,10 @@ export default {
 			}
 
 			this.ajaxUrl(this.saveUrl, callback.success, callback.error);
+		},
+		goToPurchaseOrder( id ){
+			this.$refs.poModal.$refs.closeModalButton.click();
+			this.$router.push(this.symfony.views.purchase_orders_purchase_order.replace(':id', id))
 		}
 	}
 }
@@ -119,7 +126,10 @@ export default {
 		</div>
 		<div>
 			<div class="text-end d-flex gap-2">
-				<button :data-href="publicUrl" class="btn btn-outline-primary" disabled><i class="bi bi-eye"></i> Public Version</button>
+				<a :href="publicUrl" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Public Version</a>
+				<Modal :id="'create-po'" :title="'Create POs'" :buttonText="'Create POs'" :buttonClasses="'btn btn-primary'" :icon="'bi-node-plus'" ref="poModal">
+					<CreatePOs :goToPurchaseOrder="goToPurchaseOrder"  />
+				</Modal>
 				<button class="btn btn-primary" :disabled="loading" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
 			</div>
 		</div>
