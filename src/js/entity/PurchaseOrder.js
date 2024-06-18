@@ -17,6 +17,7 @@ function create(id){
             follow_up_date: '',
             follow_up_note: '',
             ship_to: `Promo Retailer \n14655 Northwest Fwy, Suite 127C \nHouston, TX 77040`,
+            ship_blind: false,
             bill_to: `Promo Retailer \n14655 Northwest Fwy, Suite 127C \nHouston, TX 77040`,
             type: 'supplier',
             vendor: {
@@ -29,6 +30,7 @@ function create(id){
                 private: '',
                 flags: []
             },
+            events: [],
             attributes: [],
             references: [],
         },
@@ -60,6 +62,8 @@ function patchData( data, init )
     let po = data.po;
     if( !po.info.follow_up_date ) po.info.follow_up_date = '';
     if( !po.info.follow_up_note ) po.info.follow_up_note = '';
+    if( typeof po.info.ship_blind === 'undefined' ) po.info.ship_blind = false;
+    if( !po.info.events ) po.info.events = [];
 
     return po;
 }
@@ -70,6 +74,9 @@ function fromOrder( order, company_id, decorator_code)
     let is_decorator = typeof decorator_code !== 'undefined';
 
     if( is_decorator ) po.info.type = 'decorator';
+
+    po.info.deliver_by = order.info.deliver_by;
+    po.info.deliver_by_strict = order.info.deliver_by_strict;
 
     order.items.forEach( item => {
         if( is_decorator ){

@@ -60,7 +60,8 @@ export default {
 		getStatusColor( status ){
 			let statuses = {
 				sent: 'primary',
-				pushed: 'success'
+				confirmed: 'primary',
+				complete: 'success',
 			}
 
 			let className = 'secondary';
@@ -91,14 +92,14 @@ export default {
 	<table class="table align-middle table-hover" v-if="quotes.totals">
 		<thead>
 		<tr>
-<!--			<th style="width: 5%">ID</th>-->
+			<th>ID</th>
 <!--			<th>Author</th>-->
 			<th>Status</th>
 			<th>Reference Number</th>
 			<th>Client</th>
 			<th style="width: 9%">Order Date</th>
 			<th style="width: 9%">Origin Date</th>
-			<th>Totals</th>
+<!--			<th>Totals</th>-->
 			<th>Total</th>
 			<th>Profit</th>
 			<th style="width: 50px">Margin</th>
@@ -108,6 +109,7 @@ export default {
 		<tbody>
 		<template v-for="quote in quotes.results">
 		<tr class="quote-row">
+			<td @click="viewQuote(quote.id)">{{ quote.id }}</td>
 			<td @click="viewQuote(quote.id)">
 				<span :class="getStatusColor(quote.status)">
 					{{ quote.status }}
@@ -115,16 +117,15 @@ export default {
 			</td>
 			<td @click="viewQuote(quote.id)">
 				<span :class="'fw-normal badge source-'+quote.source">{{ quote.source.charAt(0).toUpperCase() }}</span>
-				{{ quote.reference_number }}
+				{{ quote.reference_number || '-' }}
 			</td>
-<!--			<td @click="viewQuote(quote.id)">{{ quote.id }}</td>-->
 <!--			<td @click="viewQuote(quote.id)">{{ quote.author }}</td>-->
 			<td @click="viewQuote(quote.id)">
 				{{ quote.client }}
 			</td>
 			<td @click="viewQuote(quote.id)">{{ quote.created }}</td>
 			<td @click="viewQuote(quote.id)">{{ quote.date }}</td>
-			<td @click="viewQuote(quote.id)">{{ formatPricing(quote.total_cost) }}</td>
+<!--			<td @click="viewQuote(quote.id)">{{ formatPricing(quote.total_cost) }}</td>-->
 			<td @click="viewQuote(quote.id)">{{ formatPricing(quote.total) }}</td>
 			<td @click="viewQuote(quote.id)">{{ formatPricing(quote.profit) }}</td>
 			<td @click="viewQuote(quote.id)">{{ quote.margin }}%</td>
@@ -167,7 +168,7 @@ export default {
 	</table>
 
 </template>
-<style scoped>
+<style>
 tr{
 	cursor: pointer;
 }
@@ -176,5 +177,8 @@ tr{
 }
 .source-quote{
 	background-color: green;
+}
+.source-order{
+	background-color: blue;
 }
 </style>

@@ -2,6 +2,7 @@
 import Header from "@/Views/Orders/Order/Header.vue";
 import Loader from "@/components/globals/Loader.vue";
 import Order from "@/EntityComponents/Order/Order.vue";
+import Info from "@/Views/Orders/Order/Info.vue";
 
 import {provide, inject, computed, reactive} from "vue";
 import {onBeforeRouteLeave, useRoute, useRouter} from "vue-router";
@@ -20,10 +21,12 @@ const data = reactive({
 	urls: inject('symfony').value.orders.order,
 })
 
-function afterDataRetrieval( entity_data )
+function afterDataRetrieval( entity_data, init )
 {
 	if( !entity_data.order ) {
-		orderStore.order.id = entity_data.new_order_id;
+		let id = entity_data.id;
+		if( entity_data.new_order_id ) id = entity_data.new_order_id;
+		orderStore.order.id = id;
 	} else{
 		orderStore.$patch({order: entity_data.order});
 	}
@@ -33,7 +36,7 @@ function afterDataRetrieval( entity_data )
 	else orderStore.fn.vendor.set( entity.order.vendor.getAll() )
 
 
-	if( entity_data.order.info.source && entity_data.order.info.reference_number ) {
+	if( entity_data.order && entity_data.order.info.source && entity_data.order.info.reference_number ) {
 		let { info } = entity_data.order;
 		let ref = {
 			source: info.source,
@@ -63,7 +66,9 @@ function setup()
 	let url = data.urls.get.replace(':id', data.id);
 	utils.ajax(url, (d) => {
 
-		let entity_data = JSON.parse(d.data);
+		let entity_data = {};
+		if( d.data ) entity_data = JSON.parse(d.data);
+
 		let init = d.init;
 
 		init.references.forEach( r => {
@@ -73,6 +78,9 @@ function setup()
 				title: r.title
 			})
 		})
+
+		if( init.id ) entity_data.id = init.id;
+		if( init.new_order_id ) entity_data.id = init.new_order_id;
 
 		if( entity_data.source ) {
 			entity.order.convertFromSource(d, (order, logos) => {
@@ -87,6 +95,7 @@ function setup()
 		if( entity_data.order ){
 			entity_data.order = entity.order.patchData(entity_data, init);
 		}
+
 
 		afterDataRetrieval(entity_data);
 	})
@@ -136,7 +145,11 @@ provide('event', {
 
 	<template v-if="!data.loading">
 		<Header />
-		<Order />
+		<Order>
+			<template #info>
+				<Info />
+			</template>
+		</Order>
 	</template>
 
 </template>

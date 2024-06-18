@@ -1,4 +1,5 @@
 <script setup>
+import Search from "@/EntityComponents/Company/Search.vue";
 </script>
 <script>
 import LogoSearch from "@/EntityComponents/Order/Logos/Search.vue";
@@ -21,16 +22,15 @@ export default {
 		publicUrl() {
 			return this.urls.public.replace(':id', this.order.id);
 		},
+		packingSlip(){
+			return this.symfony.api.orders.order.packing_slip.replace(':id', this.order.id);
+		},
 		saveUrl() {
 			return this.urls.save;
 		}
 	},
 
 	methods: {
-		addAttribute()
-		{
-			this.order.info.attributes.push( entity.order.attribute.create() );
-		},
 		getData() {
 			this.updatePricing();
 			return {
@@ -38,6 +38,12 @@ export default {
 				logos: this.logos,
 				vendors: this.vendors,
 			}
+		},
+
+		onVendorSelect( company )
+		{
+			this.order.info.company.name = company.name;
+			this.order.info.company.id = company.id
 		},
 
 		ajaxUrl(url, cb, ecb) {
@@ -127,6 +133,7 @@ export default {
 		<div>
 			<div class="text-end d-flex gap-2">
 				<a :href="publicUrl" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Public Version</a>
+				<a :href="packingSlip" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Packing Slip</a>
 				<Modal :id="'create-po'" :title="'Create POs'" :buttonText="'Create POs'" :buttonClasses="'btn btn-primary'" :icon="'bi-node-plus'" ref="poModal">
 					<CreatePOs :goToPurchaseOrder="goToPurchaseOrder"  />
 				</Modal>
@@ -145,6 +152,7 @@ export default {
 							<option value="sent">Sent</option>
 							<option value="confirmed">Confirmed</option>
 							<option value="closed">Closed</option>
+							<option value="complete">Complete</option>
 						</select>
 						<label for="status">Status</label>
 					</div>
@@ -155,17 +163,6 @@ export default {
 						<label for="client">Title</label>
 					</div>
 				</div>
-					<!--
-				<div class="col-2">
-					<div class="form-floating">
-						<select class="form-select" id="source" v-model="order.info.source">
-							<option value="quote">Quote</option>
-							<option value="magento">Magento</option>
-						</select>
-						<label for="source">Source</label>
-					</div>
-				</div>
-				-->
 				<div class="col-2">
 					<div class="form-floating">
 						<input type="text" class="form-control" id="client" placeholder="Quote Name"
@@ -173,79 +170,17 @@ export default {
 						<label for="client">Reference Number</label>
 					</div>
 				</div>
-				<div>
-					<Modal :id="'quote-info-edit'" :title="'Quote Info'" :buttonText="''"
-						   :buttonClasses="'btn btn-primary'" :icon="'bi-pencil'">
-						<div class="d-flex flex-column gap-3">
-							<div class="d-flex gap-4 align-items-center">
-								<label class="col-2 text-end">Date:</label>
-								<div class="col-2">
-									<input type="date" class="form-control" placeholder="Date"
-										   v-model="order.info.date">
-								</div>
-							</div>
-							<div class="d-flex gap-4 align-items-center">
-								<label class="col-2 text-end">In-Hands Date:</label>
-								<div class="col-2">
-									<input type="date" class="form-control" placeholder="In Hands Date"
-										   v-model="order.info.deliver_by">
-								</div>
-								<div>
-									<label>Is Firm?</label>
-								</div>
-								<div class="col-2">
-									<select class="form-select" id="status" v-model="order.info.deliver_by_strict">
-										<option :value="true">Yes</option>
-										<option :value="false">No</option>
-									</select>
-								</div>
-							</div>
-							<div class="d-flex gap-4">
-								<label class="form-label col-2 text-end pt-2">PO Number:</label>
-								<input class="form-control" type="text" v-model="order.info.po_number" />
-							</div>
-							<div class="d-flex gap-4">
-								<label class="form-label col-2 text-end pt-2">Client Name:</label>
-								<input class="form-control" type="text" v-model="order.client.name"/>
-							</div>
-							<div class="d-flex gap-4">
-								<label class="form-label col-2 text-end pt-2">Client Email:</label>
-								<input class="form-control" type="text" v-model="order.client.email"/>
-							</div>
-							<div class="d-flex gap-4">
-								<label class="form-label col-2 text-end pt-2">Client Info:</label>
-								<textarea class="form-control" v-model="order.client.info"></textarea>
-							</div>
-							<div class="d-flex gap-4">
-								<label class="form-label col-2 text-end pt-2">Ship To:</label>
-								<textarea class="form-control" v-model="order.client.ship_to"></textarea>
-							</div>
-							<div class="d-flex gap-4">
-								<label class="form-label col-2 text-end pt-2">Order Notes (Public):</label>
-								<textarea class="form-control" v-model="order.info.notes.public"></textarea>
-							</div>
-							<div class="d-flex gap-4">
-								<label class="form-label col-2 text-end pt-2">Order Notes (Private):</label>
-								<textarea class="form-control" v-model="order.info.notes.private"></textarea>
-							</div>
 
-							<div v-for="attribute in order.info.attributes" class="d-flex gap-2 align-items-center">
-								<div class="col-2">
-									<input class="form-control text-end" type="text" placeholder="Name" v-model="attribute.name">
-								</div>
-								<div>:</div>
-								<input class="form-control" type="text" placeholder="Value" v-model="attribute.value">
-							</div>
-
-							<div class="d-flex gap-4">
-								<div class="col-2"></div>
-								<div>
-									<button class="btn btn-primary" @click="addAttribute"><i class="bi bi-plus-circle"></i> Add Attribute</button>
-								</div>
-							</div>
+				<div class="col-3">
+					<div class="input-group">
+						<div class="form-floating">
+							<input type="text" class="form-control" placeholder="Vendor" v-model="order.info.company.name" disabled>
+							<label>Company</label>
 						</div>
-					</Modal>
+						<Search :on-select="onVendorSelect" :button-text="''" :button-icon="'bi-pencil'" />
+					</div>
 				</div>
+
 			</div>
 		</div>
 	</div>

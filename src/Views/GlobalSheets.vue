@@ -68,8 +68,7 @@ export default {
 							<span class="h3">{{ spreadsheet.name }}</span>
 							<br>
 							<a :href="`https://docs.google.com/spreadsheets/d/${spreadsheet.google_sheet_id}/edit#gid=0`" target="_blank">View Sheet</a> |
-							<a :href="`https://preview.promoretailer.dev/magento/import/products/generate/${spreadsheet.google_sheet_id}/${spreadsheet.zoho_id}/`" target="_blank">View Imports</a> |
-							<a :href="`https://preview.promoretailer.dev/zoho/supplier/export/${spreadsheet.id}/`" target="_blank">View Zoho Exports</a>
+							<a :href="`https://preview.promoretailer.dev/magento/import/products/generate/${spreadsheet.google_sheet_id}/${spreadsheet.zoho_id}/`" target="_blank">View Imports</a>
 						</div>
 						<div class="col-auto">
 							<div class="btn-group">

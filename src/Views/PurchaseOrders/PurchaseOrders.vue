@@ -69,9 +69,16 @@ export default {
 				<td @click="viewSingle(quote.id)">{{ quote.id }}</td>
 				<td @click="viewSingle(quote.id)">{{ quote.status }}</td>
 				<td @click="viewSingle(quote.id)">{{ quote.vendor }}</td>
+				<template v-if="quote.data && JSON.parse(quote.data).po">
 				<td>{{ JSON.parse(quote.data).po.info.deliver_by }}</td>
 				<td>{{ JSON.parse(quote.data).po.info.follow_up_date }}</td>
 				<td>{{ JSON.parse(quote.data).po.info.follow_up_note }}</td>
+				</template>
+				<template v-else>
+					<td></td>
+					<td></td>
+					<td></td>
+				</template>
 <!--				<td @click="viewSingle(quote.id)">{{ quote.created }}</td>-->
 				<td @click="viewSingle(quote.id)">{{ formatPricing(quote.total) }}</td>
 				<td class="delete text-end"></td>

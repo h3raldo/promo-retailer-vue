@@ -2,6 +2,7 @@
 import Header from "@/Views/Quotes/Quote/Header.vue";
 import Loader from "@/components/globals/Loader.vue";
 import Order from "@/EntityComponents/Order/Order.vue";
+import Info from "@/Views/Quotes/Quote/Info.vue";
 
 import {provide, inject, computed, reactive} from "vue";
 import {onBeforeRouteLeave, useRoute, useRouter} from "vue-router";
@@ -107,7 +108,11 @@ provide('event', {
 
 	<template v-if="!data.loading">
 		<Header />
-		<Order />
+		<Order>
+			<template #info>
+				<Info />
+			</template>
+		</Order>
 	</template>
 
 </template>

@@ -3,6 +3,7 @@ import {reactive, ref, toRaw} from "vue";
 import api from "@/js/api.js";
 import entity from "@/js/entity.js";
 import pricing from "@/js/pricing.js";
+import utils from "@/js/utils.js";
 
 export const useOrderStore = defineStore('order', () => {
 
@@ -18,7 +19,11 @@ export const useOrderStore = defineStore('order', () => {
         item: {
             add( new_item = {} )
             {
+                console.log('new_item', new_item);
                 let item = Object.assign( entity.quote.item.create(), new_item)
+
+                console.log('item added', item);
+
                 if( item.sizes.length === 1 ) item.sizes = entity.order.item.defaults.sizes();
                 order.items.push(item);
 
@@ -43,10 +48,11 @@ export const useOrderStore = defineStore('order', () => {
                 order.items.splice(fromIndex, 1);
                 order.items.splice(toIndex, 0, element);
             },
-            addSageItem( sage_item )
+            async addSageItem( sage_item )
             {
-                let item = api.sage.toQuoteItem(sage_item);
-                api.sage.postCreation(item, vendors);
+                let item= await api.sage.toQuoteItem(sage_item);
+                console.log('supplier added?', item.info.supplier);
+                // api.sage.postCreation(item, vendors);
                 fn.item.add(item);
             },
             replaceWithSageItem( index, sage_item )

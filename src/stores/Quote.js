@@ -43,10 +43,11 @@ export const useQuoteStore = defineStore('quote', () => {
                 order.items.splice(fromIndex, 1);
                 order.items.splice(toIndex, 0, element);
             },
-            addSageItem( sage_item )
+            async addSageItem( sage_item )
             {
-                let item = api.sage.toQuoteItem(sage_item);
-                api.sage.postCreation(item, vendors);
+                let item= await api.sage.toQuoteItem(sage_item);
+                console.log('supplier added?', item.info.supplier);
+                // api.sage.postCreation(item, vendors);
                 fn.item.add(item);
             },
             replaceWithSageItem( index, sage_item )

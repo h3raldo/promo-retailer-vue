@@ -118,6 +118,12 @@ export default {
 									<span>Closed</span>
 								</label>
 							</div>
+							<div>
+								<label class="form-check-label bg-gray px-2 rounded small">
+									<input class="form-check-input me-1" type="checkbox" name="status[]" value="complete" v-model="searchParams.status">
+									<span>Complete</span>
+								</label>
+							</div>
 						</div>
 					</div>
 					<div>

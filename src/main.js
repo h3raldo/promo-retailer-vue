@@ -31,7 +31,11 @@ const routes = [
     { path: window.symfony.views.images_update, component: () => import('@/Views/Images/UpdateImages.vue') },
     { path: window.symfony.views.global_sheets, component: () => import('@/Views/GlobalSheets.vue') },
     { path: window.symfony.views.companies, component: () => import('@/Views/Companies/Companies.vue') },
-    { path: window.symfony.views.companies_company, component: () => import('@/Views/Companies/Company/View.vue') },
+    {
+        name: 'companies_company',
+        path: window.symfony.views.companies_company,
+        component: () => import('@/Views/Companies/Company/View.vue')
+    },
     { path: window.symfony.views.contacts, component: () => import('@/Views/Contacts/Contacts.vue') },
     { path: window.symfony.views.contacts_contact, component: () => import('@/Views/Contacts/Contact/View.vue') },
 ]

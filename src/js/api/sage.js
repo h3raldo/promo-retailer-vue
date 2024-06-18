@@ -3,7 +3,7 @@ import entity from "@/js/entity.js";
 import utils from "@/js/utils.js";
 export default
 {
-    toQuoteItem( sageItem )
+    async toQuoteItem( sageItem, cb )
     {
         sageItem = structuredClone(sageItem);
         let item = entity.order.item.create();
@@ -18,6 +18,7 @@ export default
         item.info.supplier.sage_id = sageItem.suppId;
         item.info.supplier.name = sageItem.supplier.coName;
 
+
         let sageOptions = this.getOptions(sageItem);
         item.options = sageOptions.options;
         if( sageOptions.sizes.length > 0 )
@@ -26,6 +27,30 @@ export default
             item.colors = sageOptions.colors;
         item.cost.material.tiers = this.getCostTiers(sageItem)
         item.subitems[0].qty = pricing.getMinimum(item);
+
+        return await this.matchSupplierWithCompany( sageItem.supplier, item);
+    },
+
+    async matchSupplierWithCompany( sage_company, item )
+    {
+        let name = sage_company.coName.toLowerCase();
+
+        let url = window.symfony.api.companies.search + '?name=' + name;
+
+        let d = await utils.ajaxAsync(url);
+
+        console.log('companies', d);
+        if( !d || !d.length ) return item;
+
+        let company = d[0];
+        console.log('using', company);
+
+        item.info.supplier = {
+            id: company.id,
+            name: company.name,
+            company_id: company.id
+        }
+
         return item;
     },
 
@@ -130,6 +155,7 @@ export default
      */
     postCreation( item, vendors )
     {
+        console.log(item);
         let matched_vendor = vendors.filter( v => v.sage_id === item.info.supplier.sage_id );
         if( matched_vendor.length > 0 ){
             item.info.supplier = matched_vendor[0];

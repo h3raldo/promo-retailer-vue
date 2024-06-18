@@ -20,11 +20,18 @@ function create(id){
             deliver_by: date.toISOString().split('T')[0],
             deliver_by_strict: false,
             attributes: [],
+            events: [],
             notes: {
                 public: '',
                 private: '',
                 flags: []
             },
+            company: {
+                id: '',
+                name: '',
+                parent: '',
+                parent_name: '',
+            }
         },
         config: {
             tax: {
@@ -64,6 +71,8 @@ function patchData( data, init )
     if( typeof order.info.tax === 'undefined' ) order.info.tax = false;
     if( typeof order.totals.tax === 'undefined' ) order.totals.tax = 0;
     if( typeof order.totals.paid === 'undefined' ) order.totals.paid = 0;
+    if( typeof order.info.company === 'undefined' ) order.info.company = {name: '', id: '', parent: '', parent_name: ''};
+    if( typeof order.info.events === 'undefined' ) order.info.events = [];
 
     order.fees.forEach( f => {
         if( typeof f.config === 'undefined' ) f.config = {tax: {enabled: true}}
@@ -145,7 +154,18 @@ function convertFromSource( data, cb )
 
             addFees( magento_order, order );
 
-            cb(order, logos);
+            if( magento_order.company_id && magento_order.company_id !== '' ){
+                utils.ajax(window.symfony.api.companies.company.get.replace(':id', magento_order.company_id), (res) => {
+                    if( res.entity ) {
+                        order.info.company.name = res.entity.name;
+                        order.info.company.parent_name = res.entity.parent_name;
+                        order.info.company.id = res.entity.id;
+                    }
+                    cb(order, logos);
+                })
+            } else{
+                cb(order, logos);
+            }
         }, (error) => {
             console.log('oh no', error);
         });

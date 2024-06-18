@@ -4,6 +4,8 @@ import Search from "@/EntityComponents/Company/Search.vue";
 </script>
 
 <script>
+import entity from "@/js/entity.js";
+
 export default {
 	data() {
 		return {
@@ -32,12 +34,6 @@ export default {
 		setImage(e){
 			this.item.info.image.primary = e.target.value;
 		},
-		companySelected(company){
-			console.log('selected', company);
-			this.searchingCompanies = false;
-			this.item.info.supplier.name = company.name;
-			this.item.info.supplier.company_id = company.id;
-		}
 	}
 }
 </script>

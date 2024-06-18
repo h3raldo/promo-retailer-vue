@@ -1,6 +1,6 @@
 <script>
 export default {
-	props: ['labels'],
+	props: ['labels', 'onTabChange', 'first'],
 	data(){
 		return {
 			activeLabel: this.labels[0]
@@ -8,13 +8,19 @@ export default {
 	},
 	methods: {
 		onLabelClick(label) {
-			this.activeLabel = label.replace(' ', '')
+			this.activeLabel = label.replace(' ', '');
+			if( this.onTabChange ) this.onTabChange(label);
 		},
 		tabClasses(label){
 			let classes = 'nav-link'
 			if( label === this.activeLabel )  classes += ' active';
 			return classes;
 		}
+	},
+	mounted() {
+		if( !this.first ) return;
+
+		this.activeLabel = this.first;
 	}
 }
 </script>

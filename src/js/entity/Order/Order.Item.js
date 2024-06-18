@@ -111,12 +111,20 @@ let defaults = {
     },
 }
 
+function addCompany( company, item )
+{
+    item.info.supplier.id = company.id;
+    item.info.supplier.name = company.name;
+    item.info.supplier.company_id = company.id;
+}
+
 export default {
     create,
     defaults,
     color,
     size,
     image,
+    addCompany,
     subitem: OrderItemSubitem,
     tier: OrderItemTier,
     option: OrderItemOption,

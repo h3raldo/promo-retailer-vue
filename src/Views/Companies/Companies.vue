@@ -1,5 +1,6 @@
 <script setup>
 import Loader from "@/components/globals/Loader.vue";
+import Tabs from "@/components/globals/Tabs.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -8,7 +9,8 @@ export default {
 	data() {
 		return {
 			loading: false,
-			companies: []
+			type: 'client',
+			companies: [],
 		}
 	},
 	inject: ['symfony', 'alert'],
@@ -17,7 +19,7 @@ export default {
 			let self = this;
 			if (!params) params = '';
 
-			let url = this.symfony.api.companies.search + '?' + params;
+			let url = this.symfony.api.companies.search + `?type=${this.type}&${params}`;
 
 			self.loading = true;
 			utils.ajax(url, (data) => {
@@ -45,6 +47,10 @@ export default {
 				this.alert('Error Creating', 'danger');
 			})
 		},
+		onTabChange(label){
+			this.type = label;
+			this.retrieve();
+		}
 	},
 	mounted() {
 		this.loading = true;
@@ -57,19 +63,28 @@ export default {
 
 	<div class="text-end pb-3 bg-gray p-3 mb-2 d-flex justify-content-between align-items-center">
 		<h3 class="m-0"><i class="bi bi-building"></i> Companies/Vendors</h3>
-		<button class="btn btn-primary p-3" @click="createNew"><i class="bi bi-plus-square-fill"></i> Create New
-		</button>
+		<button class="btn btn-primary p-3" @click="createNew"><i class="bi bi-plus-square-fill"></i> Create New</button>
 	</div>
+
+	<ul class="nav nav-tabs pt-3">
+		<li class="nav-item">
+			<button :class="'nav-link' + ( type === 'client' ? ' active' : '' )" @click="onTabChange('client')">Clients</button>
+		</li>
+		<li class="nav-item">
+			<button :class="'nav-link' + ( type === 'vendor' ? ' active' : '' )" @click="onTabChange('vendor')">Vendors</button>
+		</li>
+	</ul>
 
 	<Loader v-if="loading"/>
 
 	<table v-if="!loading" class="table table-hover">
 		<thead>
 		<tr>
-			<th>ID</th>
+			<th class="col-1">ID</th>
 			<th class="col-1">Type</th>
 			<th>Company</th>
-			<th>Child</th>
+			<th class="col-1 text-center">Supplier</th>
+			<th class="col-1 text-center">Decorator</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -80,17 +95,17 @@ export default {
 				<span v-else class="badge text-bg-secondary text-end">default</span>
 			</td>
 			<td>
-				<template v-if="company.parent">
-					{{ company.parent }}
-				</template>
-				<template v-else>
-					{{ company.name }}
-				</template>
+				{{ company.name }}
 			</td>
-			<td>
-				<template v-if="company.parent">
-					{{ company.name }}
-				</template>
+			<td class="text-center">
+				<span v-if="company.data.type && company.data.type.supplier">
+					<i class="bi bi-check-square-fill"></i>
+				</span>
+			</td>
+			<td class="text-center">
+				<span v-if="company.data.type && company.data.type.decorator">
+					<i class="bi bi-check-square-fill"></i>
+				</span>
 			</td>
 		</tr>
 		</tbody>

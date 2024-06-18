@@ -18,6 +18,7 @@ function create(id){
                 flags: []
             },
             attributes: [],
+            events: [],
             tax: false,
             date: date.toISOString().split('T')[0],
             deliver_by: date.toISOString().split('T')[0],
@@ -68,6 +69,7 @@ function patchData( data, init )
 
     if( typeof quote.info.po_number === 'undefined' ) quote.info.po_number = '';
     if( typeof quote.info.attributes === 'undefined' ) quote.info.attributes = [];
+    if( typeof quote.info.events === 'undefined' ) quote.info.events = [];
     if( typeof quote.config === 'undefined' ) quote.config = { tax: { enabled: false } }
     if( typeof quote.info.tax === 'undefined' ) quote.info.tax = false;
     if( typeof quote.totals.tax === 'undefined' ) quote.totals.tax = 0;

@@ -4,6 +4,7 @@ import Header from "@/Views/PurchaseOrders/PurchaseOrder/Header.vue";
 import Items from "@/EntityComponents/Order/Items.vue";
 import Tabs from "@/components/globals/Tabs.vue";
 import References from "@/components/globals/References.vue";
+import Info from "@/Views/PurchaseOrders/PurchaseOrder/Info.vue";
 </script>
 <script>
 import {computed} from "vue";
@@ -21,7 +22,7 @@ export default{
 			loading: true,
 			urls: this.symfony.api.purchase_orders.order,
 			po: purchaseOrderStore.po,
-			tabs: ['Items', 'Vendor', 'References']
+			tabs: ['Info', 'Items', 'Vendor', 'References']
 		}
 	},
 
@@ -103,7 +104,11 @@ export default{
 	<template v-if="!loading">
 		<Header />
 
-		<Tabs :labels="tabs">
+		<Tabs :labels="tabs" :first="'Items'">
+
+			<template #Info>
+				<Info />
+			</template>
 
 			<template #Items>
 				<Items />

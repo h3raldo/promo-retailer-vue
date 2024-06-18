@@ -1,9 +1,13 @@
-import Order from "@/js/entity/Order.js";
-import Quote from "@/js/entity/Quote.js";
-import PurchaseOrder from "@/js/entity/PurchaseOrder.js";
+import order from "@/js/entity/Order.js";
+import quote from "@/js/entity/Quote.js";
+import purchaseOrder from "@/js/entity/PurchaseOrder.js";
+import customer from "@/js/entity/Customer.js";
+import event from "@/js/entity/Event.js";
 
 export default {
-    order: Order,
-    quote: Quote,
-    purchaseOrder: PurchaseOrder
+    order,
+    quote,
+    purchaseOrder,
+    customer,
+    event,
 }

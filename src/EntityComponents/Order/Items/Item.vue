@@ -82,7 +82,7 @@ export default {
 		},
 		getPlacementLogoClasses( variation ){
 			let classes = 'p-1 text-center ';
-			if( variation.includes('dark') ) classes += 'bg-secondary';
+			if( variation && variation.includes('dark') ) classes += 'bg-secondary';
 			else classes += 'bg-light'
 
 			return classes;
@@ -97,8 +97,12 @@ export default {
 			<h5><i v-if="item.info.hidden" class="bi bi-eye-slash me-1"></i>{{ item.info.name }}</h5>
 
 			<div class="mb-2">
-				<span class="badge text-bg-secondary me-1" v-if="item.info.sku">Item # {{ item.info.sku }}</span>
-				<span class="badge text-bg-secondary me-1" v-if="item.info.supplier.name">Supplier: {{ item.info.supplier.name }}</span>
+				<span class="badge text-bg-secondary me-1" v-if="item.info.sku">{{ item.info.sku }}</span>
+				<span class="badge text-bg-secondary me-1" v-if="item.info.supplier.name">{{ item.info.supplier.name }}</span>
+
+				<span class="badge text-bg-primary me-1" v-if="item.notes.flags.includes('RP')">Require Proof</span>
+				<span class="badge text-bg-primary me-1" v-if="item.notes.flags.includes('NP')">Needs Package</span>
+
 				<span v-if="!item.info.supplier || !item.info.supplier.company_id" class="text-danger">
 					<small><i class="bi bi-info-circle"></i> Supplier Unverified</small>
 				</span>
@@ -118,8 +122,8 @@ export default {
 						<a :href="placement.logo.url" target="_blank"><img :src="placement.logo.url" width="100"  alt="" /></a>
 					</span>
 				</div>
-			</div>
 
+			</div>
 
 			<div class="alert alert-light d-flex align-items-center mb-2" role="alert" v-if="item.notes.public.length">
 				<i class="bi bi-info-circle me-2"></i>
