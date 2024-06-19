@@ -22,6 +22,9 @@ export default{
 			loading: true,
 			urls: this.symfony.api.purchase_orders.order,
 			po: purchaseOrderStore.po,
+			entities: {
+				order: {}
+			},
 			tabs: ['Info', 'Items', 'Vendor', 'References']
 		}
 	},
@@ -31,11 +34,12 @@ export default{
 			edited: computed(() => purchaseOrderStore.edited ),
 			urls: computed(() => this.urls ),
 			po: computed(() => purchaseOrderStore.po ),
+			entities: computed(() => this.entities ),
 			order: computed(() => purchaseOrderStore.po ),
 			fn: purchaseOrderStore.fn,
 			references: computed(() => purchaseOrderStore.po.info.references ),
-			vendors: purchaseOrderStore.vendors,
-			logos: purchaseOrderStore.logos,
+			vendors: computed(() => purchaseOrderStore.vendors ),
+			logos: computed(() => purchaseOrderStore.logos ),
 			updateTotals: purchaseOrderStore.updateTotals,
 			updatePricing: purchaseOrderStore.updatePricing
 		}
@@ -49,11 +53,19 @@ export default{
 		let self = this;
 		let url = self.urls.get.replace(':id', self.id);
 		purchaseOrderStore.$reset();
+
 		utils.ajax(url, (d) => {
 
 			let entity_data = d;
 
-			if( entity_data.source && entity_data.source_id ) {
+			if( entity_data.entities && entity_data.entities.order ){
+				self.entities.order = JSON.parse( entity_data.entities.order.data );
+			}
+
+			if ( !entity_data.po ) {
+				self.loading = false;
+				purchaseOrderStore.po.id = entity_data.id;
+			} else if( entity_data.source && entity_data.source_id ) {
 				utils.ajax(self.symfony.orders.order.get.replace(':id', entity_data.source_id), r => {
 					const order = JSON.parse(r.data);
 					order.logos.forEach( l => purchaseOrderStore.logos.push(l));

@@ -3,8 +3,24 @@ import Events from "@/components/globals/properties/Events.vue";
 </script>
 <script>
 export default {
-	inject: ['po'],
+	data(){
+		return {
+
+		}
+	},
+	inject: ['po', 'entities'],
+	computed: {
+		hasOrderShipTo(){
+			return this.entities.order
+			  && this.entities.order.order
+			  && this.entities.order.order.client
+			  && this.entities.order.order.client.ship_to
+		}
+	},
 	methods: {
+		copyToShipTo(){
+			this.po.info.ship_to = this.entities.order.order.client.ship_to;
+		}
 	}
 }
 </script>
@@ -69,7 +85,11 @@ export default {
 		<div class="d-flex gap-4">
 			<label class="form-label col-2 text-end pt-2">Ship To:</label>
 			<div class="col-5">
-				<textarea class="form-control" v-model="po.info.ship_to"></textarea>
+				<textarea class="form-control" v-model="po.info.ship_to" rows="4"></textarea>
+			</div>
+			<div class="col-5" v-if="hasOrderShipTo">
+				<pre>{{ entities.order.order.client.ship_to }}</pre>
+				<button class="btn btn-outline-primary" @click="copyToShipTo">Use Order Shipping Address</button>
 			</div>
 		</div>
 
@@ -86,7 +106,7 @@ export default {
 		<div class="d-flex gap-4">
 			<label class="form-label col-2 text-end pt-2">Bill To:</label>
 			<div class="col-5">
-				<textarea class="form-control" v-model="po.info.bill_to"></textarea>
+				<textarea class="form-control" v-model="po.info.bill_to" rows="4"></textarea>
 			</div>
 		</div>
 

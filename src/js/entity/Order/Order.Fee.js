@@ -29,6 +29,14 @@ function create(){
     }
 }
 
+function addCompany( company, item )
+{
+    item.vendor.id = company.id;
+    item.vendor.name = company.name;
+    item.vendor.company_id = company.id;
+}
+
 export default {
-    create: create
+    create,
+    addCompany
 }

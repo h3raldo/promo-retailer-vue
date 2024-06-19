@@ -24,6 +24,10 @@ export default {
 		}
 	},
 
+	created() {
+		console.log('created header', this.po.items);
+	},
+
 	methods: {
 		getData(){
 			return {

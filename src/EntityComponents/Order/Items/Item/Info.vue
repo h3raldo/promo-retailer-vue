@@ -21,19 +21,17 @@ export default {
 		}
 	},
 
-	computed: {
-		showSupplier(){
-			if( !this.order.config || !this.order.config.decoration )
-				return true;
-
-			return this.order.config.decoration.supplier;
-		}
-	},
-
 	methods: {
 		setImage(e){
 			this.item.info.image.primary = e.target.value;
 		},
+		supplierSelected(company){
+			this.order.fees.forEach( f => {
+				if( !f.name.includes(this.item.info.name) ) return;
+				console.log('adding supplier to matching fee', f);
+				entity.order.fee.addCompany(company, f);
+			})
+		}
 	}
 }
 </script>
@@ -60,7 +58,7 @@ export default {
 
 			<div class="border rounded p-2">
 				<span class="text-secondary mb-0">Supplier</span>
-				<VendorSelect v-model="item.info.supplier" />
+				<VendorSelect v-model="item.info.supplier" :onSelect="supplierSelected" />
 			</div>
 
 			<div class="d-flex gap-3">

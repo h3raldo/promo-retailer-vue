@@ -11,7 +11,7 @@ export default {
 		}
 	},
 
-	props: ['modelValue'],
+	props: ['modelValue', 'onSelect'],
 	inject: ['vendors'],
 
 	computed: {
@@ -35,6 +35,7 @@ export default {
 				name: company.name,
 				company_id: company.id
 			})
+			if( this.onSelect ) this.onSelect(company);
 			this.isSearching = false;
 		}
 	}

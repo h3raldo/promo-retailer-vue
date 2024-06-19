@@ -138,6 +138,8 @@ export const usePurchaseOrderStore = defineStore('purchaseOrder', () => {
     function $reset()
     {
         Object.assign(po, JSON.parse(JSON.stringify(entity.purchaseOrder.create(false))));
+        po.items = [];
+        po.fees = [];
         fn.hasEdited(false);
     }
 
