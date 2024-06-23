@@ -14,8 +14,6 @@ function create(id){
             date: date.toISOString().split('T')[0],
             deliver_by: date.toISOString().split('T')[0],
             deliver_by_strict: false,
-            follow_up_date: '',
-            follow_up_note: '',
             ship_to: `Promo Retailer \n14655 Northwest Fwy, Suite 127C \nHouston, TX 77040`,
             ship_blind: false,
             bill_to: `Promo Retailer \n14655 Northwest Fwy, Suite 127C \nHouston, TX 77040`,
@@ -77,12 +75,16 @@ function fromOrder( order, company_id, decorator_code)
 
     po.info.deliver_by = order.info.deliver_by;
     po.info.deliver_by_strict = order.info.deliver_by_strict;
+    po.info.title = order.info.title;
 
     order.items.forEach( item => {
         if( is_decorator ){
             let matched = false;
             item.decoration.placements.forEach( p => {
-                if( p.decorator.info.id === decorator_code ) matched = true;
+                console.log(p);
+                if( p.decorator && p.decorator.info && p.decorator.info.id
+                    && entity.order.vendor.getDecoratorCompanyID(p.decorator.info.id) === company_id
+                ) matched = true;
             })
             if( matched === true ) po.items.push( fromOrderItemPrepare(item, is_decorator) );
             return;
@@ -147,6 +149,22 @@ function fromOrderItemPrepare( item, is_decorator )
                     t.fixed = true;
                 })
             })
+        })
+    })
+
+    item.sizes.forEach( s => {
+        s.cost.forEach( t => {
+            t.price = t.cost;
+            t.margin = 0;
+            t.fixed = true;
+        })
+    })
+
+    item.colors.forEach( s => {
+        s.cost.forEach( t => {
+            t.price = t.cost;
+            t.margin = 0;
+            t.fixed = true;
         })
     })
 

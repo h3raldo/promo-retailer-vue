@@ -98,12 +98,12 @@ export default {
 				{{ company.name }}
 			</td>
 			<td class="text-center">
-				<span v-if="company.data.type && company.data.type.supplier">
+				<span v-if="company.data && company.data.type && company.data.type.supplier">
 					<i class="bi bi-check-square-fill"></i>
 				</span>
 			</td>
 			<td class="text-center">
-				<span v-if="company.data.type && company.data.type.decorator">
+				<span v-if="company.data && company.data.type && company.data.type.decorator">
 					<i class="bi bi-check-square-fill"></i>
 				</span>
 			</td>

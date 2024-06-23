@@ -19,12 +19,14 @@ function create(id){
             },
             attributes: [],
             events: [],
-            tax: false,
+            tax: true,
             date: date.toISOString().split('T')[0],
             deliver_by: date.toISOString().split('T')[0],
-            deliver_by_strict: false
+            deliver_by_strict: false,
+            delivery_method: '',
+            payment_method: '',
         },
-        config: { tax: { enabled: false } },
+        config: { tax: { enabled: true } },
         client: {
             name: 'New Client',
             email: '',
@@ -74,6 +76,8 @@ function patchData( data, init )
     if( typeof quote.info.tax === 'undefined' ) quote.info.tax = false;
     if( typeof quote.totals.tax === 'undefined' ) quote.totals.tax = 0;
     if( typeof quote.totals.paid === 'undefined' ) quote.totals.paid = 0;
+    if( typeof quote.info.delivery_method === 'undefined' ) quote.info.delivery_method = '';
+    if( typeof quote.info.payment_method === 'undefined' ) quote.info.payment_method = '';
 
     quote.fees.forEach( f => {
         if( typeof f.config === 'undefined' ) f.config = {tax: {enabled: true}}

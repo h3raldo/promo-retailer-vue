@@ -65,27 +65,30 @@ export default{
 			if ( !entity_data.po ) {
 				self.loading = false;
 				purchaseOrderStore.po.id = entity_data.id;
-			} else if( entity_data.source && entity_data.source_id ) {
-				utils.ajax(self.symfony.orders.order.get.replace(':id', entity_data.source_id), r => {
-					const order = JSON.parse(r.data);
-					order.logos.forEach( l => purchaseOrderStore.logos.push(l));
-					let transformedOrder = entity.purchaseOrder.fromOrder(order.order, entity_data.company, entity_data.decorator_code);
-					purchaseOrderStore.$patch({po: transformedOrder});
-					purchaseOrderStore.po.id = self.id;
-					purchaseOrderStore.updatePricing();
 
-					purchaseOrderStore.po.info.references.push({
-						source: entity_data.source,
-						reference_number: entity_data.source_id,
-					})
+				if( entity_data.source && entity_data.source_id ) {
+					utils.ajax(self.symfony.orders.order.get.replace(':id', entity_data.source_id), r => {
+						const order = JSON.parse(r.data);
+						order.logos.forEach( l => purchaseOrderStore.logos.push(l));
+						let transformedOrder = entity.purchaseOrder.fromOrder(order.order, entity_data.company, entity_data.decorator_code);
+						purchaseOrderStore.$patch({po: transformedOrder});
+						purchaseOrderStore.po.id = self.id;
+						purchaseOrderStore.updatePricing();
 
-					utils.ajax(self.symfony.api.companies.company.get.replace(':id', entity_data.company), c => {
-						purchaseOrderStore.po.info.vendor.info = c;
-						purchaseOrderStore.po.info.vendor.name = c.entity.name;
-						purchaseOrderStore.po.info.vendor.id = entity_data.company;
-						self.loading = false;
-					})
-				});
+						purchaseOrderStore.po.info.references.push({
+							source: entity_data.source,
+							reference_number: entity_data.source_id,
+						})
+
+						utils.ajax(self.symfony.api.companies.company.get.replace(':id', entity_data.company), c => {
+							purchaseOrderStore.po.info.vendor.info = c;
+							purchaseOrderStore.po.info.vendor.name = c.entity.name;
+							purchaseOrderStore.po.info.vendor.id = entity_data.company;
+							self.loading = false;
+						})
+					});
+				}
+
 			} else{
 				self.loading = false;
 				purchaseOrderStore.po.id = entity_data.id;

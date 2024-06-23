@@ -105,6 +105,7 @@ export default {
 					<div class="form-floating">
 						<select class="form-select" id="status" v-model="po.info.status">
 							<option value="open">Open</option>
+							<option value="sent">Sent</option>
 							<option value="closed">Closed</option>
 						</select>
 						<label for="status">Status</label>

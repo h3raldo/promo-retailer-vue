@@ -142,7 +142,10 @@ export default {
 		</tbody>
 		<tfoot>
 		<tr>
-			<th colspan="999" class="text-end">
+			<th colspan="999">
+
+			</th>
+<!--			<th colspan="999" class="text-end">
 
 				<table class="float-end">
 					<tr>
@@ -162,7 +165,7 @@ export default {
 						<td class="text-start">{{ quotes.totals.margin }}%</td>
 					</tr>
 				</table>
-			</th>
+			</th>-->
 		</tr>
 		</tfoot>
 	</table>

@@ -89,7 +89,7 @@
 			<tr>
 				<th>ID</th>
 				<th class="">Company</th>
-				<th class="">Items</th>
+				<th class="">Items/Placements</th>
 				<th></th>
 			</tr>
 			</thead>

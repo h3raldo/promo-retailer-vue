@@ -141,12 +141,21 @@ export const useOrderStore = defineStore('order', () => {
         hasEdited();
     }
 
+    function $reset()
+    {
+        Object.assign(order, JSON.parse(JSON.stringify(entity.order.create(false))));
+        logos.length = 0;
+        vendors.length = 0;
+        hasEdited(false);
+    }
+
     return {
         order,
         logos,
         vendors,
         edited,
-        fn: fn,
+        fn,
+        $reset,
         updatePricing,
         updateTotals,
         hasEdited,

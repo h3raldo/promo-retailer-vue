@@ -63,6 +63,8 @@ function afterDataRetrieval( entity_data, init )
 
 function setup()
 {
+	orderStore.$reset();
+
 	let url = data.urls.get.replace(':id', data.id);
 	utils.ajax(url, (d) => {
 

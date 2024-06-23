@@ -55,20 +55,6 @@ export default {
 		</div>
 
 		<div class="d-flex gap-4 align-items-center">
-			<label class="col-2 text-end">Follow-Up Date:</label>
-			<div class="col-2">
-				<input type="date" class="form-control" placeholder="Date"
-					   v-model="po.info.follow_up_date">
-			</div>
-			<div>
-				Note:
-			</div>
-			<div class="col">
-				<input class="form-control" type="text" v-model="po.info.follow_up_note"/>
-			</div>
-		</div>
-
-		<div class="d-flex gap-4 align-items-center">
 			<label class="col-2 text-end">Events:</label>
 			<div class="col">
 				<div class="bg-light p-3">

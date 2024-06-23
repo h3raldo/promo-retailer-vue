@@ -52,7 +52,7 @@ export default {
 						<div class="pb-2">
 							<div class="form-floating">
 								<input class="form-control" type="text" name="data_string" id="data_string" placeholder="Search anything in quote" v-model="searchParams.data_string">
-								<label class="form-label" for="data_string">Quote Search</label>
+								<label class="form-label" for="data_string">Search</label>
 							</div>
 						</div>
 					</div>
@@ -96,8 +96,8 @@ export default {
 							<label class="fw-bold">Status</label>
 							<div>
 								<label class="form-check-label bg-gray px-2 rounded small">
-									<input class="form-check-input me-1" type="checkbox" name="status[]" value="draft" v-model="searchParams.status">
-									<span>Draft</span>
+									<input class="form-check-input me-1" type="checkbox" name="status[]" value="open" v-model="searchParams.status">
+									<span>Open</span>
 								</label>
 							</div>
 							<div>
@@ -108,43 +108,8 @@ export default {
 							</div>
 							<div>
 								<label class="form-check-label bg-gray px-2 rounded small">
-									<input class="form-check-input me-1" type="checkbox" name="status[]" value="confirmed" v-model="searchParams.status">
-									<span>Confirmed</span>
-								</label>
-							</div>
-							<div>
-								<label class="form-check-label bg-gray px-2 rounded small">
-									<input class="form-check-input me-1" type="checkbox" name="status[]" value="pushed" v-model="searchParams.status">
-									<span>Pushed</span>
-								</label>
-							</div>
-							<div>
-								<label class="form-check-label bg-gray px-2 rounded small">
 									<input class="form-check-input me-1" type="checkbox" name="status[]" value="closed" v-model="searchParams.status">
 									<span>Closed</span>
-								</label>
-							</div>
-						</div>
-					</div>
-					<div>
-						<div class="d-flex gap-1">
-							<label class="fw-bold">Category</label>
-							<div>
-								<label class="form-check-label bg-gray px-2 rounded small">
-									<input class="form-check-input me-1" type="checkbox" name="category[]" value="standard" v-model="searchParams.category">
-									<span>Standard</span>
-								</label>
-							</div>
-							<div>
-								<label class="form-check-label bg-gray px-2 rounded small">
-									<input class="form-check-input me-1" type="checkbox" name="category[]" value="bid" v-model="searchParams.category">
-									<span>Bid</span>
-								</label>
-							</div>
-							<div>
-								<label class="form-check-label bg-gray px-2 rounded small">
-									<input class="form-check-input me-1" type="checkbox" name="category[]" value="idea" v-model="searchParams.category">
-									<span>Idea</span>
 								</label>
 							</div>
 						</div>

@@ -15,10 +15,12 @@ function create(id){
             category: 'standard',
             reference_number: '',
             po_number: '',
-            source: 'quote',
+            source: 'order',
             date: date.toISOString().split('T')[0],
             deliver_by: date.toISOString().split('T')[0],
             deliver_by_strict: false,
+            delivery_method: '',
+            payment_method: '',
             attributes: [],
             events: [],
             notes: {
@@ -73,6 +75,8 @@ function patchData( data, init )
     if( typeof order.totals.paid === 'undefined' ) order.totals.paid = 0;
     if( typeof order.info.company === 'undefined' ) order.info.company = {name: '', id: '', parent: '', parent_name: ''};
     if( typeof order.info.events === 'undefined' ) order.info.events = [];
+    if( typeof order.info.delivery_method === 'undefined' ) order.info.delivery_method = '';
+    if( typeof order.info.payment_method === 'undefined' ) order.info.payment_method = '';
 
     order.fees.forEach( f => {
         if( typeof f.config === 'undefined' ) f.config = {tax: {enabled: true}}
@@ -106,6 +110,11 @@ function convertFromSource( data, cb )
             order.info.title = `Web Order - ${stores[0].trim()} (${stores[stores.length-1].trim()})`;
 
             order.info.date = magento_order.date;
+            order.info.delivery_method = magento_order.delivery_method;
+            order.info.payment_method = magento_order.payment.title;
+            if( magento_order.payment.code === 'purchaseorder' ){
+                order.info.po_number = magento_order.payment.po_number;
+            }
             order.client.name = magento_order.extra.customer.name.first + ' ' + magento_order.extra.customer.name.last;
             order.client.email = magento_order.extra.customer.email;
             // order.info.notes.public = magento_order.notes; // moved to attributes
