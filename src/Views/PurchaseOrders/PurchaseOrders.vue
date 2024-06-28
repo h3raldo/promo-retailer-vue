@@ -87,13 +87,12 @@ export default {
 			<th>SO#</th>
 			<th>Status</th>
 			<th>Title</th>
-			<th>Client</th>
+<!--			<th>Client</th>-->
 			<th>In-Hands</th>
-			<th>Follow-Up</th>
-			<th>Note</th>
+			<th style="width: 20%">Events</th>
 <!--			<th>Created</th>-->
-			<th>Total</th>
-			<th style="width: 120px"></th>
+			<th style="width: 100px">Total</th>
+			<th style="width: 90px"></th>
 		</tr>
 		</thead>
 		<tbody>
@@ -110,29 +109,30 @@ export default {
 				<td @click="viewSingle(quote.id)">
 					<span class="badge text-bg-secondary rounded-pill">{{ quote.vendor }}</span>
 
-					<span v-if="quote.data && JSON.parse(quote.data).po" class="d-block">
-						{{ JSON.parse(quote.data).po.info.title }}
+					<span class="d-block">
+						{{ quote.title }}
+					</span>
+
+					<span v-if="quote.reference_order && quote.reference_order.client" class="d-block">
+						{{ quote.reference_order.client }}
 					</span>
 
 				</td>
-
+<!--
 				<td @click="viewSingle(quote.id)">
 					<span v-if="quote.reference_order && quote.reference_order.client" class="d-block">
 						{{ quote.reference_order.client }}
 					</span>
+				</td>-->
+
+				<td>{{ quote.deliver_by }}</td>
+				<td>
+					<details class=" p-1 mb-1" v-for="event in quote.events">
+						<summary style="text-transform: capitalize">{{ event.type }}: {{event.date}}</summary>
+						{{event.note}}
+					</details>
 				</td>
 
-				<template v-if="quote.data && JSON.parse(quote.data).po">
-					<td>{{ JSON.parse(quote.data).po.info.deliver_by }}</td>
-					<td>{{ JSON.parse(quote.data).po.info.follow_up_date }}</td>
-					<td>{{ JSON.parse(quote.data).po.info.follow_up_note }}</td>
-				</template>
-
-				<template v-else>
-					<td></td>
-					<td></td>
-					<td></td>
-				</template>
 <!--				<td @click="viewSingle(quote.id)">{{ quote.created }}</td>-->
 				<td @click="viewSingle(quote.id)">{{ formatPricing(quote.total) }}</td>
 				<td class="delete text-end">

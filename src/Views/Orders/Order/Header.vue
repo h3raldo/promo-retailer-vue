@@ -19,6 +19,9 @@ export default {
 	inject: ['order', 'logos', 'vendors', 'updatePricing', 'hasEdited', 'alert', 'symfony', 'urls'],
 
 	computed: {
+		printView() {
+			return this.symfony.api.orders.order.print.replace(':id', this.order.id);
+		},
 		publicUrl() {
 			return this.urls.public.replace(':id', this.order.id);
 		},
@@ -132,7 +135,8 @@ export default {
 		</div>
 		<div>
 			<div class="text-end d-flex gap-2">
-				<a :href="publicUrl" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Public Version</a>
+				<a :href="printView" class="btn btn-outline-primary"><i class="bi bi-printer"></i> Print View</a>
+				<a :href="publicUrl" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Public View</a>
 				<a :href="packingSlip" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Packing Slip</a>
 				<Modal :id="'create-po'" :title="'Create POs'" :buttonText="'Create POs'" :buttonClasses="'btn btn-primary'" :icon="'bi-node-plus'" ref="poModal">
 					<CreatePOs :goToPurchaseOrder="goToPurchaseOrder"  />

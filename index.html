@@ -43,8 +43,10 @@
                     }
                 },
 				orders: {
+					export: 'https://tools.promoretailer.dev/admin/orders/export/',
 					order: {
 						packing_slip: 'https://tools.promoretailer.dev/admin/orders/order/:id/packing-slip/',
+						print: 'https://tools.promoretailer.dev/admin/orders/order/:id/print/',
 					}
 				},
                 contacts: {
@@ -91,7 +93,7 @@
                     duplicate: 'https://tools.promoretailer.dev/orders/duplicate/:id/',
                     delete: 'https://tools.promoretailer.dev/orders/delete/:id/',
                     push: 'https://preview.promoretailer.dev/orders/push/',
-                    public: 'https://tools.promoretailer.dev/orders/public/view/:id/',
+                    public: 'https://tools.promoretailer.dev/orders/order/:id/',
                 }
             },
             reports: {

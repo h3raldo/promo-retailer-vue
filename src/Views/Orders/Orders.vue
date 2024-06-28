@@ -20,6 +20,14 @@ export default {
 		searchState(){
 			if( typeof this.search.orders === 'undefined' ) this.search.orders = {}
 			return this.search.orders;
+		},
+		exportLink(){
+			let params = '';
+
+			if( this.searchState.urlParams )
+				params = this.searchState.urlParams;
+
+			return this.symfony.api.orders.export +'?' + params ?? ''
 		}
 	},
 
@@ -142,10 +150,7 @@ export default {
 		</tbody>
 		<tfoot>
 		<tr>
-			<th colspan="999">
-
-			</th>
-<!--			<th colspan="999" class="text-end">
+			<th colspan="999" class="text-end">
 
 				<table class="float-end">
 					<tr>
@@ -165,10 +170,15 @@ export default {
 						<td class="text-start">{{ quotes.totals.margin }}%</td>
 					</tr>
 				</table>
-			</th>-->
+
+			</th>
 		</tr>
 		</tfoot>
 	</table>
+
+	<div class="text-center">
+		<a class="btn btn-outline-primary" :href="exportLink" target="_blank">Export to CSV</a>
+	</div>
 
 </template>
 <style>
