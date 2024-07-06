@@ -2,6 +2,7 @@ import OrderItem from "@/js/entity/Order/Order.Item.js";
 import OrderFee from "@/js/entity/Order/Order.Fee.js";
 import OrderLogo from "@/js/entity/Order/Order.Logo.js";
 import OrderVendor from "@/js/entity/Order/Order.Vendor.js";
+import entity from "@/js/entity.js";
 
 function create(id){
     let date = new Date();
@@ -33,6 +34,8 @@ function create(id){
             info: '',
             id: '',
             ship_to: '',
+            shipping: entity.customer.address.create(),
+            billing: entity.customer.address.create(),
         },
         items: [],
         fees: [],
@@ -78,6 +81,8 @@ function patchData( data, init )
     if( typeof quote.totals.paid === 'undefined' ) quote.totals.paid = 0;
     if( typeof quote.info.delivery_method === 'undefined' ) quote.info.delivery_method = '';
     if( typeof quote.info.payment_method === 'undefined' ) quote.info.payment_method = '';
+    if( typeof quote.client.shipping === 'undefined' ) quote.client.shipping = entity.customer.address.create();
+    if( typeof quote.client.billing === 'undefined' ) quote.client.billing = entity.customer.address.create();
 
     quote.fees.forEach( f => {
         if( typeof f.config === 'undefined' ) f.config = {tax: {enabled: true}}

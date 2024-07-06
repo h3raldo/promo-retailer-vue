@@ -14,7 +14,7 @@ export default {
 </script>
 <template>
 	<div class="row mb-2 g-2" v-for="(event, i) in events">
-		<div class="col-2">
+		<div class="col-3">
 			<select class="form-select" v-model="event.type">
 				<option value="follow-up">Follow-Up</option>
 				<option value="general">General</option>
@@ -22,14 +22,14 @@ export default {
 				<option value="delivery">Delivery</option>
 			</select>
 		</div>
-		<div class="col-2">
+		<div class="col-3">
 			<input type="date" class="form-control" placeholder="Date" v-model="event.date">
 		</div>
 		<div class="col">
 			<input class="form-control" type="text" placeholder="Note" v-model="event.note">
 		</div>
-		<div class="col-2">
-			<button class="btn btn-outline-danger" @click="remove(i)">Remove</button>
+		<div class="col-1">
+			<button class="btn btn-outline-danger" @click="remove(i)"><i class="bi bi-trash"></i></button>
 		</div>
 	</div>
 	<div>

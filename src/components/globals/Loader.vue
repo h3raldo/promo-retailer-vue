@@ -1,18 +1,18 @@
 <script>
-	export default {
-		data(){
-			return {
+export default {
+	data(){
+		return {
 
-			}
-		},
-		props: ['align'],
-		computed: {
-			alignClass(){
-				let align = this.align ?? 'center';
-				return 'text-' + align;
-			}
+		}
+	},
+	props: ['align'],
+	computed: {
+		alignClass(){
+			let align = this.align ?? 'center';
+			return 'text-' + align;
 		}
 	}
+}
 </script>
 <template>
 	<div :class="alignClass">

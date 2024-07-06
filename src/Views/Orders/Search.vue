@@ -10,20 +10,11 @@ export default {
 	},
 	props: ['getEntities', 'searchParams'],
 	inject: ['symfony', 'alert'],
-	computed: {
-		pageCount(){
-			if( !this.searchParams.count ) return 1;
-			return Math.ceil( this.searchParams.count / this.searchParams.per_page );
-		}
-	},
 	methods: {
 		search(e){
 			e.preventDefault();
 			let params = utils.form.toGetParams(e.target);
 			this.getEntities(params);
-		},
-		changePage(page){
-			this.$refs.page.value = page;
 		},
 		createNew()
 		{
@@ -165,20 +156,6 @@ export default {
 							</div>
 						</div>
 					</div>
-				</div>
-
-				<div class="text-center pt-4">
-					<nav>
-						<ul class="pagination justify-content-center mb-0">
-							<li class="page-item"><button class="page-link" @click="changePage(1)"><span aria-hidden="true">&laquo;</span></button></li>
-
-							<li v-for="index in pageCount" :class="getPageClasses(index)">
-								<button class="page-link" @click="changePage(index)">{{ index }}</button>
-							</li>
-
-							<li class="page-item"><button class="page-link" @click="changePage(pageCount)"><span aria-hidden="true">&raquo;</span></button></li>
-						</ul>
-					</nav>
 				</div>
 			</form>
 		</div>

@@ -2,6 +2,7 @@
 	import Loader from "@/components/globals/Loader.vue";
 	import Modal from "@/components/globals/bootstrap/Modal.vue";
 	import Search from "@/Views/Orders/Search.vue";
+	import Grid from "@/components/globals/Grid.vue";
 </script>
 
 <script>
@@ -9,7 +10,18 @@ import utils from "@/js/utils.js";
 export default {
 	data() {
 		return {
-			loading: true,
+			loading: false,
+			columns: {
+				'ID': { id: 'id' },
+				'Status': { id: 'status' },
+				'Reference Number': { id: 'reference_number' },
+				'Client': { id: 'client' },
+				'Order Date': { id: 'date' },
+				'Origin Date': { id: 'date_created' },
+				'Total': { },
+				'Profit': {  },
+				'Margin': {  }
+			},
 			quotes: {},
 		}
 	},
@@ -18,7 +30,6 @@ export default {
 
 	computed: {
 		searchState(){
-			if( typeof this.search.orders === 'undefined' ) this.search.orders = {}
 			return this.search.orders;
 		},
 		exportLink(){
@@ -28,7 +39,7 @@ export default {
 				params = this.searchState.urlParams;
 
 			return this.symfony.api.orders.export +'?' + params ?? ''
-		}
+		},
 	},
 
 	methods: {
@@ -46,25 +57,6 @@ export default {
 		{
 			return this.symfony.orders.order.delete.replace(':id', id);
 		},
-		getEntities( params ){
-			if( params )
-				this.searchState.urlParams = params;
-			else if( this.searchState.urlParams )
-				params = this.searchState.urlParams;
-			else
-				params = ''
-
-			let self = this;
-			let url = this.symfony.orders.search +'?' + params ?? ''
-
-			self.loading = true;
-			utils.ajax(url, (data) => {
-				self.search.orders = data.search;
-				self.search.orders.urlParams = params;
-				self.quotes = data;
-				self.loading = false;
-			})
-		},
 		getStatusColor( status ){
 			let statuses = {
 				sent: 'primary',
@@ -76,105 +68,87 @@ export default {
 			if( statuses[status] ) className = statuses[status];
 
 			return `badge text-bg-${className}`;
-		}
+		},
 	},
 
 	created() {
-
+		if( typeof this.search.orders === 'undefined' ) this.search.orders = {}
 	},
-
-	mounted() {
-		if( this.quotes.length > 0 ) return;
-		this.getEntities()
-	}
 }
 </script>
 
 <template>
-	<Search :getEntities="getEntities" :searchParams="searchState" />
 
-	<br>
+	<Grid :api="symfony.orders.search" :columns="columns" :searchState="searchState">
 
-	<Loader v-if="loading" :align="'center'" />
-
-	<table class="table align-middle table-hover" v-if="quotes.totals">
-		<thead>
-		<tr>
-			<th>ID</th>
-<!--			<th>Author</th>-->
-			<th>Status</th>
-			<th>Reference Number</th>
-			<th>Client</th>
-			<th style="width: 9%">Order Date</th>
-			<th style="width: 9%">Origin Date</th>
-<!--			<th>Totals</th>-->
-			<th>Total</th>
-			<th>Profit</th>
-			<th style="width: 50px">Margin</th>
-			<th style="width: 120px"></th>
-		</tr>
-		</thead>
-		<tbody>
-		<template v-for="quote in quotes.results">
-		<tr class="quote-row">
-			<td @click="viewQuote(quote.id)">{{ quote.id }}</td>
-			<td @click="viewQuote(quote.id)">
-				<span :class="getStatusColor(quote.status)">
-					{{ quote.status }}
-				</span>
-			</td>
-			<td @click="viewQuote(quote.id)">
-				<span :class="'fw-normal badge source-'+quote.source">{{ quote.source.charAt(0).toUpperCase() }}</span>
-				{{ quote.reference_number || '-' }}
-			</td>
-<!--			<td @click="viewQuote(quote.id)">{{ quote.author }}</td>-->
-			<td @click="viewQuote(quote.id)">
-				{{ quote.client }}
-			</td>
-			<td @click="viewQuote(quote.id)">{{ quote.created }}</td>
-			<td @click="viewQuote(quote.id)">{{ quote.date }}</td>
-<!--			<td @click="viewQuote(quote.id)">{{ formatPricing(quote.total_cost) }}</td>-->
-			<td @click="viewQuote(quote.id)">{{ formatPricing(quote.total) }}</td>
-			<td @click="viewQuote(quote.id)">{{ formatPricing(quote.profit) }}</td>
-			<td @click="viewQuote(quote.id)">{{ quote.margin }}%</td>
-			<td class="delete text-end">
-				<a class="btn btn-outline-primary me-1" :href="getDuplicateUrl(quote.id)"><i class="bi bi-copy"></i></a>
-
-				<Modal :id="'deleteQuote-'+quote.id" :title="'Are you sure?'"  :icon="'bi-trash'" :buttonClasses="'btn btn-danger'">
-					<p>Quote will be deleted permanently. Cannot be undone.</p>
-					<a class="btn btn-danger" :href="getDeleteUrl(quote.id)"><i class="bi bi-trash"></i> DELETE</a>
-				</Modal>
-			</td>
-		</tr>
+		<template #header="{search}">
+			<Search :getEntities="search" :searchParams="searchState" />
 		</template>
-		</tbody>
-		<tfoot>
-		<tr>
-			<th colspan="999" class="text-end">
 
-				<table class="float-end">
-					<tr>
-						<td class="pe-3">Total:</td>
-						<td class="text-start">{{ formatPricing(quotes.totals.total) }}</td>
-					</tr>
-					<tr class="text-warning">
-						<td class="pe-3">Cost:</td>
-						<td class="text-start">{{ formatPricing(quotes.totals.cost) }}</td>
-					</tr>
-					<tr class="text-success">
-						<td class="pe-3">Profit:</td>
-						<td class="text-start">{{ formatPricing(quotes.totals.profit) }}</td>
-					</tr>
-					<tr>
-						<td class="pe-3">Margin:</td>
-						<td class="text-start">{{ quotes.totals.margin }}%</td>
-					</tr>
-				</table>
+		<template #item="{item}">
+			<tr class="quote-row">
 
-			</th>
-		</tr>
-		</tfoot>
-	</table>
+				<td @click="viewQuote(item.id)">{{ item.id }}</td>
+
+				<td @click="viewQuote(item.id)">
+				<span :class="getStatusColor(item.status)">
+					{{ item.status }}
+				</span>
+				</td>
+
+				<td @click="viewQuote(item.id)">
+					<span :class="'fw-normal badge source-'+item.source">{{ item.source.charAt(0).toUpperCase() }}</span>
+					{{ item.reference_number || '-' }}
+				</td>
+
+				<td @click="viewQuote(item.id)">
+					{{ item.client }}
+				</td>
+
+				<td @click="viewQuote(item.id)">{{ item.date }}</td>
+				<td @click="viewQuote(item.id)">{{ item.created }}</td>
+				<td @click="viewQuote(item.id)">{{ formatPricing(item.total) }}</td>
+				<td @click="viewQuote(item.id)">{{ formatPricing(item.profit) }}</td>
+				<td @click="viewQuote(item.id)">{{ item.margin }}%</td>
+
+				<td class="delete text-end">
+					<a class="btn btn-outline-primary me-1" :href="getDuplicateUrl(item.id)"><i class="bi bi-copy"></i></a>
+					<Modal :id="'deleteQuote-'+item.id" :title="'Are you sure?'"  :icon="'bi-trash'" :buttonClasses="'btn btn-danger'">
+						<p>Quote will be deleted permanently. Cannot be undone.</p>
+						<a class="btn btn-danger" :href="getDeleteUrl(item.id)"><i class="bi bi-trash"></i> DELETE</a>
+					</Modal>
+				</td>
+
+			</tr>
+		</template>
+
+		<template #footer="{response}">
+			<tr v-if="response && response.totals">
+				<th colspan="999" class="text-end">
+
+					<table class="float-end">
+						<tr>
+							<td class="pe-3">Total:</td>
+							<td class="text-start">{{ formatPricing(response.totals.total) }}</td>
+						</tr>
+						<tr class="text-warning">
+							<td class="pe-3">Cost:</td>
+							<td class="text-start">{{ formatPricing(response.totals.cost) }}</td>
+						</tr>
+						<tr class="text-success">
+							<td class="pe-3">Profit:</td>
+							<td class="text-start">{{ formatPricing(response.totals.profit) }}</td>
+						</tr>
+						<tr>
+							<td class="pe-3">Margin:</td>
+							<td class="text-start">{{ response.totals.margin }}%</td>
+						</tr>
+					</table>
+
+				</th>
+			</tr>
+		</template>
+	</Grid>
 
 	<div class="text-center">
 		<a class="btn btn-outline-primary" :href="exportLink" target="_blank">Export to CSV</a>

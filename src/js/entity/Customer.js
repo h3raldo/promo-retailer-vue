@@ -2,6 +2,7 @@ export default {
     address: {
         create(){
             return {
+                company: '',
                 first_name: '',
                 last_name: '',
                 address_line_1: '',
@@ -9,7 +10,7 @@ export default {
                 city: '',
                 state: '',
                 postal_code: '',
-                country: ''
+                country: 'United States',
             }
         }
     }

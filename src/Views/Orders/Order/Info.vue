@@ -1,5 +1,6 @@
 <script setup>
 import Events from "@/components/globals/properties/Events.vue";
+import Address from "@/components/globals/properties/Address.vue";
 </script>
 <script>
 import entity from "@/js/entity.js";
@@ -63,9 +64,24 @@ export default {
 			<label class="form-label col-2 text-end pt-2">Client Info:</label>
 			<textarea class="form-control" v-model="order.client.info"></textarea>
 		</div>
-		<div class="d-flex gap-4">
-			<label class="form-label col-2 text-end pt-2">Ship To:</label>
+		<div class="d-flex gap-4" v-if="order.client.ship_to !== ''">
+			<label class="form-label col-2 text-end pt-2">
+				Ship To:
+				<span class="d-block text-secondary"><small>DO NOT USE<br>. Use Shipping Address)</small></span>
+			</label>
 			<textarea class="form-control" v-model="order.client.ship_to"></textarea>
+		</div>
+		<div class="d-flex gap-4">
+			<label class="form-label col-2 text-end pt-2">Shipping Address:</label>
+			<div class="col-5">
+				<Address :address="order.client.shipping" />
+			</div>
+		</div>
+		<div class="d-flex gap-4">
+			<label class="form-label col-2 text-end pt-2">Billing Address:</label>
+			<div class="col-5">
+				<Address :address="order.client.billing" />
+			</div>
 		</div>
 		<div class="d-flex gap-4">
 			<label class="form-label col-2 text-end pt-2">Shipping Method:</label>

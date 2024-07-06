@@ -33,7 +33,7 @@ function create(id){
                 name: '',
                 parent: '',
                 parent_name: '',
-            }
+            },
         },
         config: {
             tax: {
@@ -46,6 +46,8 @@ function create(id){
             info: '',
             id: '',
             ship_to: '',
+            shipping: entity.customer.address.create(),
+            billing: entity.customer.address.create(),
         },
         items: [],
         fees: [],
@@ -77,6 +79,8 @@ function patchData( data, init )
     if( typeof order.info.events === 'undefined' ) order.info.events = [];
     if( typeof order.info.delivery_method === 'undefined' ) order.info.delivery_method = '';
     if( typeof order.info.payment_method === 'undefined' ) order.info.payment_method = '';
+    if( typeof order.client.shipping === 'undefined' ) order.client.shipping = entity.customer.address.create();
+    if( typeof order.client.billing === 'undefined' ) order.client.billing = entity.customer.address.create();
 
     order.fees.forEach( f => {
         if( typeof f.config === 'undefined' ) f.config = {tax: {enabled: true}}
@@ -121,8 +125,25 @@ function convertFromSource( data, cb )
             // order.info.notes.private = 'Store: ' + magento_order.store;  // moved to attributes
             order.totals.paid = magento_order.paid;
 
-            if( magento_order.extra.customer.address.shipping.text ){
-                order.client.ship_to = magento_order.extra.customer.address.shipping.text
+            if( magento_order.extra.customer.address.shipping.street ){
+                order.client.shipping.first_name = magento_order.extra.customer.address.shipping.first_name
+                order.client.shipping.last_name = magento_order.extra.customer.address.shipping.last_name
+                order.client.shipping.address_line_1 = magento_order.extra.customer.address.shipping.street
+                order.client.shipping.address_line_2 = magento_order.extra.customer.address.shipping.street_2
+                order.client.shipping.city = magento_order.extra.customer.address.shipping.city
+                order.client.shipping.state = magento_order.extra.customer.address.shipping.state
+                order.client.shipping.postal_code = magento_order.extra.customer.address.shipping.zip
+                order.client.shipping.country = 'United States'
+            }
+            if( magento_order.extra.customer.address.billing.street ){
+                order.client.billing.first_name = magento_order.extra.customer.address.billing.first_name
+                order.client.billing.last_name = magento_order.extra.customer.address.billing.last_name
+                order.client.billing.address_line_1 = magento_order.extra.customer.address.billing.street
+                order.client.billing.address_line_2 = magento_order.extra.customer.address.billing.street_2
+                order.client.billing.city = magento_order.extra.customer.address.billing.city
+                order.client.billing.state = magento_order.extra.customer.address.billing.state
+                order.client.billing.postal_code = magento_order.extra.customer.address.billing.zip
+                order.client.billing.country = 'United States'
             }
 
             order.info.reference_number = magento_order.reference_number;

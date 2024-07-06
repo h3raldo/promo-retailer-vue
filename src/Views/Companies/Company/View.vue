@@ -39,11 +39,7 @@ export default {
 			utils.ajax(url, (data) => {
 				self.company = data.entity;
 				self.extra = data.extra;
-				if( !self.company.data ) self.company.data = {};
-				if( !self.company.data.properties ) self.company.data.properties = [];
-				if( !self.company.data.type ) self.company.data.type = { supplier: false, decorator: false };
-				if( !self.company.data.billing ) self.company.data.billing = { address: entity.customer.address.create() };
-				if( !self.company.data.shipping ) self.company.data.shipping = { address: entity.customer.address.create() };
+				entity.company.patch(self.company);
 				self.loading = false;
 			})
 		},
