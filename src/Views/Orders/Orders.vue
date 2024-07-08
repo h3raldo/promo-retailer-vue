@@ -18,7 +18,7 @@ export default {
 				'Client': { id: 'client' },
 				'Order Date': { id: 'date' },
 				'Origin Date': { id: 'date_created' },
-				'Total': { },
+				'Total': { id: 'total' },
 				'Profit': {  },
 				'Margin': {  }
 			},

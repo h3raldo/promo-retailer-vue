@@ -108,7 +108,7 @@ export default {
 		<table class="table align-middle table-hover">
 			<thead>
 				<tr>
-					<th v-for="(col, title) in columns" @click="orderBy(col.id)">
+					<th v-for="(col, title) in columns" @click="orderBy(col.id)" class="text-nowrap">
 						{{ title }}
 						<span v-if="col.id && searchState.order_by === col.id"><i :class="caretClasses"></i></span>
 					</th>

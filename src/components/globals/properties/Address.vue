@@ -81,7 +81,7 @@ export default {
 	<template v-else>
 
 		<div class="">
-			<address>
+			<address class="fst-italic border-start border-3 ps-2">
 				<span class="d-block">{{ address.company }}</span>
 				<span class="d-block">
 					<span v-if="address.company">Attn: </span>

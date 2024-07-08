@@ -19,8 +19,8 @@ export default {
 				'Category': { id: 'category' },
 				'Title': { },
 				'Date': { id: 'date_created' },
-				'Totals': { },
-				'Total': {  },
+				'Total': { id: 'total' },
+				'Cost': { id: 'total_cost' },
 				'Profit': {  },
 				'Margin': {  }
 			},
@@ -92,8 +92,8 @@ export default {
 					{{ item.title }}
 				</td>
 				<td @click="viewQuote(item.id)">{{ item.updated }}</td>
-				<td @click="viewQuote(item.id)">{{ formatPricing(item.total_cost) }}</td>
 				<td @click="viewQuote(item.id)">{{ formatPricing(item.total) }}</td>
+				<td @click="viewQuote(item.id)">{{ formatPricing(item.total_cost) }}</td>
 				<td @click="viewQuote(item.id)">{{ formatPricing(item.profit) }}</td>
 				<td @click="viewQuote(item.id)">{{ item.margin }}%</td>
 				<td class="delete text-end">
