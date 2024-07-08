@@ -55,15 +55,26 @@ function create(id){
     }
 }
 
-function patchData( data, init )
+function patchData( po, init )
 {
-    let po = data.po;
     if( !po.info.follow_up_date ) po.info.follow_up_date = '';
     if( !po.info.follow_up_note ) po.info.follow_up_note = '';
     if( typeof po.info.ship_blind === 'undefined' ) po.info.ship_blind = false;
     if( !po.info.events ) po.info.events = [];
 
-    return po;
+    let logos = []
+    po.items.forEach( item => {
+        item.decoration.placements.forEach( placement => {
+            if( !placement.logo || !placement.logo.id ) return;
+            let existing_logos = logos.filter( l => l.id === placement.logo.id )
+            if( existing_logos.length > 0 ) return;
+            logos.push( placement.logo );
+        })
+    })
+
+    return {
+        po, logos
+    };
 }
 
 function fromOrder( order, company_id, decorator_code)

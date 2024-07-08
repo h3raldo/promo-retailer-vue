@@ -103,12 +103,12 @@ export const usePurchaseOrderStore = defineStore('purchaseOrder', () => {
             },
             add( new_logo={} )
             {
-                let logo = Object.assign( entity.purchaseOrder.logo.create(), new_logo)
+                let logo = Object.assign( entity.order.logo.create(), new_logo)
                 logos.push( logo );
             },
             addCustomLogo()
             {
-                let logo = entity.purchaseOrder.logo.default()[0];
+                let logo = entity.order.logo.default()[0];
                 logo.id += Math.floor(Math.random() * 500);
                 logos.push( logo );
                 console.log('log', logos);

@@ -5,6 +5,7 @@ import Items from "@/EntityComponents/Order/Items.vue";
 import Tabs from "@/components/globals/Tabs.vue";
 import References from "@/components/globals/References.vue";
 import Info from "@/Views/PurchaseOrders/PurchaseOrder/Info.vue";
+import Logos from "@/EntityComponents/Order/Logos.vue";
 </script>
 <script>
 import {computed} from "vue";
@@ -25,7 +26,7 @@ export default{
 			entities: {
 				order: {}
 			},
-			tabs: ['Info', 'Items', 'Vendor', 'References']
+			tabs: ['Info', 'Items', 'Vendor', 'Logos', 'References']
 		}
 	},
 
@@ -92,7 +93,9 @@ export default{
 			} else{
 				self.loading = false;
 				purchaseOrderStore.po.id = entity_data.id;
-				purchaseOrderStore.$patch({po: entity_data.po});
+				let { po, logos } = entity.purchaseOrder.patchData(entity_data.po)
+				logos.forEach( l => purchaseOrderStore.logos.push(l));
+				purchaseOrderStore.$patch({po: po, logos: logos});
 			}
 		})
 	},
@@ -127,6 +130,10 @@ export default{
 
 			<template #Items>
 				<Items />
+			</template>
+
+			<template #Logos>
+				<Logos />
 			</template>
 
 			<template #Vendor>
