@@ -20,8 +20,8 @@ export default {
 				'Ship By': { id: 'date_ship_by' },
 				'In-Hands': { id: 'date_deliver_by' },
 				'Total': { id: 'total' },
-				'Profit': {  },
-				'Margin': {  }
+				'Profit': { id: 'total_profit'  },
+				'Margin': { id: 'total_margin' }
 			},
 			quotes: {},
 		}
