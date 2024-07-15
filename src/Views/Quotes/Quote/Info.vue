@@ -3,9 +3,15 @@ import Events from "@/components/globals/properties/Events.vue";
 import Address from "@/components/globals/properties/Address.vue";
 </script>
 <script>
+import utils from "@/js/utils.js";
+
 export default {
 	inject: ['order'],
 	methods: {
+		deliverByChanged(){
+			if( this.order.info.deliver_by === '' || this.order.info.ship_by !== '' ) return
+			this.order.info.ship_by = utils.time.removeDays(this.order.info.deliver_by, 3);
+		}
 	}
 }
 </script>
@@ -53,7 +59,7 @@ export default {
 							</label>
 						</div>
 					</div>
-					<input type="date" class="form-control" placeholder="In Hands Date" v-model="order.info.deliver_by">
+					<input type="date" class="form-control" placeholder="In Hands Date" v-model="order.info.deliver_by" @change="deliverByChanged">
 				</div>
 			</div>
 

@@ -2,6 +2,8 @@
 import Events from "@/components/globals/properties/Events.vue";
 </script>
 <script>
+import utils from "@/js/utils.js";
+
 export default {
 	data(){
 		return {
@@ -20,6 +22,11 @@ export default {
 	methods: {
 		copyToShipTo(){
 			this.po.info.ship_to = this.entities.order.order.client.ship_to;
+		},
+		deliverByChanged(){
+			console.log(this.po.info.deliver_by, this.po.info.ship_by);
+			if( this.po.info.deliver_by === '' || this.po.info.ship_by !== '' ) return
+			this.po.info.ship_by = utils.time.removeDays(this.po.info.deliver_by, 3);
 		}
 	}
 }
@@ -56,7 +63,7 @@ export default {
 							</label>
 						</div>
 					</div>
-					<input type="date" class="form-control" placeholder="Date" v-model="po.info.deliver_by">
+					<input type="date" class="form-control" placeholder="Date" v-model="po.info.deliver_by" @change="deliverByChanged">
 				</div>
 			</div>
 

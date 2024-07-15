@@ -1,7 +1,7 @@
 import entity from "@/js/entity.js";
+import utils from "@/js/utils.js";
 
 function create(id){
-    let date = new Date();
     return {
         id: id,
         info: {
@@ -12,9 +12,10 @@ function create(id){
                 paid: false,
                 shipped: false,
             },
-            date: date.toISOString().split('T')[0],
-            deliver_by: date.toISOString().split('T')[0],
+            date: utils.time.getDateAsString(),
+            deliver_by: '',
             deliver_by_strict: false,
+            ship_by: '',
             ship_to: `Promo Retailer \n14655 Northwest Fwy, Suite 127C \nHouston, TX 77040`,
             ship_blind: false,
             bill_to: `Promo Retailer \n14655 Northwest Fwy, Suite 127C \nHouston, TX 77040`,
@@ -60,6 +61,7 @@ function patchData( po, init )
 {
     if( !po.info.follow_up_date ) po.info.follow_up_date = '';
     if( !po.info.follow_up_note ) po.info.follow_up_note = '';
+    if( typeof po.info.ship_by === 'undefined' ) po.info.ship_by= '';
     if( typeof po.info.ship_blind === 'undefined' ) po.info.ship_blind = false;
     if( !po.info.events ) po.info.events = [];
     if( typeof po.info.statuses.shipped === 'undefined' ) po.info.statuses.shipped = false;

@@ -3,9 +3,9 @@ import OrderFee from "@/js/entity/Order/Order.Fee.js";
 import OrderLogo from "@/js/entity/Order/Order.Logo.js";
 import OrderVendor from "@/js/entity/Order/Order.Vendor.js";
 import entity from "@/js/entity.js";
+import utils from "@/js/utils.js";
 
 function create(id){
-    let date = new Date();
     return {
         id: id,
         info: {
@@ -21,7 +21,7 @@ function create(id){
             attributes: [],
             events: [],
             tax: true,
-            date: date.toISOString().split('T')[0],
+            date: utils.time.getDateAsString(),
             deliver_by: '',
             deliver_by_strict: false,
             ship_by: '',
@@ -60,8 +60,7 @@ function patchData( data, init )
     quote.info.status = init.status;
 
     if( init.updated ){
-        let date = new Date(init.updated);
-        quote.info.date = date.toISOString().split('T')[0];
+        quote.info.date = utils.time.getDateAsString(init.updated);
     }
 
     if( typeof quote.info.notes === 'string' ){

@@ -110,6 +110,23 @@ export default
 
     pricing: pricing,
 
+    time: {
+        getDateAsString( provided ) {
+          let date = new Date();
+          if( provided ) date = new Date(provided)
+
+          return this.dateToString(date);
+        },
+        dateToString( date ){
+            return  date.toISOString().split('T')[0]
+        },
+        removeDays( date, days ){
+            let temp = new Date(date);
+            temp.setDate(temp.getDate()-days);
+            return this.dateToString(temp)
+        }
+    },
+
     tiers: {
         sort( tiers ){
             let compare = ( a, b ) => {

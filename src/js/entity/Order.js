@@ -6,7 +6,6 @@ import utils from "@/js/utils.js";
 import entity from "@/js/entity.js";
 
 function create(id){
-    let date = new Date();
     return {
         id: id,
         info: {
@@ -16,7 +15,7 @@ function create(id){
             reference_number: '',
             po_number: '',
             source: 'order',
-            date: date.toISOString().split('T')[0],
+            date: utils.time.getDateAsString(),
             deliver_by: '',
             deliver_by_strict: false,
             ship_by: '',
@@ -105,8 +104,7 @@ function convertFromQuote( quote )
     order.info.reference_number = quote.id;
     order.info.status = 'new';
     order.info.source = 'quote';
-    const date = new Date();
-    order.info.date = date.toISOString().split('T')[0]
+    order.info.date = utils.time.getDateAsString()
     return order;
 }
 

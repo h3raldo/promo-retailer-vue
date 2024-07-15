@@ -9,7 +9,7 @@ import {computed} from "vue";
 export default {
 	data() {
 		return {
-			version: '1.9.1',
+			version: '1.9.3',
 			symfony: window.symfony,
 			alert: {
 				enabled: false,
