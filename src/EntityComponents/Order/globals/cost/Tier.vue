@@ -11,7 +11,7 @@ export default {
 		}
 	},
 
-	props: ['tier', 'index','removeTier', 'showMargin'],
+	props: ['tier', 'index','removeTier', 'showMargin', 'canDelete'],
 	inject: ['order'],
 
 	computed:{
@@ -20,6 +20,13 @@ export default {
 		},
 		showPrice(){
 			return pricing.showPrice(this.order);
+		},
+		deletable(){
+			if( typeof this.canDelete === 'undefined' ){
+				return true;
+			}
+
+			return this.canDelete;
 		}
 	},
 
@@ -101,7 +108,7 @@ export default {
 		</div>
 
 		<div>
-			<button class="btn btn-outline-danger" @click="removeTier(index)"><i class="bi bi-trash"></i></button>
+			<button class="btn btn-outline-danger" v-if="deletable" @click="removeTier(index)"><i class="bi bi-trash"></i></button>
 		</div>
 	</div>
 </template>

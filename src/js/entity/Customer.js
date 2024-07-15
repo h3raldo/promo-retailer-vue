@@ -11,6 +11,7 @@ export default {
                 state: '',
                 postal_code: '',
                 country: 'United States',
+                phone: '',
             }
         }
     }

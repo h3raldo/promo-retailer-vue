@@ -72,6 +72,11 @@ export default {
 					<option v-for="country in countries" :value="country">{{country}}</option>
 				</select>
 			</div>
+
+			<div class="col-12" v-if="typeof address.phone !== 'undefined'">
+				<input type="text" class="form-control" placeholder="Phone" v-model="address.phone">
+			</div>
+
 			<div class="col-12 text-end">
 				<button class="btn btn-outline-primary" @click="editing = false"><i class="bi bi-check2"></i></button>
 			</div>
@@ -91,6 +96,7 @@ export default {
 				<span class="d-block">{{ address.address_line_2 }}</span>
 				<span class="d-block">{{ address.city }}, {{ address.state }} {{ address.postal_code }}</span>
 				<span class="d-block">{{ address.country }}</span>
+				<span class="d-block" v-if="address.phone"><i class="bi bi-telephone"></i> {{ address.phone }}</span>
 				<button class="btn btn-link p-0 m-0 d-inline align-baseline" @click="editing = true"><i class="bi bi-pencil-square"></i></button>
 			</address>
 		</div>

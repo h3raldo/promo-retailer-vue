@@ -14,10 +14,11 @@ export default {
 			columns: {
 				'ID': { id: 'id' },
 				'Status': { id: 'status' },
-				'Reference Number': { id: 'reference_number' },
-				'Client': { id: 'client' },
-				'Order Date': { id: 'date' },
-				'Origin Date': { id: 'date_created' },
+				'Pushed Date': { id: 'date' },
+				// 'Reference Number': { id: 'reference_number' },
+				'Origin/Client': { id: 'client' },
+				'Ship By': { id: 'date_ship_by' },
+				'In-Hands': { id: 'date_deliver_by' },
 				'Total': { id: 'total' },
 				'Profit': {  },
 				'Margin': {  }
@@ -91,22 +92,25 @@ export default {
 				<td @click="viewQuote(item.id)">{{ item.id }}</td>
 
 				<td @click="viewQuote(item.id)">
-				<span :class="getStatusColor(item.status)">
-					{{ item.status }}
-				</span>
-				</td>
-
-				<td @click="viewQuote(item.id)">
-					<span :class="'fw-normal badge source-'+item.source">{{ item.source.charAt(0).toUpperCase() }}</span>
-					{{ item.reference_number || '-' }}
-				</td>
-
-				<td @click="viewQuote(item.id)">
-					{{ item.client }}
+					<span :class="getStatusColor(item.status)">
+						{{ item.status }}
+					</span>
 				</td>
 
 				<td @click="viewQuote(item.id)">{{ item.date }}</td>
-				<td @click="viewQuote(item.id)">{{ item.created }}</td>
+
+				<td @click="viewQuote(item.id)">
+					<span class="d-block">
+						<span :class="'fw-normal badge source-'+item.source">
+							{{ item.source.charAt(0).toUpperCase() }} -
+							{{ item.reference_number || '' }}
+						</span>
+					</span>
+					{{ item.client }}
+				</td>
+
+				<td @click="viewQuote(item.id)">{{ item.ship_by || '-' }}</td>
+				<td @click="viewQuote(item.id)">{{ item.deliver_by || '-' }}</td>
 				<td @click="viewQuote(item.id)">{{ formatPricing(item.total) }}</td>
 				<td @click="viewQuote(item.id)">{{ formatPricing(item.profit) }}</td>
 				<td @click="viewQuote(item.id)">{{ item.margin }}%</td>

@@ -15,7 +15,7 @@ export default {
 		}
 	},
 
-	props: ['tiers', 'showMargin'],
+	props: ['tiers', 'showMargin', 'canDeleteTiers'],
 
 	computed:{
 
@@ -84,7 +84,7 @@ export default {
 		</details>
 
 		<div v-if="tiers">
-			<Tier v-for="(tier, index) in tiers" :tier="tier" :index="index" :removeTier="removeTier" :showMargin="showMargin" />
+			<Tier v-for="(tier, index) in tiers" :tier="tier" :index="index" :removeTier="removeTier" :showMargin="showMargin" :canDelete="canDeleteTiers"  />
 			<div class="mt-4"><button class="btn btn-outline-primary btn-sm" @click="addTier"><i class="bi bi-plus-square"></i> Tier</button></div>
 		</div>
 	</div>

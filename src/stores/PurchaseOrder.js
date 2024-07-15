@@ -77,6 +77,8 @@ export const usePurchaseOrderStore = defineStore('purchaseOrder', () => {
             },
             remove( index ){
                 po.fees.splice(index, 1);
+
+                updatePricing();
             }
         },
         vendor: {

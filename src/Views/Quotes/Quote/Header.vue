@@ -1,11 +1,14 @@
-<script>
+<script setup>
+import Search from "@/EntityComponents/Company/Search.vue";
 import LogoSearch from "@/EntityComponents/Order/Logos/Search.vue";
 import Modal from "@/components/globals/bootstrap/Modal.vue";
+</script>
+
+<script>
 import utils from "@/js/utils.js";
 import entity from "@/js/entity.js";
 
 export default {
-	components: {Modal, LogoSearch},
 	data() {
 		return {
 			loading: false
@@ -120,18 +123,40 @@ export default {
 				self.alert('Error converting to order!', 'danger');
 				console.log(error)
 			}, data )
-		}
+		},
+		onVendorSelect( company )
+		{
+			this.order.info.company.name = company.name;
+			this.order.info.company.id = company.id
+		},
 	}
 }
 </script>
 
 <template>
-	<div class="d-flex align-items-center p-3 bg-light">
+
+	<div class="d-flex justify-content-between align-items-center mb-2 bg-gray p-3">
+		<div class="d-flex gap-3">
+			<div>
+				<button @click="$router.go(-1)" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></button>
+			</div>
+			<div class="fw-bold fs-4">
+				QUOTE #{{ order.id }}
+			</div>
+			<span class="badge text-bg-secondary align-self-center text-capitalize">{{order.info.category}}</span>
+		</div>
+		<div>
+			<div class="text-end d-flex gap-2">
+				<a :href="publicUrl" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Public Version</a>
+				<button class="btn btn-primary" :disabled="loading" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
+				<button class="btn btn-danger btn-push-to-zoho" :disabled="loading" @click="push"><i class="bi bi-cloud-arrow-up-fill"></i> Push</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="d-flex align-items-center">
 		<div class="flex-grow-1">
 			<div class="d-flex gap-3 align-items-center">
-				<div>
-					<button @click="$router.go(-1)" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></button>
-				</div>
 				<div>
 					<div class="form-floating">
 						<select class="form-select" id="status" v-model="order.info.status">
@@ -150,13 +175,17 @@ export default {
 						<label for="client">Quote Title</label>
 					</div>
 				</div>
+				<div class="col-3">
+					<div class="input-group">
+						<div class="form-floating">
+							<input type="text" class="form-control" placeholder="Vendor" v-model="order.info.company.name" disabled>
+							<label>Company</label>
+						</div>
+						<Search :onSelect="onVendorSelect" :buttonText="''" :buttonIcon="'bi-pencil'" />
+					</div>
+				</div>
 			</div>
 		</div>
-		<div class="text-end d-flex gap-2">
-			<a :href="publicUrl" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Public Version</a>
-			<button class="btn btn-primary" :disabled="loading" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
-			<button class="btn btn-danger btn-push-to-zoho" :disabled="loading" @click="push"><i class="bi bi-cloud-arrow-up-fill"></i> Push</button>
-<!--			<button class="btn btn-danger btn-push-to-zoho" :disabled="loading" @click="toOrder"><i class="bi bi-send"></i> Order</button>-->
-		</div>
 	</div>
+
 </template>

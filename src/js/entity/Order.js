@@ -17,8 +17,9 @@ function create(id){
             po_number: '',
             source: 'order',
             date: date.toISOString().split('T')[0],
-            deliver_by: date.toISOString().split('T')[0],
+            deliver_by: '',
             deliver_by_strict: false,
+            ship_by: '',
             delivery_method: '',
             payment_method: '',
             attributes: [],
@@ -28,12 +29,7 @@ function create(id){
                 private: '',
                 flags: []
             },
-            company: {
-                id: '',
-                name: '',
-                parent: '',
-                parent_name: '',
-            },
+            company: company.create(),
         },
         config: {
             tax: {
@@ -62,6 +58,17 @@ function create(id){
     }
 }
 
+let company = {
+    create(){
+        return {
+            id: '',
+            name: '',
+            parent: '',
+            parent_name: '',
+        }
+    }
+}
+
 function patchData( data, init )
 {
     let order = data.order;
@@ -75,12 +82,15 @@ function patchData( data, init )
     if( typeof order.info.tax === 'undefined' ) order.info.tax = false;
     if( typeof order.totals.tax === 'undefined' ) order.totals.tax = 0;
     if( typeof order.totals.paid === 'undefined' ) order.totals.paid = 0;
-    if( typeof order.info.company === 'undefined' ) order.info.company = {name: '', id: '', parent: '', parent_name: ''};
+    if( typeof order.info.company === 'undefined' ) order.info.company = company.create();
     if( typeof order.info.events === 'undefined' ) order.info.events = [];
     if( typeof order.info.delivery_method === 'undefined' ) order.info.delivery_method = '';
     if( typeof order.info.payment_method === 'undefined' ) order.info.payment_method = '';
     if( typeof order.client.shipping === 'undefined' ) order.client.shipping = entity.customer.address.create();
     if( typeof order.client.billing === 'undefined' ) order.client.billing = entity.customer.address.create();
+    if( typeof order.client.shipping.phone === 'undefined' ) order.client.shipping.phone = '';
+    if( typeof order.client.billing.phone === 'undefined' ) order.client.billing.phone = '';
+    if( typeof order.info.ship_by === 'undefined' ) order.info.ship_by = '';
 
     order.fees.forEach( f => {
         if( typeof f.config === 'undefined' ) f.config = {tax: {enabled: true}}
@@ -95,6 +105,8 @@ function convertFromQuote( quote )
     order.info.reference_number = quote.id;
     order.info.status = 'new';
     order.info.source = 'quote';
+    const date = new Date();
+    order.info.date = date.toISOString().split('T')[0]
     return order;
 }
 
@@ -125,6 +137,7 @@ function convertFromSource( data, cb )
             // order.info.notes.private = 'Store: ' + magento_order.store;  // moved to attributes
             order.totals.paid = magento_order.paid;
 
+            let phone = magento_order.extra.customer.phone;
             if( magento_order.extra.customer.address.shipping.street ){
                 order.client.shipping.first_name = magento_order.extra.customer.address.shipping.first_name
                 order.client.shipping.last_name = magento_order.extra.customer.address.shipping.last_name
@@ -134,6 +147,7 @@ function convertFromSource( data, cb )
                 order.client.shipping.state = magento_order.extra.customer.address.shipping.state
                 order.client.shipping.postal_code = magento_order.extra.customer.address.shipping.zip
                 order.client.shipping.country = 'United States'
+                order.client.shipping.phone =  magento_order.extra.customer.address.shipping.phone ?? phone;
             }
             if( magento_order.extra.customer.address.billing.street ){
                 order.client.billing.first_name = magento_order.extra.customer.address.billing.first_name
@@ -372,6 +386,7 @@ export default {
             }
         }
     },
+    company,
     item: OrderItem,
     fee: OrderFee,
     logo: OrderLogo,

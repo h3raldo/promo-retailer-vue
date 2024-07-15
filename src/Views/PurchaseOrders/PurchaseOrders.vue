@@ -18,9 +18,11 @@ export default {
 				'ID': { id: 'id' },
 				'SO#': {},
 				'Status': { id: 'status' },
+				'Date': { id: 'date_updated' },
 				'Title': { },
-				'In-Hands': {},
-				'Events': { },
+				'Ship By': { id:'date_ship_by' },
+				'In-Hands': { id: 'date_deliver_by' },
+				// 'Events': { },
 				'Total': { id: 'total' },
 			},
 		}
@@ -80,6 +82,10 @@ export default {
 				</td>
 
 				<td @click="viewSingle(item.id)">
+					{{ item.updated }}
+				</td>
+
+				<td @click="viewSingle(item.id)">
 					<span class="badge text-bg-secondary rounded-pill">{{ item.vendor }}</span>
 
 					<span class="d-block">
@@ -98,8 +104,9 @@ export default {
 									</span>
 								</td>-->
 
-				<td>{{ item.deliver_by }}</td>
-				<td>
+				<td>{{ item.ship_by || '-' }}</td>
+				<td>{{ item.deliver_by || '-' }}</td>
+				<td class="d-none">
 					<details class=" p-1 mb-1" v-for="event in item.events">
 						<summary style="text-transform: capitalize">{{ event.type }}: {{event.date}}</summary>
 						{{event.note}}

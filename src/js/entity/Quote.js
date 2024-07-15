@@ -22,10 +22,12 @@ function create(id){
             events: [],
             tax: true,
             date: date.toISOString().split('T')[0],
-            deliver_by: date.toISOString().split('T')[0],
+            deliver_by: '',
             deliver_by_strict: false,
+            ship_by: '',
             delivery_method: '',
             payment_method: '',
+            company: entity.order.company.create()
         },
         config: { tax: { enabled: true } },
         client: {
@@ -83,6 +85,10 @@ function patchData( data, init )
     if( typeof quote.info.payment_method === 'undefined' ) quote.info.payment_method = '';
     if( typeof quote.client.shipping === 'undefined' ) quote.client.shipping = entity.customer.address.create();
     if( typeof quote.client.billing === 'undefined' ) quote.client.billing = entity.customer.address.create();
+    if( typeof quote.client.shipping.phone === 'undefined' ) quote.client.shipping.phone = '';
+    if( typeof quote.client.billing.phone === 'undefined' ) quote.client.billing.phone = '';
+    if( typeof quote.info.ship_by === 'undefined' ) quote.info.ship_by = '';
+    if( typeof quote.info.company === 'undefined' ) quote.info.company = entity.order.company.create();
 
     quote.fees.forEach( f => {
         if( typeof f.config === 'undefined' ) f.config = {tax: {enabled: true}}

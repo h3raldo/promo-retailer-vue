@@ -74,7 +74,7 @@ export default {
 							<VendorSelect v-model="fee.vendor" />
 						</div>
 					</div>
-					<Tier :tier="fee.tier" :index="feeIndex" :removeTier="remove" />
+					<Tier :tier="fee.tier" :index="feeIndex" :removeTier="remove" :canDelete="false" />
 
 					<div class="form-check form-switch pt-3">
 						<input class="form-check-input" type="checkbox" role="switch" v-model="fee.config.tax.enabled">

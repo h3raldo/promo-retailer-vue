@@ -38,19 +38,22 @@ export default {
 					</div>
 				</div>
 				<div class="col">
-					<label class="form-label">In-Hands Date:</label>
-					<div>
-						<input type="date" class="form-control" placeholder="In Hands Date" v-model="order.info.deliver_by">
-					</div>
+					<label class="form-label">Ship By:</label>
+					<input type="date" class="form-control" placeholder="Date" v-model="order.info.ship_by">
 				</div>
 				<div class="col">
-					<label class="form-label">Is Firm?</label>
-					<div>
-						<select class="form-select" id="status" v-model="order.info.deliver_by_strict">
-							<option :value="true">Yes</option>
-							<option :value="false">No</option>
-						</select>
+					<div class="row justify-content-between">
+						<div class="col">
+							<label class="form-label">In-Hands By:</label>
+						</div>
+						<div class="col-auto">
+							<label class="form-check-label">
+								<input class="form-check-input me-1" type="checkbox" v-model="order.info.deliver_by_strict">
+								<span>Strict?</span>
+							</label>
+						</div>
 					</div>
+					<input type="date" class="form-control" placeholder="In Hands Date" v-model="order.info.deliver_by">
 				</div>
 			</div>
 

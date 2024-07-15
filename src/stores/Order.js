@@ -82,6 +82,7 @@ export const useOrderStore = defineStore('order', () => {
             },
             remove( index ){
                 order.fees.splice(index, 1);
+                updatePricing();
             }
         },
         vendor: {

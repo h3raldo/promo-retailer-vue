@@ -77,6 +77,7 @@ export const useQuoteStore = defineStore('quote', () => {
             },
             remove( index ){
                 order.fees.splice(index, 1);
+                updatePricing();
             }
         },
         vendor: {

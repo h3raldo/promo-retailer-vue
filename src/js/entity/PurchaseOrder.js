@@ -10,6 +10,7 @@ function create(id){
             statuses: {
                 sent: false,
                 paid: false,
+                shipped: false,
             },
             date: date.toISOString().split('T')[0],
             deliver_by: date.toISOString().split('T')[0],
@@ -61,6 +62,7 @@ function patchData( po, init )
     if( !po.info.follow_up_note ) po.info.follow_up_note = '';
     if( typeof po.info.ship_blind === 'undefined' ) po.info.ship_blind = false;
     if( !po.info.events ) po.info.events = [];
+    if( typeof po.info.statuses.shipped === 'undefined' ) po.info.statuses.shipped = false;
 
     let logos = []
     po.items.forEach( item => {

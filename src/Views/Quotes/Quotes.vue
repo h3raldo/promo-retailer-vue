@@ -14,15 +14,15 @@ export default {
 			quotes: {},
 			columns: {
 				'ID': { id: 'id' },
-				'Author': { id: 'author' },
 				'Status': { id: 'status' },
 				'Category': { id: 'category' },
-				'Title': { },
 				'Date': { id: 'date_created' },
+				'Title': { },
 				'Total': { id: 'total' },
 				'Cost': { id: 'total_cost' },
 				'Profit': {  },
-				'Margin': {  }
+				'Margin': {  },
+				'Author': { id: 'author' },
 			},
 		}
 	},
@@ -80,22 +80,22 @@ export default {
 		<template #item="{item}">
 			<tr class="quote-row">
 				<td @click="viewQuote(item.id)">{{ item.id }}</td>
-				<td @click="viewQuote(item.id)">{{ item.author }}</td>
 				<td @click="viewQuote(item.id)">
-				<span :class="getStatusColor(item.status)">
-					{{ item.status }}
-				</span>
+					<span :class="getStatusColor(item.status)">
+						{{ item.status }}
+					</span>
 				</td>
 				<td @click="viewQuote(item.id)">{{ item.category }}</td>
+				<td @click="viewQuote(item.id)">{{ item.date }}</td>
 				<td @click="viewQuote(item.id)">
 					<span class="badge text-bg-secondary rounded-pill">{{ item.client }}</span><br>
 					{{ item.title }}
 				</td>
-				<td @click="viewQuote(item.id)">{{ item.updated }}</td>
 				<td @click="viewQuote(item.id)">{{ formatPricing(item.total) }}</td>
 				<td @click="viewQuote(item.id)">{{ formatPricing(item.total_cost) }}</td>
 				<td @click="viewQuote(item.id)">{{ formatPricing(item.profit) }}</td>
 				<td @click="viewQuote(item.id)">{{ item.margin }}%</td>
+				<td @click="viewQuote(item.id)">{{ item.author }}</td>
 				<td class="delete text-end">
 					<a class="btn btn-outline-primary me-1" :href="getDuplicateUrl(item.id)"><i class="bi bi-copy"></i></a>
 
