@@ -72,58 +72,56 @@ export default {
 		</template>
 
 		<template #item="{item}">
-			<tr class="quote-row">
-				<td @click="viewSingle(item.id)">{{ item.id }}</td>
-				<td @click="viewSingle(item.id)">#{{ item.reference_number }}</td>
-				<td @click="viewSingle(item.id)">
-					<span :class="getStatusColor(item.status)">
-						{{ item.status }}
-					</span>
-				</td>
+			<td @click="viewSingle(item.id)">{{ item.id }}</td>
+			<td @click="viewSingle(item.id)">#{{ item.reference_number }}</td>
+			<td @click="viewSingle(item.id)">
+				<span :class="getStatusColor(item.status)">
+					{{ item.status }}
+				</span>
+			</td>
 
-				<td @click="viewSingle(item.id)">
-					{{ item.updated }}
-				</td>
+			<td @click="viewSingle(item.id)">
+				{{ item.updated }}
+			</td>
 
-				<td @click="viewSingle(item.id)">
-					<span class="badge text-bg-secondary rounded-pill">{{ item.vendor }}</span>
+			<td @click="viewSingle(item.id)">
+				<span class="badge text-bg-secondary rounded-pill">{{ item.vendor }}</span>
 
-					<span class="d-block">
-						{{ item.title }}
-					</span>
+				<span class="d-block">
+					{{ item.title }}
+				</span>
 
-					<span v-if="item.reference_order && item.reference_order.client" class="d-block">
-						{{ item.reference_order.client }}
-					</span>
+				<span v-if="item.reference_order && item.reference_order.client" class="d-block">
+					{{ item.reference_order.client }}
+				</span>
 
-				</td>
-				<!--
-								<td @click="viewSingle(item.id)">
-									<span v-if="item.reference_order && item.reference_order.client" class="d-block">
-										{{ item.reference_order.client }}
-									</span>
-								</td>-->
+			</td>
+			<!--
+							<td @click="viewSingle(item.id)">
+								<span v-if="item.reference_order && item.reference_order.client" class="d-block">
+									{{ item.reference_order.client }}
+								</span>
+							</td>-->
 
-				<td>{{ item.ship_by || '-' }}</td>
-				<td>{{ item.deliver_by || '-' }}</td>
-				<td class="d-none">
-					<details class=" p-1 mb-1" v-for="event in item.events">
-						<summary style="text-transform: capitalize">{{ event.type }}: {{event.date}}</summary>
-						{{event.note}}
-					</details>
-				</td>
+			<td>{{ item.ship_by || '-' }}</td>
+			<td>{{ item.deliver_by || '-' }}</td>
+			<td class="d-none">
+				<details class=" p-1 mb-1" v-for="event in item.events">
+					<summary style="text-transform: capitalize">{{ event.type }}: {{event.date}}</summary>
+					{{event.note}}
+				</details>
+			</td>
 
-				<!--				<td @click="viewSingle(item.id)">{{ item.created }}</td>-->
-				<td @click="viewSingle(item.id)">{{ formatPricing(item.total) }}</td>
-				<td class="delete text-end">
-					<!--					<a class="btn btn-outline-primary me-1" :href="getDuplicateUrl(item.id)"><i class="bi bi-copy"></i></a>-->
+			<!--				<td @click="viewSingle(item.id)">{{ item.created }}</td>-->
+			<td @click="viewSingle(item.id)">{{ formatPricing(item.total) }}</td>
+			<td class="delete text-end">
+				<!--					<a class="btn btn-outline-primary me-1" :href="getDuplicateUrl(item.id)"><i class="bi bi-copy"></i></a>-->
 
-					<Modal :id="'deletePO-'+item.id" :title="'Are you sure?'"  :icon="'bi-trash'" :buttonClasses="'btn btn-danger'">
-						<p>Will be deleted permanently. Cannot be undone.</p>
-						<a class="btn btn-danger" :href="getDeleteUrl(item.id)"><i class="bi bi-trash"></i> DELETE</a>
-					</Modal>
-				</td>
-			</tr>
+				<Modal :id="'deletePO-'+item.id" :title="'Are you sure?'"  :icon="'bi-trash'" :buttonClasses="'btn btn-danger'">
+					<p>Will be deleted permanently. Cannot be undone.</p>
+					<a class="btn btn-danger" :href="getDeleteUrl(item.id)"><i class="bi bi-trash"></i> DELETE</a>
+				</Modal>
+			</td>
 		</template>
 
 		<template #footer="{response}">

@@ -116,6 +116,18 @@ export default {
 		goToPurchaseOrder( id ){
 			this.$refs.poModal.$refs.closeModalButton.click();
 			this.$router.push(this.symfony.views.purchase_orders_purchase_order.replace(':id', id))
+		},
+		togglePaid(e){
+			if( e.target.checked ){
+				this.order.totals.paid = this.order.totals.total + this.order.totals.tax;
+			} else {
+				this.order.totals.paid = 0;
+			}
+		},
+		toggleShipped(e){
+			if( e.target.checked ){
+				this.order.info.shipped = utils.time.getDateAsString();
+			}
 		}
 	}
 }
@@ -183,6 +195,23 @@ export default {
 						</div>
 						<Search :on-select="onVendorSelect" :button-text="''" :button-icon="'bi-pencil'" />
 					</div>
+				</div>
+
+				<div>
+					<label class="form-check-label">
+						<input class="form-check-input me-1" type="checkbox" @change="togglePaid" v-model="order.info.statuses.paid">
+						<span>Paid</span>
+					</label>
+					<br>
+					<label class="form-check-label">
+						<input class="form-check-input me-1" type="checkbox" v-model="order.info.statuses.invoiced">
+						<span>Invoiced</span>
+					</label>
+					<br>
+					<label class="form-check-label">
+						<input class="form-check-input me-1" type="checkbox" @change="toggleShipped" v-model="order.info.statuses.shipped">
+						<span>Shipped</span>
+					</label>
 				</div>
 
 			</div>

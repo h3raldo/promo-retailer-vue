@@ -139,6 +139,8 @@ export default
             quote.totals.tax = 0;
 
         quote.totals.total = this.round(total_price);
+
+        if( quote.totals.paid >= quote.totals.total ) quote.info.statuses.paid = true;
     },
 
     calculateTax( price, tax=8.25 )

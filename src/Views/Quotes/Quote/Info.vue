@@ -1,6 +1,7 @@
 <script setup>
 import Events from "@/components/globals/properties/Events.vue";
 import Address from "@/components/globals/properties/Address.vue";
+import SelectOrCustom from "@/EntityComponents/Order/globals/item/SelectOrCustom.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -103,6 +104,10 @@ export default {
 				<label class="form-label">Ship To:</label>
 				<textarea class="form-control" v-model="order.client.ship_to" rows="4"></textarea>
 				<div class="form-text">DO NOT USE. Use Shipping Address Instead.</div>
+			</div>
+			<div class="mb-3">
+				<label class="form-label">Shipping Method:</label>
+				<SelectOrCustom :array="['Ground', 'Courier', 'Overnight', 'Will Call',]" :type="'textarea'" v-model="order.info.delivery_method" />
 			</div>
 			<div class="mb-3">
 				<label class="form-label">Shipping Address:</label>

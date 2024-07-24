@@ -11,6 +11,11 @@ function create(id){
         info: {
             title: 'New Order',
             status: 'new',
+            statuses: {
+              shipped: false,
+              invoiced: false,
+              paid: false,
+            },
             category: 'standard',
             reference_number: '',
             po_number: '',
@@ -19,6 +24,7 @@ function create(id){
             deliver_by: '',
             deliver_by_strict: false,
             ship_by: '',
+            shipped: '',
             delivery_method: '',
             payment_method: '',
             attributes: [],
@@ -57,6 +63,14 @@ function create(id){
     }
 }
 
+let statuses = [
+    { value: 'new', title: 'New'},
+    { value: 'sent', title: 'Sent'},
+    { value: 'confirmed', title: 'Confirmed'},
+    { value: 'closed', title: 'Closed'},
+    { value: 'complete', title: 'Complete'},
+];
+
 let company = {
     create(){
         return {
@@ -70,15 +84,14 @@ let company = {
 
 function patchData( data, init )
 {
+    let blank = create(0);
     let order = data.order;
 
     order.id = init.id;
-    order.info.status = init.status;
 
-    if( typeof order.info.po_number === 'undefined' ) order.info.po_number = '';
-    if( typeof order.info.attributes === 'undefined' ) order.info.attributes = [];
-    if( typeof order.config === 'undefined' ) order.config = { tax: { enabled: false } }
-    if( typeof order.info.tax === 'undefined' ) order.info.tax = false;
+    if( typeof order.info.po_number === 'undefined' ) order.info.po_number = blank.info.po_number;
+    if( typeof order.info.attributes === 'undefined' ) order.info.attributes = blank.info.attributes;
+    if( typeof order.config === 'undefined' ) order.config = blank.config
     if( typeof order.totals.tax === 'undefined' ) order.totals.tax = 0;
     if( typeof order.totals.paid === 'undefined' ) order.totals.paid = 0;
     if( typeof order.info.company === 'undefined' ) order.info.company = company.create();
@@ -90,6 +103,12 @@ function patchData( data, init )
     if( typeof order.client.shipping.phone === 'undefined' ) order.client.shipping.phone = '';
     if( typeof order.client.billing.phone === 'undefined' ) order.client.billing.phone = '';
     if( typeof order.info.ship_by === 'undefined' ) order.info.ship_by = '';
+    if( typeof order.info.statuses === 'undefined' ) order.info.statuses = blank.info.statuses;
+    if( typeof order.info.shipped === 'undefined' ) order.info.shipped = blank.info.shipped;
+
+    order.info.status = init.status;
+    order.info.deliver_by = init.dateDeliverBy || '';
+    order.info.ship_by = init.dateShipBy || '';
 
     order.fees.forEach( f => {
         if( typeof f.config === 'undefined' ) f.config = {tax: {enabled: true}}
@@ -373,6 +392,9 @@ function addSubitems( subitems, order )
 
 export default {
     create,
+    default: {
+      statuses
+    },
     patchData,
     convertFromQuote,
     convertFromSource,

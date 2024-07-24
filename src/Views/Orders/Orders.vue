@@ -1,12 +1,14 @@
 <script setup>
-	import Loader from "@/components/globals/Loader.vue";
 	import Modal from "@/components/globals/bootstrap/Modal.vue";
 	import Search from "@/Views/Orders/Search.vue";
 	import Grid from "@/components/globals/Grid.vue";
+	import EditableColumn from "@/components/globals/Grid/EditableColumn.vue";
+	import entity from "@/js/entity.js";
 </script>
 
 <script>
 import utils from "@/js/utils.js";
+import entity from "@/js/entity.js";
 export default {
 	data() {
 		return {
@@ -23,7 +25,21 @@ export default {
 				'Profit': { id: 'total_profit'  },
 				'Margin': { id: 'total_margin' }
 			},
+			bulkEdits: [
+				{
+					name: 'Status',
+					column: 'status',
+					type: 'select',
+					options: entity.order.default.statuses
+				},
+				{
+					name: 'Ship By',
+					column: 'dateShipBy',
+					type: 'date'
+				},
+			],
 			quotes: {},
+			editing: 0,
 		}
 	},
 
@@ -41,11 +57,19 @@ export default {
 
 			return this.symfony.api.orders.export +'?' + params ?? ''
 		},
+		api(){
+
+		}
 	},
 
 	methods: {
 		formatPricing(price){
 			return utils.pricing.format(price);
+		},
+		formatDate(date)
+		{
+			if( !date ) return '-';
+			return utils.time.dateToNiceString(date);
 		},
 		viewQuote( id ){
 			this.$router.push( this.symfony.views.orders_order.replace(':id', id) );
@@ -80,50 +104,58 @@ export default {
 
 <template>
 
-	<Grid :api="symfony.orders.search" :columns="columns" :searchState="searchState">
+	<Grid :api="symfony.orders.search" :columns="columns" :searchState="searchState" :bulkEdits="bulkEdits" :entity="'order'">
 
 		<template #header="{search}">
 			<Search :getEntities="search" :searchParams="searchState" />
 		</template>
 
 		<template #item="{item}">
-			<tr class="quote-row">
 
-				<td @click="viewQuote(item.id)">{{ item.id }}</td>
+			<td @click="viewQuote(item.id)">{{ item.id }}</td>
 
-				<td @click="viewQuote(item.id)">
-					<span :class="getStatusColor(item.status)">
+			<td>
+				<EditableColumn :type="'select'" :item="item" :column="'status'" :options="entity.order.default.statuses" :entity="'order'">
+					<span :class="getStatusColor(item.status)" @click="editing = item.id">
 						{{ item.status }}
 					</span>
-				</td>
+				</EditableColumn>
+			</td>
 
-				<td @click="viewQuote(item.id)">{{ item.date }}</td>
+			<td @click="viewQuote(item.id)">{{ formatDate(item.date) }}</td>
 
-				<td @click="viewQuote(item.id)">
-					<span class="d-block">
-						<span :class="'fw-normal badge source-'+item.source">
-							{{ item.source.charAt(0).toUpperCase() }} -
-							{{ item.reference_number || '' }}
-						</span>
+			<td @click="viewQuote(item.id)">
+				<span class="d-block">
+					<span :class="'fw-normal badge source-'+item.source">
+						{{ item.source.charAt(0).toUpperCase() }} -
+						{{ item.referenceNumber || '' }}
 					</span>
-					{{ item.client }}
-				</td>
+				</span>
+				{{ item.client }}
+			</td>
 
-				<td @click="viewQuote(item.id)">{{ item.ship_by || '-' }}</td>
-				<td @click="viewQuote(item.id)">{{ item.deliver_by || '-' }}</td>
-				<td @click="viewQuote(item.id)">{{ formatPricing(item.total) }}</td>
-				<td @click="viewQuote(item.id)">{{ formatPricing(item.profit) }}</td>
-				<td @click="viewQuote(item.id)">{{ item.margin }}%</td>
+			<td>
+				<EditableColumn :type="'date'" :item="item" :column="'dateShipBy'" :entity="'order'">
+					{{ formatDate(item.dateShipBy) }}
+				</EditableColumn>
+			</td>
+			<td>
+				<EditableColumn :type="'date'" :item="item" :column="'dateDeliverBy'" :entity="'order'">
+					{{ formatDate(item.dateDeliverBy) }}
+				</EditableColumn>
+			</td>
+			<td @click="viewQuote(item.id)">{{ formatPricing(item.total) }}</td>
+			<td @click="viewQuote(item.id)">{{ formatPricing(item.totalProfit) }}</td>
+			<td @click="viewQuote(item.id)">{{ item.totalMargin }}%</td>
 
-				<td class="delete text-end">
-					<a class="btn btn-outline-primary me-1" :href="getDuplicateUrl(item.id)"><i class="bi bi-copy"></i></a>
-					<Modal :id="'deleteQuote-'+item.id" :title="'Are you sure?'"  :icon="'bi-trash'" :buttonClasses="'btn btn-danger'">
-						<p>Quote will be deleted permanently. Cannot be undone.</p>
-						<a class="btn btn-danger" :href="getDeleteUrl(item.id)"><i class="bi bi-trash"></i> DELETE</a>
-					</Modal>
-				</td>
+			<td class="delete text-end">
+				<a class="btn btn-outline-primary me-1" :href="getDuplicateUrl(item.id)"><i class="bi bi-copy"></i></a>
+				<Modal :id="'deleteQuote-'+item.id" :title="'Are you sure?'"  :icon="'bi-trash'" :buttonClasses="'btn btn-danger'">
+					<p>Quote will be deleted permanently. Cannot be undone.</p>
+					<a class="btn btn-danger" :href="getDeleteUrl(item.id)"><i class="bi bi-trash"></i> DELETE</a>
+				</Modal>
+			</td>
 
-			</tr>
 		</template>
 
 		<template #footer="{response}">

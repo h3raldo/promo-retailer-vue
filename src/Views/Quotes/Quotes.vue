@@ -78,33 +78,31 @@ export default {
 		</template>
 
 		<template #item="{item}">
-			<tr class="quote-row">
-				<td @click="viewQuote(item.id)">{{ item.id }}</td>
-				<td @click="viewQuote(item.id)">
-					<span :class="getStatusColor(item.status)">
-						{{ item.status }}
-					</span>
-				</td>
-				<td @click="viewQuote(item.id)">{{ item.category }}</td>
-				<td @click="viewQuote(item.id)">{{ item.date }}</td>
-				<td @click="viewQuote(item.id)">
-					<span class="badge text-bg-secondary rounded-pill">{{ item.client }}</span><br>
-					{{ item.title }}
-				</td>
-				<td @click="viewQuote(item.id)">{{ formatPricing(item.total) }}</td>
-				<td @click="viewQuote(item.id)">{{ formatPricing(item.total_cost) }}</td>
-				<td @click="viewQuote(item.id)">{{ formatPricing(item.profit) }}</td>
-				<td @click="viewQuote(item.id)">{{ item.margin }}%</td>
-				<td @click="viewQuote(item.id)">{{ item.author }}</td>
-				<td class="delete text-end">
-					<a class="btn btn-outline-primary me-1" :href="getDuplicateUrl(item.id)"><i class="bi bi-copy"></i></a>
+			<td @click="viewQuote(item.id)">{{ item.id }}</td>
+			<td @click="viewQuote(item.id)">
+				<span :class="getStatusColor(item.status)">
+					{{ item.status }}
+				</span>
+			</td>
+			<td @click="viewQuote(item.id)">{{ item.category }}</td>
+			<td @click="viewQuote(item.id)">{{ item.date }}</td>
+			<td @click="viewQuote(item.id)">
+				<span class="badge text-bg-secondary rounded-pill">{{ item.client }}</span><br>
+				{{ item.title }}
+			</td>
+			<td @click="viewQuote(item.id)">{{ formatPricing(item.total) }}</td>
+			<td @click="viewQuote(item.id)">{{ formatPricing(item.total_cost) }}</td>
+			<td @click="viewQuote(item.id)">{{ formatPricing(item.profit) }}</td>
+			<td @click="viewQuote(item.id)">{{ item.margin }}%</td>
+			<td @click="viewQuote(item.id)">{{ item.author }}</td>
+			<td class="delete text-end">
+				<a class="btn btn-outline-primary me-1" :href="getDuplicateUrl(item.id)"><i class="bi bi-copy"></i></a>
 
-					<Modal :id="'deleteQuote-'+item.id" :title="'Are you sure?'"  :icon="'bi-trash'" :buttonClasses="'btn btn-danger'">
-						<p>Quote will be deleted permanently. Cannot be undone.</p>
-						<a class="btn btn-danger" :href="getDeleteUrl(item.id)"><i class="bi bi-trash"></i> DELETE</a>
-					</Modal>
-				</td>
-			</tr>
+				<Modal :id="'deleteQuote-'+item.id" :title="'Are you sure?'"  :icon="'bi-trash'" :buttonClasses="'btn btn-danger'">
+					<p>Quote will be deleted permanently. Cannot be undone.</p>
+					<a class="btn btn-danger" :href="getDeleteUrl(item.id)"><i class="bi bi-trash"></i> DELETE</a>
+				</Modal>
+			</td>
 		</template>
 		<template #footer="{response}">
 			<tr v-if="response && response.totals">

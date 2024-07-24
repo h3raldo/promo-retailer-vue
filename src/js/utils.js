@@ -31,7 +31,20 @@ export default
     },
 
     async ajaxAsync( url, data ){
-        const response = await fetch(url);
+        let init = {
+            method: 'GET'
+        }
+
+        if( typeof data === 'object' ){
+            init.method = 'POST';
+            init.headers = {
+                'Accept': 'application/json',
+                'Content-type': 'application/json',
+            };
+            init.body = JSON.stringify(data);
+        }
+
+        const response = await fetch(url, init);
         return await response.json();
     },
 
@@ -112,13 +125,45 @@ export default
 
     time: {
         getDateAsString( provided ) {
-          let date = new Date();
-          if( provided ) date = new Date(provided)
-
-          return this.dateToString(date);
+            let date = new Date();
+            if( provided ) date = new Date(provided)
+            return this.dateToString(date);
         },
         dateToString( date ){
-            return  date.toISOString().split('T')[0]
+            let month = date.getMonth() + 1;
+            if( month < 10 ) month = '0' + month;
+
+            let day = date.getDate();
+            if( day < 10 ) day = '0' + day;
+
+            return `${date.getFullYear()}-${month}-${day}`
+        },
+        dateToNiceString( stringDate )
+        {
+            let date = new Date(stringDate+'T12:00:00'+this.getUserTimezoneOffset()+':00');
+            return date.toLocaleDateString('en-us', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+            });
+        },
+        getUserTimezoneOffset()
+        {
+            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+            const getOffset = (tz) => Intl.DateTimeFormat("ia", {
+                timeZoneName: "shortOffset",
+                timeZone : tz
+            })
+                .formatToParts()
+                .find((i) => i.type === "timeZoneName").value // => "GMT+/-hh:mm"
+                .slice(3);
+
+            let offset = getOffset(tz);
+            let type = offset[0];
+            let without = offset.substring(1);
+            if( without.length < 2 ) without = '0' + without;
+
+            return `${type}${without}`;
         },
         removeDays( date, days ){
             let temp = new Date(date);
@@ -154,6 +199,27 @@ export default
             }
 
             return params.join('&')
+        },
+        paramsToArray( form, ignoreEmpty ){
+            let params = [];
+
+            let inputs = form.elements;
+
+            for (let i = 0; i < inputs.length; i++) {
+                let input = inputs[i];
+
+                if( !input.name ) continue;
+                if( input.type === 'checkbox' && input.checked !== true ) continue;
+
+                if (!(ignoreEmpty && input.value === '')) {
+                    params.push({
+                        name: input.name,
+                        value: input.value
+                    });
+                }
+            }
+
+            return params;
         }
     }
 }

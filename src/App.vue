@@ -9,7 +9,7 @@ import {computed} from "vue";
 export default {
 	data() {
 		return {
-			version: '1.9.3',
+			version: '2.0.2',
 			symfony: window.symfony,
 			alert: {
 				enabled: false,
@@ -93,7 +93,7 @@ export default {
 
 				<div class="d-flex justify-content-center align-items-center gap-2 pt-5">
 					<div><img class="d-block" src="https://cdn.promoretailer.com/logos/promo-retailer-purple.png" alt="" height="30"></div>
-					<div class="fst-italic">PR ProVue v{{ version }}</div>
+					<div class="fst-italic">PromoVue v{{ version }}</div>
 				</div>
 			</main>
 		</div>

@@ -27,6 +27,9 @@ function afterDataRetrieval( entity_data, init )
 		let id = entity_data.id;
 		if( entity_data.new_order_id ) id = entity_data.new_order_id;
 		orderStore.order.id = id;
+		orderStore.order.info.status = init.status;
+		orderStore.order.info.deliver_by = init.dateDeliverBy || '';
+		orderStore.order.info.ship_by = init.dateShipBy || '';
 	} else{
 		orderStore.$patch({order: entity_data.order});
 	}
@@ -99,7 +102,7 @@ function setup()
 		}
 
 
-		afterDataRetrieval(entity_data);
+		afterDataRetrieval(entity_data, init);
 	})
 }
 

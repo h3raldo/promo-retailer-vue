@@ -10,7 +10,7 @@ export default {
 	},
 	props: ['address'],
 	beforeMount() {
-		if( !this.address.first_name ) this.editing = true;
+		// if( !this.address.first_name ) this.editing = true;
 	}
 }
 </script>

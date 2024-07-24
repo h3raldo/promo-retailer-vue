@@ -11,7 +11,9 @@ import entity from "@/js/entity.js";
 
 export default {
 	data() {
-		return {}
+		return {
+			editingPaid: false,
+		}
 	},
 
 	inject: ['order', 'updateTotals', 'updatePricing', 'order'],
@@ -29,6 +31,7 @@ export default {
 	},
 
 	methods: {
+
 	},
 
 	mounted() {}
@@ -87,12 +90,6 @@ export default {
 	</div>
 
 	<template v-if="showPrice">
-
-		<div class="d-flex gap-3 justify-content-end align-items-center pt-2">
-			<div class="text-end">Paid:</div>
-			<div class="col-1 text-end">{{ pricing.format(order.totals.paid) }}</div>
-			<div class="col-1 text-end"></div>
-		</div>
 
 		<div class="d-flex gap-3 justify-content-end pt-2">
 			<div class="text-end"><i class="bi bi-eye-slash"></i> Cost:</div>

@@ -11,6 +11,12 @@ function create(id){
         info: {
             title: 'New Quote',
             status: 'draft',
+            statuses: {
+                sent: false,
+                shipped: false,
+                approved: false,
+                paid: false,
+            },
             category: 'standard',
             po_number: '',
             notes: {
@@ -54,6 +60,7 @@ function create(id){
 
 function patchData( data, init )
 {
+    let blank = create(0);
     let quote = data.quote;
 
     quote.id = init.id;
@@ -88,6 +95,7 @@ function patchData( data, init )
     if( typeof quote.client.billing.phone === 'undefined' ) quote.client.billing.phone = '';
     if( typeof quote.info.ship_by === 'undefined' ) quote.info.ship_by = '';
     if( typeof quote.info.company === 'undefined' ) quote.info.company = entity.order.company.create();
+    if( typeof quote.info.statuses === 'undefined' ) quote.info.statuses = blank.info.statuses;
 
     quote.fees.forEach( f => {
         if( typeof f.config === 'undefined' ) f.config = {tax: {enabled: true}}

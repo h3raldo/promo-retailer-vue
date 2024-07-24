@@ -1,7 +1,7 @@
 export default {
     address: {
-        create(){
-            return {
+        create( init ){
+            let address =  {
                 company: '',
                 first_name: '',
                 last_name: '',
@@ -13,6 +13,8 @@ export default {
                 country: 'United States',
                 phone: '',
             }
+
+            return Object.assign( address, init );
         }
     }
 }

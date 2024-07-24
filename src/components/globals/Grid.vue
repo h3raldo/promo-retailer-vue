@@ -8,11 +8,14 @@ export default {
 	data(){
 		return {
 			loading: false,
+			confirmBulkEdit: false,
 			response: {},
 			entities: [],
+			selected: [],
 		}
 	},
-	props: ['columns', 'searchState', 'api'],
+	inject: ['symfony', 'alert'],
+	props: ['columns', 'searchState', 'api', 'bulkEdits', 'entity'],
 	computed: {
 		caretClasses() {
 			if( this.searchState.order_by_direction === 'desc' ) return 'bi bi-caret-down';
@@ -75,6 +78,50 @@ export default {
 		},
 		getPageClasses( page ) {
 			return 'page-item' + (page === parseInt(this.searchState.page) ? ' active' : '');
+		},
+		async submitBulkEdits(e)
+		{
+			e.preventDefault();
+			let params = utils.form.paramsToArray( this.$refs.bulkEditForm, true )
+			if( !params.length ) return;
+
+			let entities = [];
+
+			this.selected.forEach( id => {
+				params.forEach( p => {
+					entities.push({
+						id: id,
+						column: p.name,
+						value: p.value,
+					})
+				})
+			})
+
+			let api = this.symfony.api.entity.save.replace(':type', this.entity);
+			let data = {entities: entities}
+
+			let response;
+			this.loading = true;
+
+			try {
+				response = await utils.ajaxAsync(api, data);
+				this.loading = false;
+			} catch (e) {
+				this.loading = false;
+				this.alert('Unable to save item(s)', 'danger', e.message);
+				return;
+			}
+
+			this.confirmBulkEdit = false;
+
+			if( !response || response.error === true ){
+				this.alert('Could not save item(s)', 'danger');
+				return;
+			}
+
+			this.alert(`Item(s) Saved!`);
+
+			this.getEntities();
 		}
 	},
 	mounted() {
@@ -89,25 +136,62 @@ export default {
 
 		<slot name="header" :search="getEntities"></slot>
 
-		<Loader v-if="loading" :align="'center'" />
+		<div class="row pt-4">
+			<div class="col">
+				<div class=" border py-2 px-3" v-if="bulkEdits && selected.length > 0">
+					<form @submit="submitBulkEdits" class="d-flex align-items-center gap-2" ref="bulkEditForm">
 
-		<div class="text-center pt-4">
-			<nav>
-				<ul class="pagination justify-content-center mb-0">
-					<li class="page-item"><button class="page-link" @click="changePage(1)"><span aria-hidden="true">&laquo;</span></button></li>
+						<template v-for="param in bulkEdits">
+							<div class="">
+								<label>{{ param.name }}:</label>
+							</div>
+							<div v-if="param.type === 'select'">
+								<select class="form-select form-select-sm" :name="param.column">
+									<option value="">-</option>
+									<option v-for="option in param.options" :value="option.value">{{ option.title }}</option>
+								</select>
+							</div>
+							<div v-if="param.type === 'date'">
+								<input type="date" class="form-control form-control-sm" :name="param.column">
+							</div>
+						</template>
 
-					<li v-for="index in pageCount" :class="getPageClasses(index)">
-						<button class="page-link" @click="changePage(index)">{{ index }}</button>
-					</li>
+						<div>
+							<span v-if="!confirmBulkEdit" class="btn btn-sm btn-outline-primary" @click="confirmBulkEdit = true">Update</span>
+							<button v-else class="btn btn-sm btn-primary" :disabled="loading">Confirm Updating {{ selected.length }} Item(s)</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="col">
+				<nav class="pb-2">
+					<ul class="pagination justify-content-end mb-0">
+						<li class="page-item">
+							<button class="page-link" @click="getEntities(false)"><i class="bi bi-arrow-clockwise"></i></button>
+						</li>
 
-					<li class="page-item"><button class="page-link" @click="changePage(pageCount)"><span aria-hidden="true">&raquo;</span></button></li>
-				</ul>
-			</nav>
+						<li class="page-item">
+							<button class="page-link" @click="changePage(1)"><span aria-hidden="true">&laquo;</span></button>
+						</li>
+
+						<li v-for="index in pageCount" :class="getPageClasses(index)">
+							<button class="page-link" @click="changePage(index)">{{ index }}</button>
+						</li>
+
+						<li class="page-item">
+							<button class="page-link" @click="changePage(pageCount)"><span aria-hidden="true">&raquo;</span></button>
+						</li>
+					</ul>
+				</nav>
+			</div>
 		</div>
+
+		<Loader v-if="loading" :align="'center'" />
 
 		<table class="table align-middle table-hover">
 			<thead>
 				<tr>
+					<th></th>
 					<th v-for="(col, title) in columns" @click="orderBy(col.id)" class="text-nowrap">
 						{{ title }}
 						<span v-if="col.id && searchState.order_by === col.id"><i :class="caretClasses"></i></span>
@@ -117,7 +201,10 @@ export default {
 			</thead>
 			<tbody>
 				<template v-for="item in entities">
-					<slot name="item" :item="item"></slot>
+					<tr class="quote-row">
+						<td><input class="form-check-input p-2" type="checkbox" v-model="selected" :value="item.id"></td>
+						<slot name="item" :item="item"></slot>
+					</tr>
 				</template>
 			</tbody>
 			<tfoot>
