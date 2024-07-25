@@ -57,10 +57,11 @@ export default{
 
 		utils.ajax(url, (d) => {
 
-			let entity_data = d;
+			let entity_data = d.data;
+			let init = d.init;
 
-			if( entity_data.entities && entity_data.entities.order ){
-				self.entities.order = JSON.parse( entity_data.entities.order.data );
+			if( d.entities && d.entities.order ){
+				self.entities.order = JSON.parse( d.entities.order.data );
 			}
 
 			if ( !entity_data.po ) {
@@ -90,10 +91,14 @@ export default{
 					});
 				}
 
+				purchaseOrderStore.po.info.status = init.status;
+				purchaseOrderStore.po.info.deliver_by = init.dateDeliverBy || '';
+				purchaseOrderStore.po.info.ship_by = init.dateShipBy || '';
+
 			} else{
 				self.loading = false;
 				purchaseOrderStore.po.id = entity_data.id;
-				let { po, logos } = entity.purchaseOrder.patchData(entity_data.po)
+				let { po, logos } = entity.purchaseOrder.patchData(entity_data.po, init);
 				logos.forEach( l => purchaseOrderStore.logos.push(l));
 				purchaseOrderStore.$patch({po: po, logos: logos});
 			}

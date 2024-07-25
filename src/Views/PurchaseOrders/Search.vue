@@ -17,7 +17,7 @@ export default {
 					return;
 				}
 
-				self.$router.push( self.symfony.views.quotes_quote.replace(':id', data.id) )
+				self.$router.push( self.symfony.views.purchase_orders_purchase_order.replace(':id', data.id) )
 
 			}, (error) => {
 				this.alert('Error creating new order', 'danger');

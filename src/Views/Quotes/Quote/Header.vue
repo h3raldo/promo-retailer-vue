@@ -154,36 +154,33 @@ export default {
 		</div>
 	</div>
 
-	<div class="d-flex align-items-center">
+
+	<div class="d-flex gap-3 align-items-center">
+		<div>
+			<div class="form-floating">
+				<select class="form-select" id="status" v-model="order.info.status">
+					<option value="draft">Draft</option>
+					<option value="sent">Sent</option>
+					<option value="confirmed">Confirmed</option>
+					<option value="pushed">Pushed</option>
+					<option value="closed">Closed</option>
+				</select>
+				<label for="status">Status</label>
+			</div>
+		</div>
 		<div class="flex-grow-1">
-			<div class="d-flex gap-3 align-items-center">
-				<div>
-					<div class="form-floating">
-						<select class="form-select" id="status" v-model="order.info.status">
-							<option value="draft">Draft</option>
-							<option value="sent">Sent</option>
-							<option value="confirmed">Confirmed</option>
-							<option value="pushed">Pushed</option>
-							<option value="closed">Closed</option>
-						</select>
-						<label for="status">Status</label>
-					</div>
+			<div class="form-floating">
+				<input type="text" class="form-control" id="client" placeholder="Quote Name" v-model="order.info.title">
+				<label for="client">Quote Title</label>
+			</div>
+		</div>
+		<div class="col-3">
+			<div class="input-group">
+				<div class="form-floating">
+					<input type="text" class="form-control" placeholder="Vendor" v-model="order.info.company.name" disabled>
+					<label>Company</label>
 				</div>
-				<div class="col-5">
-					<div class="form-floating">
-						<input type="text" class="form-control" id="client" placeholder="Quote Name" v-model="order.info.title">
-						<label for="client">Quote Title</label>
-					</div>
-				</div>
-				<div class="col-3">
-					<div class="input-group">
-						<div class="form-floating">
-							<input type="text" class="form-control" placeholder="Vendor" v-model="order.info.company.name" disabled>
-							<label>Company</label>
-						</div>
-						<Search :onSelect="onVendorSelect" :buttonText="''" :buttonIcon="'bi-pencil'" />
-					</div>
-				</div>
+				<Search :onSelect="onVendorSelect" :buttonText="''" :buttonIcon="'bi-pencil'" />
 			</div>
 		</div>
 	</div>

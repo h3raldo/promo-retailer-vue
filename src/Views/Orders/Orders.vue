@@ -37,6 +37,11 @@ export default {
 					column: 'dateShipBy',
 					type: 'date'
 				},
+				{
+					name: 'In-Hands',
+					column: 'dateDeliverBy',
+					type: 'date'
+				},
 			],
 			quotes: {},
 			editing: 0,

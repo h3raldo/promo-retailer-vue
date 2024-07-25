@@ -136,7 +136,7 @@ export default {
 
 		<slot name="header" :search="getEntities"></slot>
 
-		<div class="row pt-4">
+		<div class="row pt-4 align-items-center pb-2">
 			<div class="col">
 				<div class=" border py-2 px-3" v-if="bulkEdits && selected.length > 0">
 					<form @submit="submitBulkEdits" class="d-flex align-items-center gap-2" ref="bulkEditForm">
@@ -163,7 +163,7 @@ export default {
 					</form>
 				</div>
 			</div>
-			<div class="col">
+			<div class="col-4">
 				<nav class="pb-2">
 					<ul class="pagination justify-content-end mb-0">
 						<li class="page-item">
@@ -191,7 +191,7 @@ export default {
 		<table class="table align-middle table-hover">
 			<thead>
 				<tr>
-					<th></th>
+					<th v-if="bulkEdits"></th>
 					<th v-for="(col, title) in columns" @click="orderBy(col.id)" class="text-nowrap">
 						{{ title }}
 						<span v-if="col.id && searchState.order_by === col.id"><i :class="caretClasses"></i></span>
@@ -202,7 +202,7 @@ export default {
 			<tbody>
 				<template v-for="item in entities">
 					<tr class="quote-row">
-						<td><input class="form-check-input p-2" type="checkbox" v-model="selected" :value="item.id"></td>
+						<td v-if="bulkEdits"><input class="form-check-input p-2" type="checkbox" v-model="selected" :value="item.id"></td>
 						<slot name="item" :item="item"></slot>
 					</tr>
 				</template>

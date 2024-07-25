@@ -57,6 +57,12 @@ function create(id){
     }
 }
 
+let statuses = [
+    { value: 'open', title: 'Open'},
+    { value: 'sent', title: 'Sent'},
+    { value: 'closed', title: 'Closed'},
+];
+
 function patchData( po, init )
 {
     if( !po.info.follow_up_date ) po.info.follow_up_date = '';
@@ -75,6 +81,10 @@ function patchData( po, init )
             logos.push( placement.logo );
         })
     })
+
+    po.info.status = init.status;
+    po.info.deliver_by = init.dateDeliverBy || '';
+    po.info.ship_by = init.dateShipBy || '';
 
     return {
         po, logos
@@ -194,6 +204,9 @@ let item = {
 
 export default {
     create,
+    default: {
+        statuses
+    },
     item,
     patchData,
     fromOrder,

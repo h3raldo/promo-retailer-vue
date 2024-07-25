@@ -38,6 +38,8 @@ export default {
 		onVendorSelect( company )
 		{
 			this.po.info.vendor.name = company.name;
+			this.po.info.vendor.id = company.id;
+			this.po.info.vendor.info = company;
 		},
 
 		ajaxUrl(url, cb, ecb)
@@ -97,51 +99,47 @@ export default {
 		</div>
 	</div>
 
-	<div class="d-flex align-items-center">
+	<div class="d-flex gap-3 align-items-center">
+
+		<div>
+			<div class="form-floating">
+				<select class="form-select" id="status" v-model="po.info.status">
+					<option value="open">Open</option>
+					<option value="sent">Sent</option>
+					<option value="closed">Closed</option>
+				</select>
+				<label for="status">Status</label>
+			</div>
+		</div>
+
 		<div class="flex-grow-1">
-			<div class="d-flex gap-3 align-items-center">
+			<div class="form-floating">
+				<input type="text" class="form-control" id="client" placeholder="Quote Name" v-model="po.info.title">
+				<label for="client">Title</label>
+			</div>
+		</div>
 
-				<div>
-					<div class="form-floating">
-						<select class="form-select" id="status" v-model="po.info.status">
-							<option value="open">Open</option>
-							<option value="sent">Sent</option>
-							<option value="closed">Closed</option>
-						</select>
-						<label for="status">Status</label>
-					</div>
+
+		<div class="col-2">
+			<div class="input-group">
+				<div class="form-floating">
+					<input type="text" class="form-control" placeholder="Vendor" v-model="po.info.vendor.name" disabled>
+					<label>Vendor</label>
 				</div>
-
-				<div class="col-4">
-					<div class="form-floating">
-						<input type="text" class="form-control" id="client" placeholder="Quote Name" v-model="po.info.title">
-						<label for="client">Title</label>
-					</div>
-				</div>
-
-
-				<div class="col-2">
-					<div class="input-group">
-						<div class="form-floating">
-							<input type="text" class="form-control" placeholder="Vendor" v-model="po.info.vendor.name" disabled>
-							<label>Vendor</label>
-						</div>
-						<Search :on-select="onVendorSelect" :button-text="''" :button-icon="'bi-pencil'" />
-					</div>
-				</div>
-
-				<div>
-					<label class="form-check-label">
-						<input class="form-check-input me-1" type="checkbox" v-model="po.info.statuses.paid">
-						<span>Paid</span>
-					</label>
-					<br>
-					<label class="form-check-label">
-						<input class="form-check-input me-1" type="checkbox" v-model="po.info.statuses.sent">
-						<span>Sent</span>
-					</label>
-				</div>
+				<Search :on-select="onVendorSelect" :button-text="''" :button-icon="'bi-pencil'" />
 			</div>
 		</div>
 	</div>
+
+	<div class="d-flex gap-3 align-items-center pt-2">
+		<label class="form-check-label bg-gray px-2 rounded small">
+			<input class="form-check-input me-1" type="checkbox" v-model="po.info.statuses.paid">
+			<span>Paid</span>
+		</label>
+		<label class="form-check-label bg-gray px-2 rounded small">
+			<input class="form-check-input me-1" type="checkbox" v-model="po.info.statuses.sent">
+			<span>Sent</span>
+		</label>
+	</div>
+
 </template>

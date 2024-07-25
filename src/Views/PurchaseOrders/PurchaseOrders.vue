@@ -1,13 +1,14 @@
 <script setup>
-import Loader from "@/components/globals/Loader.vue";
 import Search from "@/Views/PurchaseOrders/Search.vue";
-import Totals from "@/Views/PurchaseOrders/Totals.vue";
 import Modal from "@/components/globals/bootstrap/Modal.vue";
 import Grid from "@/components/globals/Grid.vue";
+import EditableColumn from "@/components/globals/Grid/EditableColumn.vue";
+import entity from "@/js/entity.js";
 </script>
 
 <script>
 import utils from "@/js/utils.js";
+import entity from "@/js/entity.js";
 export default {
 	inject: ['symfony', 'search'],
 	data(){
@@ -25,6 +26,24 @@ export default {
 				// 'Events': { },
 				'Total': { id: 'total' },
 			},
+			bulkEdits: [
+				{
+					name: 'Status',
+					column: 'status',
+					type: 'select',
+					options: entity.purchaseOrder.default.statuses
+				},
+				{
+					name: 'Ship By',
+					column: 'dateShipBy',
+					type: 'date'
+				},
+				{
+					name: 'In Hands',
+					column: 'dateDeliverBy',
+					type: 'date'
+				},
+			],
 		}
 	},
 	computed: {
@@ -42,6 +61,11 @@ export default {
 		},
 		formatPricing( price ){
 			return utils.pricing.format(price);
+		},
+		formatDate(date)
+		{
+			if( !date ) return '-';
+			return utils.time.dateToNiceString(date);
 		},
 		getStatusColor( status ){
 			let statuses = {
@@ -65,7 +89,7 @@ export default {
 
 <template>
 
-	<Grid :api="symfony.api.purchase_orders.search" :columns="columns" :searchState="searchState">
+	<Grid :api="symfony.api.purchase_orders.search" :columns="columns" :searchState="searchState" :bulkEdits="bulkEdits" :entity="'po'">
 
 		<template #header="{search}">
 			<Search :getEntities="search" :searchParams="searchState" />
@@ -74,14 +98,16 @@ export default {
 		<template #item="{item}">
 			<td @click="viewSingle(item.id)">{{ item.id }}</td>
 			<td @click="viewSingle(item.id)">#{{ item.reference_number }}</td>
-			<td @click="viewSingle(item.id)">
-				<span :class="getStatusColor(item.status)">
-					{{ item.status }}
-				</span>
+			<td>
+				<EditableColumn :type="'select'" :item="item" :column="'status'" :options="entity.purchaseOrder.default.statuses" :entity="'po'">
+					<span :class="getStatusColor(item.status)" @click="editing = item.id">
+						{{ item.status }}
+					</span>
+				</EditableColumn>
 			</td>
 
 			<td @click="viewSingle(item.id)">
-				{{ item.updated }}
+				{{ formatDate(item.updated) }}
 			</td>
 
 			<td @click="viewSingle(item.id)">
@@ -96,15 +122,17 @@ export default {
 				</span>
 
 			</td>
-			<!--
-							<td @click="viewSingle(item.id)">
-								<span v-if="item.reference_order && item.reference_order.client" class="d-block">
-									{{ item.reference_order.client }}
-								</span>
-							</td>-->
 
-			<td>{{ item.ship_by || '-' }}</td>
-			<td>{{ item.deliver_by || '-' }}</td>
+			<td>
+				<EditableColumn :type="'date'" :item="item" :column="'dateShipBy'" :entity="'po'">
+					{{ formatDate(item.dateShipBy) }}
+				</EditableColumn>
+			</td>
+			<td>
+				<EditableColumn :type="'date'" :item="item" :column="'dateDeliverBy'" :entity="'po'">
+					{{ formatDate(item.dateDeliverBy) }}
+				</EditableColumn>
+			</td>
 			<td class="d-none">
 				<details class=" p-1 mb-1" v-for="event in item.events">
 					<summary style="text-transform: capitalize">{{ event.type }}: {{event.date}}</summary>
@@ -112,11 +140,8 @@ export default {
 				</details>
 			</td>
 
-			<!--				<td @click="viewSingle(item.id)">{{ item.created }}</td>-->
 			<td @click="viewSingle(item.id)">{{ formatPricing(item.total) }}</td>
 			<td class="delete text-end">
-				<!--					<a class="btn btn-outline-primary me-1" :href="getDuplicateUrl(item.id)"><i class="bi bi-copy"></i></a>-->
-
 				<Modal :id="'deletePO-'+item.id" :title="'Are you sure?'"  :icon="'bi-trash'" :buttonClasses="'btn btn-danger'">
 					<p>Will be deleted permanently. Cannot be undone.</p>
 					<a class="btn btn-danger" :href="getDeleteUrl(item.id)"><i class="bi bi-trash"></i> DELETE</a>
