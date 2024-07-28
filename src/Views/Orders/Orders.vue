@@ -135,6 +135,12 @@ export default {
 						{{ item.source.charAt(0).toUpperCase() }} -
 						{{ item.referenceNumber || '' }}
 					</span>
+
+					<span v-if="!item.company || !item.quickbooksID" class="text-danger badge">
+						<i class="bi bi-info-circle pe-1"></i>
+						<span v-if="!item.company">Company</span>
+						<span v-if="item.company && !item.quickbooksID">QB ID</span>
+					</span>
 				</span>
 				{{ item.client }}
 			</td>

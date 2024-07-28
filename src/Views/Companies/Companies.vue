@@ -83,8 +83,9 @@ export default {
 			<th class="col-1">ID</th>
 			<th class="col-1">Type</th>
 			<th>Company</th>
-			<th class="col-1 text-center">Supplier</th>
-			<th class="col-1 text-center">Decorator</th>
+			<th class="col-1 text-center">QB ID</th>
+			<th v-if="type === 'vendor'" class="col-1 text-center">Supplier</th>
+			<th v-if="type === 'vendor'" class="col-1 text-center">Decorator</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -98,11 +99,16 @@ export default {
 				{{ company.name }}
 			</td>
 			<td class="text-center">
+				<span v-if="company.data && company.data.external && company.data.external.quickbooks.id">
+					<i class="text-success bi bi-check-square-fill"></i>
+				</span>
+			</td>
+			<td v-if="type === 'vendor'" class="text-center">
 				<span v-if="company.data && company.data.type && company.data.type.supplier">
 					<i class="bi bi-check-square-fill"></i>
 				</span>
 			</td>
-			<td class="text-center">
+			<td v-if="type === 'vendor'" class="text-center">
 				<span v-if="company.data && company.data.type && company.data.type.decorator">
 					<i class="bi bi-check-square-fill"></i>
 				</span>

@@ -1,9 +1,9 @@
 <script setup>
 import Loader from "@/components/globals/Loader.vue";
-import Modal from "@/components/globals/bootstrap/Modal.vue";
 import Address from "@/components/globals/properties/Address.vue";
 import Tabs from "@/components/globals/Tabs.vue";
 import Search from "@/EntityComponents/Company/Search.vue";
+import SearchCustomers from "@/components/api/Quickbooks/Search.Customers.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -81,6 +81,16 @@ export default {
 				name: 'companies_company',
 				params: { id: id }
 			});
+		},
+		clearQuickbooksCustomer(){
+			this.company.data.external.quickbooks.id = '';
+			this.company.data.external.quickbooks.display_name = '';
+			this.company.data.external.quickbooks.company_name = '';
+		},
+		selectQuickbooksCustomer( customer ){
+			this.company.data.external.quickbooks.id = customer.Id;
+			this.company.data.external.quickbooks.display_name = customer.DisplayName;
+			this.company.data.external.quickbooks.company_name = customer.CompanyName;
 		}
 	},
 	mounted() {
@@ -155,7 +165,8 @@ export default {
 				<div class="row pt-4">
 					<div class="col">
 
-						<h4>Primary Contact</h4>
+						<!--
+						<h5>Primary Contact</h5>
 						<div class="row">
 							<div class="col-10">
 								<input class="form-control" type="text" placeholder="Primary Contact" disabled />
@@ -163,6 +174,19 @@ export default {
 							<div class="col-2">
 								<button class="btn btn-outline-primary"><i class="bi bi-pencil"></i></button>
 							</div>
+						</div>
+
+						<br>
+						-->
+
+						<h5>Quickbooks Customer</h5>
+						<div v-if="!company.data.external.quickbooks.id" class="">
+							<p class="text-danger">*Required. Needs a quickbook customer to match for invoicing.</p>
+							<SearchCustomers :selected="selectQuickbooksCustomer"/>
+						</div>
+						<div v-else>
+							<button class="btn btn-sm btn-outline-primary me-2" @click="clearQuickbooksCustomer"><i class="bi bi-pencil"></i></button>
+							{{ company.data.external.quickbooks.company_name }} - {{ company.data.external.quickbooks.display_name }}
 						</div>
 
 						<br>

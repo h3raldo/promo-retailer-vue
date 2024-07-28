@@ -30,6 +30,13 @@ export default {
 		},
 		saveUrl() {
 			return this.urls.save;
+		},
+		companyName()
+		{
+			let name = this.order.info.company.name;
+			if( this.order.info.company.parent_name )
+				name += ' (' + this.order.info.company.parent_name + ')';
+			return name;
 		}
 	},
 
@@ -47,6 +54,7 @@ export default {
 		{
 			this.order.info.company.name = company.name;
 			this.order.info.company.id = company.id
+			this.order.info.company.parent_name = company.parent
 		},
 
 		ajaxUrl(url, cb, ecb) {
@@ -188,7 +196,7 @@ export default {
 		<div class="col-3">
 			<div class="input-group">
 				<div class="form-floating">
-					<input type="text" class="form-control" placeholder="Vendor" v-model="order.info.company.name" disabled>
+					<input type="text" class="form-control" placeholder="Vendor" :value="companyName" disabled>
 					<label>Company</label>
 				</div>
 				<Search :on-select="onVendorSelect" :button-text="''" :button-icon="'bi-pencil'" />

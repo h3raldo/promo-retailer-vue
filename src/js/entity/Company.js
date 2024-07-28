@@ -7,7 +7,10 @@ function create()
             properties: [],
             type: { supplier: false, decorator: false },
             billing: { address: entity.customer.address.create() },
-            shipping: { address: entity.customer.address.create() }
+            shipping: { address: entity.customer.address.create() },
+            external: {
+                quickbooks: { id: '', display_name: '', company_name: '' }
+            }
         },
     }
 }
@@ -21,6 +24,7 @@ function patch( company )
     if( !company.data.type ) company.data.type = base.data.type;
     if( !company.data.billing ) company.data.billing = base.data.billing;
     if( !company.data.shipping ) company.data.shipping = base.data.shipping;
+    if( !company.data.external ) company.data.external = base.data.external;
 
     if( typeof company.data.billing.address.company === 'undefined' ) company.data.billing.address.company = '';
     if( typeof company.data.shipping.address.company === 'undefined' ) company.data.shipping.address.company = '';
