@@ -23,7 +23,7 @@ export default {
 				'Title': { },
 				'Ship By': { id:'date_ship_by' },
 				'In-Hands': { id: 'date_deliver_by' },
-				// 'Events': { },
+				'Events': { },
 				'Total': { id: 'total' },
 			},
 			bulkEdits: [
@@ -65,7 +65,7 @@ export default {
 		formatDate(date)
 		{
 			if( !date ) return '-';
-			return utils.time.dateToNiceString(date);
+			return utils.time.dateToNiceString(date, true);
 		},
 		getStatusColor( status ){
 			let statuses = {
@@ -133,7 +133,7 @@ export default {
 					{{ formatDate(item.dateDeliverBy) }}
 				</EditableColumn>
 			</td>
-			<td class="d-none">
+			<td>
 				<details class=" p-1 mb-1" v-for="event in item.events">
 					<summary style="text-transform: capitalize">{{ event.type }}: {{event.date}}</summary>
 					{{event.note}}

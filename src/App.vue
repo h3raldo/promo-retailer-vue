@@ -70,7 +70,7 @@ export default {
 			<Nav />
 		</aside>
 
-		<div class="container py-3">
+		<div class="p-4 flex-grow-1" style="min-height: 100vh">
 			<main>
 				<div v-if="alert.enabled" class="toast-container position-fixed bottom-0 end-0 p-4">
 					<div id="liveToast" :class="'toast show text-bg-'+alert.type" role="alert" aria-live="assertive" aria-atomic="true">

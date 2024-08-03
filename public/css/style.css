@@ -27,3 +27,13 @@ main > .container{
 .table-hover tr{
     cursor: pointer;
 }
+
+.source-magento{
+    background-color: #f46f25;
+}
+.source-quote{
+    background-color: green;
+}
+.source-order{
+    background-color: blue;
+}

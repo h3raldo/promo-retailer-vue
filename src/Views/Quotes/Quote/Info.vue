@@ -5,13 +5,26 @@ import SelectOrCustom from "@/EntityComponents/Order/globals/item/SelectOrCustom
 </script>
 <script>
 import utils from "@/js/utils.js";
+import entity from "@/js/entity.js";
 
 export default {
 	inject: ['order'],
+	computed: {
+		isShippingSameAsBilling(){
+			return this.order.client.billing === this.order.client.shipping;
+		}
+	},
 	methods: {
 		deliverByChanged(){
 			if( this.order.info.deliver_by === '' || this.order.info.ship_by !== '' ) return
 			this.order.info.ship_by = utils.time.removeDays(this.order.info.deliver_by, 3);
+		},
+		setBillingSameAsShipping(e){
+			if( e.target.checked ){
+				this.order.client.billing = this.order.client.shipping;
+			} else {
+				this.order.client.billing = entity.customer.address.create(this.order.client.billing)
+			}
 		}
 	}
 }
@@ -116,8 +129,14 @@ export default {
 				</div>
 			</div>
 			<div class="mb-3">
-				<label class="form-label">Billing Address:</label>
-				<div>
+				<label class="form-label d-flex gap-3">
+					Billing Address:
+					<label class="form-check-label">
+						<input class="form-check-input me-1" type="checkbox" @change="setBillingSameAsShipping" :checked="isShippingSameAsBilling">
+						<span>Same as Shipping</span>
+					</label>
+				</label>
+				<div v-if="!isShippingSameAsBilling">
 					<Address :address="order.client.billing" />
 				</div>
 			</div>

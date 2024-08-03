@@ -1,54 +1,113 @@
-<template>
-	<h1 class="text-center">Promo Retailer Admin</h1>
-
-	<h2>Changelog</h2>
-
-	<h4>1.4.0 - 1.5.0</h4>
-	<ul>
-		<li>Contacts setup!</li>
-		<li>Purchase Orders Setup!</li>
-		<li>Can now create POs from orders</li>
-	</ul>
-
-	<h4>1.3.0</h4>
-	<ul>
-		<li>Companies Setup!</li>
-		<li>Sub-Stores and relationships setup!</li>
-	</ul>
-
-	<h4>1.2.5</h4>
-	<ul>
-		<li>Sales Orders Setup!</li>
-		<li>Transformer from Magento</li>
-		<li>Now pushed when Quotes are pushed to Zoho</li>
-	</ul>
-
-	<h4>v1.2.0</h4>
-	<ul>
-		<li>Major changes to look, moved to sidebar to allow for more space when adding more pages</li>
-		<li>Major changes to allow sharing of structure between orders and quotes and pushing one to the other</li>
-		<li>Order view added</li>
-		<li>Order structure added to symfony</li>
-		<li>Order list added</li>
-	</ul>
-
-	<h4>v1.1.12</h4>
-	<ul>
-		<li>Purchase Orders grid view added</li>
-		<li>Purchase Orders added</li>
-		<li>Reporting for purchase orders added</li>
-	</ul>
-
-	<h4>v1.1.11</h4>
-	<ul>
-		<li>Moved Images functionality from symfony to vue</li>
-	</ul>
-
-	<h4>v1.1.10</h4>
-	<ul>
-		<li>Moved Reports over to vue from symfony.</li>
-	</ul>
-
-</template>
 <script setup>
+import Loader from "@/components/globals/Loader.vue";
 </script>
+
+<script>
+import utils from "@/js/utils.js";
+import entity from "@/js/entity.js";
+
+export default {
+	data() {
+		return {
+			loading: false,
+			items: []
+		}
+	},
+	inject: ['symfony'],
+	methods: {
+		load(){
+			let self = this;
+			let url = this.symfony.api.entity.events;
+			self.loading = true;
+
+			utils.ajax(url, (data) => {
+				data.results.forEach( e => self.items.push(e) );
+				console.log(self.items);
+				self.loading = false;
+			})
+		},
+		formatDate(date)
+		{
+			if( !date ) return '-';
+			return utils.time.dateToNiceString(date);
+		},
+		getView( type, id ){
+			switch (type){
+				case 'order':
+					this.$router.push({
+						name: 'orders_order',
+						params: { id }
+					});
+					break;
+				case 'po':
+					this.$router.push({
+						name: 'purchase_orders_purchase_order',
+						params: { id }
+					});
+					break;
+				case 'quote':
+					this.$router.push({
+						name: 'quotes_quote',
+						params: { id }
+					});
+					break;
+			}
+
+			return false;
+		}
+	},
+	mounted() {
+		this.load();
+	}
+}
+</script>
+
+<template>
+
+	<h1 class="pb-4">Dashboard</h1>
+
+	<div class="text-end pb-3 bg-gray p-3 mb-2 d-flex justify-content-between align-items-center">
+		<div>
+			<h3 class="mb-0"> Events</h3>
+		</div>
+	</div>
+
+	<Loader v-if="loading" />
+
+	<template v-if="!loading">
+
+		<table class="table" v-if="items.length">
+			<thead>
+			<tr>
+				<th>Date</th>
+				<th>Type</th>
+				<th>Note</th>
+				<th></th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr v-for="item in items" class="align-middle">
+				<td>
+					{{ formatDate(item.date) }}
+				</td>
+				<td>
+					<span class="d-block small">{{ item.entity.toUpperCase() }} {{ item.entity_id }}</span>
+					{{ item.entity_title }}
+				</td>
+				<td>
+					<span class="badge text-bg-secondary">{{ item.type }}</span><br>
+					{{ item.note }}
+				</td>
+				<td>
+					<button class="btn btn-primary" @click="getView(item.entity, item.entity_id)">View</button>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+
+		<p v-if="!items.length">
+			No events found.
+		</p>
+
+	</template>
+</template>

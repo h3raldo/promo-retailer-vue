@@ -1,45 +1,65 @@
+<script setup>
+	import Modal from "@/components/globals/bootstrap/Modal.vue";
+</script>
+
 <script>
 export default {
-	inject: ['references'],
+	inject: ['references', 'symfony'],
 	methods: {
 		referenceAction( reference ){
 			let self = this;
 
 			switch (reference.source){
 				case 'order':
-					return {
-						title: 'View Order',
-						action(){
-							self.$router.push({
-								name: 'orders_order',
-								params: { id: reference.reference_number }
-							});
+					return [
+						{
+							title: 'View Order',
+							type: 'view',
+							action(){
+								self.$router.push({
+									name: 'orders_order',
+									params: { id: reference.reference_number }
+								});
+							}
 						}
-					}
+					];
 				case 'po':
-					return {
-						title: 'View Purchase Order',
-						action(){
-							self.$router.push({
-								name: 'purchase_orders_purchase_order',
-								params: { id: reference.reference_number }
-							});
+					return [
+						{
+							title: 'View PO',
+							type: 'view',
+							action() {
+								self.$router.push({
+									name: 'purchase_orders_purchase_order',
+									params: {id: reference.reference_number}
+								});
+							}
+						},
+						{
+							title: 'Delete',
+							type: 'delete',
+							action() {
+								window.location = self.symfony.api.purchase_orders.order.delete.replace(':id', reference.reference_number) + '?return=' + window.location ;
+							}
 						}
-					}
+					];
 				case 'quote':
-					return {
-						title: 'View Quote',
-						action(){
-							self.$router.push({
-								name: 'quotes_quote',
-								params: { id: reference.reference_number }
-							});
+					return [
+						{
+							title: 'View Quote',
+							type: 'view',
+							action() {
+								self.$router.push({
+									name: 'quotes_quote',
+									params: {id: reference.reference_number}
+								});
+							}
 						}
-					}
+					]
 			}
 
-			return false;
-		},
+			return [];
+		}
 	}
 }
 </script>
@@ -60,7 +80,20 @@ export default {
 			<td>{{ reference.reference_number }}</td>
 			<td>{{ reference.title }}</td>
 			<td>
-				<button v-if="referenceAction(reference)" class="btn btn-outline-primary btn-sm" @click="referenceAction(reference).action">{{ referenceAction(reference).title }}</button>
+				<div class="d-flex gap-3">
+					<template v-for="action in referenceAction(reference)">
+						<template v-if="action.type === 'delete'">
+							<Modal :id="'delete-item-confirm-'+reference.reference_number" :title="'Are you sure?'"  :icon="'bi-trash'" :buttonClasses="'btn btn-danger'" :buttonText="action.title">
+								<p>{{ reference.source.toUpperCase() }} {{ reference.reference_number }} will be deleted permanently. Cannot be undone.</p>
+								<button class="btn btn-danger"  @click="action.action"><i class="bi bi-trash"></i> {{ action.title }}</button>
+							</Modal>
+						</template>
+
+						<template v-else-if="action.type === 'view'">
+							<button class="btn btn-outline-primary" @click="action.action"><i class="bi bi-arrow-right-circle"></i> {{ action.title }}</button>
+						</template>
+					</template>
+				</div>
 			</td>
 		</tr>
 		</tbody>

@@ -17,19 +17,12 @@ export default {
 			let self = this;
 
 			return [
-
-			  /*
 				{
-					title: 'Sales',
-					icon: 'bi bi-receipt-cutoff',
-					children: []
+					title: 'Dashboard',
+					icon: 'bi bi-house',
+					url: self.symfony.views.dashboard,
+					type: 'vue'
 				},
-				{
-					title: 'Images',
-					icon: 'bi bi-images',
-					children: []
-				},
-		*/
 				{
 					title: 'Quotes',
 					icon: 'bi bi-calculator',

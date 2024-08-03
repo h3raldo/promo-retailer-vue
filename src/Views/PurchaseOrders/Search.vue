@@ -61,7 +61,7 @@ export default {
 						<div class="pb-2">
 							<div class="form-floating">
 								<input class="form-control" type="text" name="client" id="client" placeholder="Client" v-model="searchParams.client">
-								<label class="form-label" for="client">Client</label>
+								<label class="form-label" for="client">Vendor</label>
 							</div>
 						</div>
 					</div>

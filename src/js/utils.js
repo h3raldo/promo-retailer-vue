@@ -129,7 +129,7 @@ export default
             if( provided ) date = new Date(provided)
             return this.dateToString(date);
         },
-        dateToString( date ){
+        dateToString( date, iso=true ){
             let month = date.getMonth() + 1;
             if( month < 10 ) month = '0' + month;
 
@@ -138,14 +138,25 @@ export default
 
             return `${date.getFullYear()}-${month}-${day}`
         },
-        dateToNiceString( stringDate )
+        dateToNiceString( stringDate, short=false )
         {
             let date = new Date(stringDate+'T12:00:00'+this.getUserTimezoneOffset()+':00');
-            return date.toLocaleDateString('en-us', {
+
+            let options = {
                 year: 'numeric',
                 month: 'short',
                 day: 'numeric',
-            });
+            }
+
+            if( short ){
+                options = {
+                    year: '2-digit',
+                    month: 'numeric',
+                    day: 'numeric',
+                }
+            }
+
+            return date.toLocaleDateString('en-us', options);
         },
         getUserTimezoneOffset()
         {

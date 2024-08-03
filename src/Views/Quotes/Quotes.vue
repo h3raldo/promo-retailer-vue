@@ -1,12 +1,14 @@
 <script setup>
-	import Loader from "@/components/globals/Loader.vue";
 	import Modal from "@/components/globals/bootstrap/Modal.vue";
 	import Search from "@/Views/Quotes/Search.vue";
 	import Grid from "@/components/globals/Grid.vue";
+	import EditableColumn from "@/components/globals/Grid/EditableColumn.vue";
+	import entity from "@/js/entity.js";
 </script>
 
 <script>
 import utils from "@/js/utils.js";
+import entity from "@/js/entity.js";
 export default {
 	data() {
 		return {
@@ -18,12 +20,26 @@ export default {
 				'Category': { id: 'category' },
 				'Date': { id: 'date_created' },
 				'Title': { id: 'title' },
+				'Events': { },
 				'Total': { id: 'total' },
 				'Cost': { id: 'total_cost' },
 				'Profit': { id: 'total_profit' },
 				'Margin': { id: 'total_margin' },
 				'Author': { id: 'author' },
 			},
+			bulkEdits: [
+				{
+					name: 'Status',
+					column: 'status',
+					type: 'select',
+					options: entity.quote.default.statuses
+				},
+				{
+					name: 'Date',
+					column: 'date',
+					type: 'date'
+				},
+			],
 		}
 	},
 
@@ -38,6 +54,11 @@ export default {
 	methods: {
 		formatPricing(price){
 			return utils.pricing.format(price);
+		},
+		formatDate(date)
+		{
+			if( !date ) return '-';
+			return utils.time.dateToNiceString(date, true);
 		},
 		viewQuote( id ){
 			this.$router.push( this.symfony.views.quotes_quote.replace(':id', id) )
@@ -71,7 +92,7 @@ export default {
 
 <template>
 
-	<Grid :columns="columns" :searchState="searchState" :api="symfony.quotes.search">
+	<Grid :columns="columns" :searchState="searchState" :api="symfony.quotes.search" :bulkEdits="bulkEdits" :entity="'quote'">
 
 		<template #header="{search}">
 			<Search :getQuotes="search" :searchParams="searchState" />
@@ -79,16 +100,24 @@ export default {
 
 		<template #item="{item}">
 			<td @click="viewQuote(item.id)">{{ item.id }}</td>
-			<td @click="viewQuote(item.id)">
-				<span :class="getStatusColor(item.status)">
-					{{ item.status }}
-				</span>
+			<td>
+				<EditableColumn :type="'select'" :item="item" :column="'status'" :options="entity.quote.default.statuses" :entity="'quote'">
+					<span :class="getStatusColor(item.status)">
+						{{ item.status }}
+					</span>
+				</EditableColumn>
 			</td>
 			<td @click="viewQuote(item.id)">{{ item.category }}</td>
-			<td @click="viewQuote(item.id)">{{ item.date }}</td>
+			<td @click="viewQuote(item.id)">{{ formatDate(item.date) }}</td>
 			<td @click="viewQuote(item.id)">
 				<span class="badge text-bg-secondary rounded-pill">{{ item.client }}</span><br>
 				{{ item.title }}
+			</td>
+			<td>
+				<details class=" p-1 mb-1" v-for="event in item.events">
+					<summary style="text-transform: capitalize">{{ event.type }}: {{ formatDate(event.date) }}</summary>
+					{{event.note}}
+				</details>
 			</td>
 			<td @click="viewQuote(item.id)">{{ formatPricing(item.total) }}</td>
 			<td @click="viewQuote(item.id)">{{ formatPricing(item.total_cost) }}</td>

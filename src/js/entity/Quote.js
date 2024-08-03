@@ -58,6 +58,14 @@ function create(id){
     }
 }
 
+let statuses = [
+    { value: 'draft', title: 'Draft'},
+    { value: 'sent', title: 'Sent'},
+    { value: 'confirmed', title: 'Confirmed'},
+    { value: 'pushed', title: 'Pushed'},
+    { value: 'closed', title: 'Closed'},
+];
+
 function patchData( data, init )
 {
     let blank = create(0);
@@ -107,6 +115,9 @@ function patchData( data, init )
 
 export default {
     create: create,
+    default: {
+        statuses
+    },
     patchData: patchData,
     item: OrderItem,
     fee: OrderFee,

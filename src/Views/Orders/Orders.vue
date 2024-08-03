@@ -1,9 +1,9 @@
 <script setup>
-	import Modal from "@/components/globals/bootstrap/Modal.vue";
-	import Search from "@/Views/Orders/Search.vue";
-	import Grid from "@/components/globals/Grid.vue";
-	import EditableColumn from "@/components/globals/Grid/EditableColumn.vue";
-	import entity from "@/js/entity.js";
+import Modal from "@/components/globals/bootstrap/Modal.vue";
+import Search from "@/Views/Orders/Search.vue";
+import Grid from "@/components/globals/Grid.vue";
+import EditableColumn from "@/components/globals/Grid/EditableColumn.vue";
+import entity from "@/js/entity.js";
 </script>
 
 <script>
@@ -21,6 +21,7 @@ export default {
 				'Origin/Client': { id: 'client' },
 				'Ship By': { id: 'date_ship_by' },
 				'In-Hands': { id: 'date_deliver_by' },
+				'Events': {  },
 				'Total': { id: 'total' },
 				'Profit': { id: 'total_profit'  },
 				'Margin': { id: 'total_margin' }
@@ -74,7 +75,7 @@ export default {
 		formatDate(date)
 		{
 			if( !date ) return '-';
-			return utils.time.dateToNiceString(date);
+			return utils.time.dateToNiceString(date, true);
 		},
 		viewQuote( id ){
 			this.$router.push( this.symfony.views.orders_order.replace(':id', id) );
@@ -142,7 +143,8 @@ export default {
 						<span v-if="item.company && !item.quickbooksID">QB ID</span>
 					</span>
 				</span>
-				{{ item.client }}
+				<span class="d-block">{{ item.title }}</span>
+				<span class="d-block small">{{ item.client }}</span>
 			</td>
 
 			<td>
@@ -154,6 +156,12 @@ export default {
 				<EditableColumn :type="'date'" :item="item" :column="'dateDeliverBy'" :entity="'order'">
 					{{ formatDate(item.dateDeliverBy) }}
 				</EditableColumn>
+			</td>
+			<td>
+				<details class=" p-1 mb-1" v-for="event in item.events">
+					<summary style="text-transform: capitalize">{{ event.type }}: {{ formatDate(event.date) }}</summary>
+					{{event.note}}
+				</details>
 			</td>
 			<td @click="viewQuote(item.id)">{{ formatPricing(item.total) }}</td>
 			<td @click="viewQuote(item.id)">{{ formatPricing(item.totalProfit) }}</td>
@@ -202,17 +210,3 @@ export default {
 	</div>
 
 </template>
-<style>
-tr{
-	cursor: pointer;
-}
-.source-magento{
-	background-color: #f46f25;
-}
-.source-quote{
-	background-color: green;
-}
-.source-order{
-	background-color: blue;
-}
-</style>
