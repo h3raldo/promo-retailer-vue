@@ -45,7 +45,10 @@ export default
         }
 
         const response = await fetch(url, init);
-        return await response.json();
+        let r = response.json();
+
+        console.log(url, data);
+        return r;
     },
 
     ajaxButtons: {

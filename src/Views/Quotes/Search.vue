@@ -46,46 +46,46 @@ export default {
 
 			<form @submit="search" class="pt-1">
 
-				<div class="row align-items-center">
-					<div class="col">
+				<div class="d-flex gap-4 align-items-center pb-2">
+					<div class="flex-grow-1">
 						<!-- quote search -->
-						<div class="pb-2">
+						<div>
 							<div class="form-floating">
 								<input class="form-control" type="text" name="data_string" id="data_string" placeholder="Search anything in quote" v-model="searchParams.data_string">
-								<label class="form-label" for="data_string">Quote Search</label>
+								<label class="form-label" for="data_string">Search</label>
 							</div>
 						</div>
 					</div>
-					<div class="col">
+					<div class="flex-grow-1">
 						<!-- client -->
-						<div class="pb-2">
+						<div>
 							<div class="form-floating">
 								<input class="form-control" type="text" name="client" id="client" placeholder="Client" v-model="searchParams.client">
 								<label class="form-label" for="client">Client</label>
 							</div>
 						</div>
 					</div>
-					<div class="col">
+					<div class="flex-grow-1">
 						<!-- from -->
-						<div class="pb-2">
+						<div>
 							<div class="form-floating">
 								<input class="form-control" type="date" name="date_from" id="date_from" v-model="searchParams.date_from">
 								<label class="form-label" for="date_from">From</label>
 							</div>
 						</div>
 					</div>
-					<div class="col">
+					<div class="flex-grow-1">
 						<!-- to -->
-						<div class="pb-2">
+						<div>
 							<div class="form-floating">
 								<input class="form-control" type="date" name="date_to" id="date_to" v-model="searchParams.date_to">
 								<label class="form-label" for="date_to">To</label>
 							</div>
 						</div>
 					</div>
-					<div class="col">
+					<div class="">
 						<div class="align-self-center">
-							<button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i> Search</button>
+							<button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i></button>
 						</div>
 					</div>
 				</div>

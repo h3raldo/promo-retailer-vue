@@ -35,7 +35,7 @@ export default
     {
         let name = sage_company.coName.toLowerCase();
 
-        let url = window.symfony.api.companies.search + '?name=' + name;
+        let url = window.symfony.api.companies.search + '?type=vendor&name=' + encodeURIComponent(name);
 
         let d = await utils.ajaxAsync(url);
 
