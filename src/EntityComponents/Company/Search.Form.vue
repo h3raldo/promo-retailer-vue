@@ -20,7 +20,7 @@ export default {
 			let url = this.symfony.api.companies.search + '?name=' + this.query;
 			self.loading = true;
 			utils.ajax( url, d => {
-				self.results = d;
+				self.results = d.results;
 				self.loading = false;
 			}, e => {
 				self.loading = false;

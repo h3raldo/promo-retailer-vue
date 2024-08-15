@@ -1,6 +1,8 @@
 <script setup>
 import Loader from "@/components/globals/Loader.vue";
 import Tabs from "@/components/globals/Tabs.vue";
+import Search from "@/Views/Companies/Search.vue";
+import Grid from "@/components/globals/Grid.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -10,111 +12,76 @@ export default {
 		return {
 			loading: false,
 			type: 'client',
-			companies: [],
+			columns: {
+				'ID': { id: 'id' },
+				'Type': { id: 'type' },
+				'Name': { id: 'name' },
+				'QB ID': { },
+				'Supplier': { },
+				'Decorator': { },
+			},
 		}
 	},
-	inject: ['symfony', 'alert'],
-	methods: {
-		retrieve(params) {
-			let self = this;
-			if (!params) params = '';
-
-			let url = this.symfony.api.companies.search + `?type=${this.type}&${params}`;
-
-			self.loading = true;
-			utils.ajax(url, (data) => {
-				self.companies = data;
-				self.loading = false;
-			})
+	inject: ['symfony', 'alert', 'search'],
+	computed: {
+		searchState(){
+			return this.search.companies;
 		},
+	},
+	methods: {
 		goToCompany(id) {
 			this.$router.push(this.symfony.views.companies_company.replace(':id', id))
 		},
-		createNew() {
-
-			let self = this;
-
-			utils.ajax(this.symfony.api.companies.company.new, (data) => {
-
-				if (data.error === true || !data.id) {
-					self.alert(data.message, 'danger');
-					return;
-				}
-
-				self.$router.push(this.symfony.views.companies_company.replace(':id', data.id))
-
-			}, (error) => {
-				this.alert('Error Creating', 'danger');
-			})
-		},
-		onTabChange(label){
-			this.type = label;
-			this.retrieve();
-		}
 	},
-	mounted() {
-		this.loading = true;
-		this.retrieve();
-	}
+	created() {
+		if( typeof this.search.companies === 'undefined' ) this.search.companies = { urlParams: 'type=client' }
+	},
 }
 </script>
 
 <template>
 
-	<div class="text-end pb-3 bg-gray p-3 mb-2 d-flex justify-content-between align-items-center">
-		<h3 class="m-0"><i class="bi bi-building"></i> Companies/Vendors</h3>
-		<button class="btn btn-primary p-3" @click="createNew"><i class="bi bi-plus-square-fill"></i> Create New</button>
-	</div>
+	<Grid :columns="columns" :searchState="searchState" :api="symfony.api.companies.search" :entity="'company'">
+		<template #header="{search}">
+			<Search :getEntities="search" :searchParams="searchState"></Search>
+		</template>
+		<template #item="{item}">
 
-	<ul class="nav nav-tabs pt-3">
-		<li class="nav-item">
-			<button :class="'nav-link' + ( type === 'client' ? ' active' : '' )" @click="onTabChange('client')">Clients</button>
-		</li>
-		<li class="nav-item">
-			<button :class="'nav-link' + ( type === 'vendor' ? ' active' : '' )" @click="onTabChange('vendor')">Vendors</button>
-		</li>
-	</ul>
+			<td @click="goToCompany(item.id)">{{ item.id }}</td>
 
-	<Loader v-if="loading"/>
-
-	<table v-if="!loading" class="table table-hover">
-		<thead>
-		<tr>
-			<th class="col-1">ID</th>
-			<th class="col-1">Type</th>
-			<th>Company</th>
-			<th class="col-1 text-center">QB ID</th>
-			<th v-if="type === 'vendor'" class="col-1 text-center">Supplier</th>
-			<th v-if="type === 'vendor'" class="col-1 text-center">Decorator</th>
-		</tr>
-		</thead>
-		<tbody>
-		<tr v-for="company in companies" @click="goToCompany(company.id)">
-			<td>{{ company.id }}</td>
-			<td>
-				<span v-if="company.type" class="badge text-bg-success text-end">{{ company.type }}</span>
+			<td @click="goToCompany(item.id)">
+				<span v-if="item.type" class="badge text-bg-success text-end">{{ item.type }}</span>
 				<span v-else class="badge text-bg-secondary text-end">default</span>
 			</td>
-			<td>
-				{{ company.name }}
+
+			<td @click="goToCompany(item.id)">
+				<span v-if="item.parent_name" class="badge text-bg-secondary">{{ item.parent_name }}</span>
+				{{ item.name }}
 			</td>
-			<td class="text-center">
-				<span v-if="company.data && company.data.external && company.data.external.quickbooks.id">
+
+			<td @click="goToCompany(item.id)" class="text-center">
+				<span v-if="item.data && item.data.external && item.data.external.quickbooks.id">
 					<i class="text-success bi bi-check-square-fill"></i>
 				</span>
 			</td>
-			<td v-if="type === 'vendor'" class="text-center">
-				<span v-if="company.data && company.data.type && company.data.type.supplier">
-					<i class="bi bi-check-square-fill"></i>
+
+			<td @click="goToCompany(item.id)">
+				<span v-if="item.type === 'vendor'" class="text-center">
+					<span v-if="item.data && item.data.type && item.data.type.supplier">
+						<i class="bi bi-check-square-fill"></i>
+					</span>
 				</span>
 			</td>
-			<td v-if="type === 'vendor'" class="text-center">
-				<span v-if="company.data && company.data.type && company.data.type.decorator">
-					<i class="bi bi-check-square-fill"></i>
+
+			<td @click="goToCompany(item.id)">
+				<span v-if="item.type === 'vendor'" class="text-center">
+					<span v-if="item.data && item.data.type && item.data.type.decorator">
+						<i class="bi bi-check-square-fill"></i>
+					</span>
 				</span>
 			</td>
-		</tr>
-		</tbody>
-	</table>
+			<td @click="goToCompany(item.id)"></td>
+		</template>
+	</Grid>
 
 </template>

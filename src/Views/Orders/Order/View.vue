@@ -18,6 +18,7 @@ const data = reactive({
 	id: route.params.id,
 	loading: true,
 	references: [],
+	init: {},
 	urls: inject('symfony').value.orders.order,
 })
 
@@ -75,6 +76,7 @@ function setup()
 		if( d.data ) entity_data = JSON.parse(d.data);
 
 		let init = d.init;
+		data.init = d.init;
 
 		init.references.forEach( r => {
 			data.references.push({
@@ -127,6 +129,7 @@ provide('logos', computed(() => orderStore.logos))
 provide('vendors', computed(() => orderStore.vendors))
 provide('urls', computed(() => data.urls))
 provide('references', computed(() => data.references))
+provide('init', computed(() => data.init))
 
 provide('hasEdited', orderStore.hasEdited)
 provide('updatePricing', orderStore.updatePricing)

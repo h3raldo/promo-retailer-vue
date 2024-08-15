@@ -93,6 +93,7 @@ export default {
 				sent: 'primary',
 				confirmed: 'primary',
 				complete: 'success',
+				bulk: 'info'
 			}
 
 			let className = 'secondary';
@@ -158,10 +159,15 @@ export default {
 				</EditableColumn>
 			</td>
 			<td>
+				<span v-if="item.invoice_quickbooks_id" class="badge text-bg-success">
+					<i class="bi bi-currency-dollar"></i> Invoiced
+				</span>
+				<!--
 				<details class=" p-1 mb-1" v-for="event in item.events">
 					<summary style="text-transform: capitalize">{{ event.type }}: {{ formatDate(event.date) }}</summary>
 					{{event.note}}
 				</details>
+				-->
 			</td>
 			<td @click="viewQuote(item.id)">{{ formatPricing(item.total) }}</td>
 			<td @click="viewQuote(item.id)">{{ formatPricing(item.totalProfit) }}</td>

@@ -39,10 +39,10 @@ export default
 
         let d = await utils.ajaxAsync(url);
 
-        console.log('companies', d);
-        if( !d || !d.length ) return item;
+        console.log('companies', d.results);
+        if( !d || !d.results || !d.results.length ) return item;
 
-        let company = d[0];
+        let company = d.results[0];
         console.log('using', company);
 
         item.info.supplier = {

@@ -1,4 +1,6 @@
-
+<script setup>
+import entity from "@/js/entity.js";
+</script>
 <script>
 import utils from "@/js/utils.js";
 
@@ -101,36 +103,14 @@ export default {
 					<div>
 						<div class="d-flex gap-2">
 							<label class="fw-bold">Status: </label>
-							<div>
+
+							<div v-for="status in entity.order.default.statuses">
 								<label class="form-check-label bg-gray px-2 rounded small">
-									<input class="form-check-input me-1" type="checkbox" name="status[]" value="new" v-model="searchParams.status">
-									<span>New</span>
+									<input class="form-check-input me-1" type="checkbox" name="status[]" :value="status.value" v-model="searchParams.status">
+									<span>{{ status.title }}</span>
 								</label>
 							</div>
-							<div>
-								<label class="form-check-label bg-gray px-2 rounded small">
-									<input class="form-check-input me-1" type="checkbox" name="status[]" value="sent" v-model="searchParams.status">
-									<span>Sent</span>
-								</label>
-							</div>
-							<div>
-								<label class="form-check-label bg-gray px-2 rounded small">
-									<input class="form-check-input me-1" type="checkbox" name="status[]" value="confirmed" v-model="searchParams.status">
-									<span>Confirmed</span>
-								</label>
-							</div>
-							<div>
-								<label class="form-check-label bg-gray px-2 rounded small">
-									<input class="form-check-input me-1" type="checkbox" name="status[]" value="closed" v-model="searchParams.status">
-									<span>Closed</span>
-								</label>
-							</div>
-							<div>
-								<label class="form-check-label bg-gray px-2 rounded small">
-									<input class="form-check-input me-1" type="checkbox" name="status[]" value="complete" v-model="searchParams.status">
-									<span>Complete</span>
-								</label>
-							</div>
+
 						</div>
 					</div>
 					<div>

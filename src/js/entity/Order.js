@@ -66,6 +66,7 @@ function create(id){
 let statuses = [
     { value: 'new', title: 'New'},
     { value: 'sent', title: 'Sent'},
+    { value: 'bulk', title: 'Bulk'},
     { value: 'confirmed', title: 'Confirmed'},
     { value: 'closed', title: 'Closed'},
     { value: 'complete', title: 'Complete'},

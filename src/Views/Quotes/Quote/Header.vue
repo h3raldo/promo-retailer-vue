@@ -159,11 +159,7 @@ export default {
 		<div>
 			<div class="form-floating">
 				<select class="form-select" id="status" v-model="order.info.status">
-					<option value="draft">Draft</option>
-					<option value="sent">Sent</option>
-					<option value="confirmed">Confirmed</option>
-					<option value="pushed">Pushed</option>
-					<option value="closed">Closed</option>
+					<option v-for="status in entity.quote.default.statuses" :value="status.value">{{ status.title }}</option>
 				</select>
 				<label for="status">Status</label>
 			</div>

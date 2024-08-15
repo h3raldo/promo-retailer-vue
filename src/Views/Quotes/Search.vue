@@ -1,8 +1,14 @@
 
 <script>
 import utils from "@/js/utils.js";
+import entity from "@/js/entity.js";
 
 export default {
+	computed: {
+		entity() {
+			return entity
+		}
+	},
 	props: ['getQuotes', 'searchParams'],
 	inject: ['symfony', 'alert'],
 	methods: {
@@ -94,36 +100,14 @@ export default {
 					<div>
 						<div class="d-flex gap-2">
 							<label class="fw-bold">Status</label>
-							<div>
+
+							<div v-for="status in entity.quote.default.statuses">
 								<label class="form-check-label bg-gray px-2 rounded small">
-									<input class="form-check-input me-1" type="checkbox" name="status[]" value="draft" v-model="searchParams.status">
-									<span>Draft</span>
+									<input class="form-check-input me-1" type="checkbox" name="status[]" :value="status.value" v-model="searchParams.status">
+									<span>{{ status.title }}</span>
 								</label>
 							</div>
-							<div>
-								<label class="form-check-label bg-gray px-2 rounded small">
-									<input class="form-check-input me-1" type="checkbox" name="status[]" value="sent" v-model="searchParams.status">
-									<span>Sent</span>
-								</label>
-							</div>
-							<div>
-								<label class="form-check-label bg-gray px-2 rounded small">
-									<input class="form-check-input me-1" type="checkbox" name="status[]" value="confirmed" v-model="searchParams.status">
-									<span>Confirmed</span>
-								</label>
-							</div>
-							<div>
-								<label class="form-check-label bg-gray px-2 rounded small">
-									<input class="form-check-input me-1" type="checkbox" name="status[]" value="pushed" v-model="searchParams.status">
-									<span>Pushed</span>
-								</label>
-							</div>
-							<div>
-								<label class="form-check-label bg-gray px-2 rounded small">
-									<input class="form-check-input me-1" type="checkbox" name="status[]" value="closed" v-model="searchParams.status">
-									<span>Closed</span>
-								</label>
-							</div>
+
 						</div>
 					</div>
 					<div>

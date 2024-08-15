@@ -12,13 +12,17 @@ export default {
 	components: {Modal, LogoSearch, CreatePOs},
 	data() {
 		return {
-			loading: false
+			loading: false,
+			invoiced: false,
 		}
 	},
 
-	inject: ['order', 'logos', 'vendors', 'updatePricing', 'hasEdited', 'alert', 'symfony', 'urls'],
+	inject: ['order', 'logos', 'vendors', 'updatePricing', 'hasEdited', 'alert', 'symfony', 'urls', 'init'],
 
 	computed: {
+		ableToInvoice(){
+			return !this.init.invoice_quickbooks_id && !this.invoiced && this.init.company_quickbooks_id
+		},
 		printView() {
 			return this.symfony.api.orders.order.print.replace(':id', this.order.id);
 		},
@@ -41,6 +45,28 @@ export default {
 	},
 
 	methods: {
+		invoice()
+		{
+			let self = this;
+			let url = this.symfony.api.orders.order.invoice;
+			let data = { order: self.order.id }
+
+			let callback = {
+				success() {
+					self.alert('Invoice successfully created!');
+					self.loading = false;
+					self.invoiced = true;
+				},
+				error(r) {
+					self.alert(`Error creating invoice. ${r.message}`, 'danger');
+					self.loading = false;
+				}
+			}
+
+			self.loading = true;
+			this.ajaxUrl(url, callback.success, callback.error, data)
+		},
+
 		getData() {
 			this.updatePricing();
 			return {
@@ -57,7 +83,7 @@ export default {
 			this.order.info.company.parent_name = company.parent
 		},
 
-		ajaxUrl(url, cb, ecb) {
+		ajaxUrl(url, cb, ecb, data=this.getData()) {
 			let callback = {
 				success(data) {
 					if (data.error === false)
@@ -70,7 +96,7 @@ export default {
 				}
 			}
 
-			utils.ajax(url, callback.success, callback.error, this.getData());
+			utils.ajax(url, callback.success, callback.error, data);
 		},
 
 		save() {
@@ -152,12 +178,15 @@ export default {
 				ORDER #{{ order.id }}
 			</div>
 			<span class="badge text-bg-secondary align-self-center">{{ order.info.source }}</span>
+
+			<span v-if="init.invoice_quickbooks_id || invoiced" class="badge text-bg-success align-self-center"><i class="bi bi-currency-dollar"></i> Invoiced</span>
 		</div>
 		<div>
 			<div class="text-end d-flex gap-2">
 				<a :href="printView" class="btn btn-outline-primary"><i class="bi bi-printer"></i> Print View</a>
 				<a :href="publicUrl" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Public View</a>
 				<a :href="packingSlip" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Packing Slip</a>
+				<button v-if="ableToInvoice" class="btn btn-outline-success" :disabled="loading" @click="invoice"><i class="bi bi-currency-dollar"></i> Invoice</button>
 				<Modal :id="'create-po'" :title="'Create POs'" :buttonText="'Create POs'" :buttonClasses="'btn btn-primary'" :icon="'bi-node-plus'" ref="poModal">
 					<CreatePOs :goToPurchaseOrder="goToPurchaseOrder"  />
 				</Modal>
@@ -170,11 +199,7 @@ export default {
 		<div>
 			<div class="form-floating">
 				<select class="form-select" id="status" v-model="order.info.status">
-					<option value="new">New</option>
-					<option value="sent">Sent</option>
-					<option value="confirmed">Confirmed</option>
-					<option value="closed">Closed</option>
-					<option value="complete">Complete</option>
+					<option v-for="status in entity.order.default.statuses" :value="status.value">{{ status.title }}</option>
 				</select>
 				<label for="status">Status</label>
 			</div>

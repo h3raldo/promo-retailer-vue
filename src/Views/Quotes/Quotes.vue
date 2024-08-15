@@ -13,7 +13,6 @@ export default {
 	data() {
 		return {
 			loading: false,
-			quotes: {},
 			columns: {
 				'ID': { id: 'id' },
 				'Status': { id: 'status' },
@@ -74,7 +73,8 @@ export default {
 		getStatusColor( status ){
 			let statuses = {
 				sent: 'primary',
-				pushed: 'success'
+				pushed: 'success',
+				bulk: 'info'
 			}
 
 			let className = 'secondary';
