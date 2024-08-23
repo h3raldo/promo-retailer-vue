@@ -39,11 +39,16 @@
 						let id = entity.order.vendor.getDecoratorCompanyID( p.decorator.info.id );
 						if( !id ) return;
 
-						if( !counts[id] ) available.push({
-							name: p.decorator.info.name,
-							company_id: id,
-							decorator_id: p.decorator.info.id,
-						});
+						if( !counts[id] ) {
+							available.push({
+								name: p.decorator.info.name,
+								company_id: id,
+								decorator_id: p.decorator.info.id,
+							});
+						}
+
+						let existing = available.filter( i => i.company_id+'' === id );
+						if( existing[0] ) existing[0].decorator_id = p.decorator.info.id;
 
 						if( !counts[id] ) counts[id] = 1;
 						else counts[id]++;
@@ -64,6 +69,8 @@
 					"source_id": this.order.id,
 					"company": supplier.company_id
 				}
+
+				console.log(supplier);
 
 				if( supplier.decorator_id ) init.decorator_code = supplier.decorator_id;
 

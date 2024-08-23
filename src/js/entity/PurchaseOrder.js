@@ -103,20 +103,21 @@ function fromOrder( order, company_id, decorator_code)
     po.info.title = order.info.title;
 
     order.items.forEach( item => {
-        if( is_decorator ){
-            let matched = false;
-            item.decoration.placements.forEach( p => {
-                console.log(p);
-                if( p.decorator && p.decorator.info && p.decorator.info.id
-                    && entity.order.vendor.getDecoratorCompanyID(p.decorator.info.id) === company_id
-                ) matched = true;
+
+        let matched_decorator = false;
+        if( is_decorator ) {
+            item.decoration.placements.forEach(p => {
+                if (p.decorator && p.decorator.info && p.decorator.info.id
+                    && entity.order.vendor.getDecoratorCompanyID(p.decorator.info.id) === company_id + ''
+                ) matched_decorator = true;
             })
-            if( matched === true ) po.items.push( fromOrderItemPrepare(item, is_decorator) );
-            return;
         }
 
-        if( !item.info.supplier || !item.info.supplier.company_id || item.info.supplier.company_id !== company_id ) return;
-        po.items.push( fromOrderItemPrepare(item, is_decorator) );
+        let matched_supplier = ( item.info.supplier && item.info.supplier.company_id && item.info.supplier.company_id === company_id );
+
+        if( matched_decorator || matched_supplier ){
+            po.items.push(fromOrderItemPrepare(item, is_decorator, matched_supplier));
+        }
     })
 
     order.fees.forEach( f => {
@@ -130,24 +131,11 @@ function fromOrder( order, company_id, decorator_code)
     return po;
 }
 
-function fromOrderItemPrepare( item, is_decorator )
+function fromOrderItemPrepare( item, is_decorator, is_supplier )
 {
     item.pricing.base.material.overwrites.decoration = !is_decorator;
 
-    item.cost.material.tiers.forEach( t => {
-
-        if( is_decorator ){
-            t.cost = 0;
-            t.price = 0;
-            t.margin = 0;
-            t.fixed = true;
-            return;
-        }
-
-        t.price = t.cost;
-        t.margin = 0;
-        t.fixed = true;
-    })
+    handleSupplierTiers( item.cost.material.tiers, is_decorator );
 
     item.decoration.placements.forEach( p => {
         // re-attach the price sheets
@@ -159,9 +147,7 @@ function fromOrderItemPrepare( item, is_decorator )
 
         if( !p.decorator || !p.decorator.cost ) return;
         p.decorator.cost.forEach( t => {
-            t.price = t.cost;
-            t.margin = 0;
-            t.fixed = true;
+            setTierToCost(t)
         })
     })
 
@@ -169,31 +155,42 @@ function fromOrderItemPrepare( item, is_decorator )
         o.groups.forEach( g => {
             g.values.forEach( v => {
                 v.cost.forEach( t => {
-                    t.price = t.cost;
-                    t.margin = 0;
-                    t.fixed = true;
+                    setTierToCost(t)
                 })
             })
         })
     })
 
     item.sizes.forEach( s => {
-        s.cost.forEach( t => {
-            t.price = t.cost;
-            t.margin = 0;
-            t.fixed = true;
-        })
+        handleSupplierTiers( s.cost, is_decorator )
     })
 
     item.colors.forEach( s => {
-        s.cost.forEach( t => {
-            t.price = t.cost;
-            t.margin = 0;
-            t.fixed = true;
-        })
+        handleSupplierTiers(s.cost, is_decorator)
     })
 
     return item;
+}
+
+function handleSupplierTiers( tiers, is_decorator, is_supplier )
+{
+    tiers.forEach( t => {
+        if( is_decorator && !is_supplier ){
+            t.cost = 0;
+            t.price = 0;
+            t.margin = 0;
+            t.fixed = true;
+            return;
+        }
+
+        setTierToCost(t)
+    })
+}
+
+function setTierToCost(t){
+    t.price = t.cost;
+    t.margin = 0;
+    t.fixed = true;
 }
 
 let item = {

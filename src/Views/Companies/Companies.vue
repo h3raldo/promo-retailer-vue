@@ -42,9 +42,11 @@ export default {
 <template>
 
 	<Grid :columns="columns" :searchState="searchState" :api="symfony.api.companies.search" :entity="'company'">
+
 		<template #header="{search}">
 			<Search :getEntities="search" :searchParams="searchState"></Search>
 		</template>
+
 		<template #item="{item}">
 
 			<td @click="goToCompany(item.id)">{{ item.id }}</td>
@@ -55,7 +57,7 @@ export default {
 			</td>
 
 			<td @click="goToCompany(item.id)">
-				<span v-if="item.parent_name" class="badge text-bg-secondary">{{ item.parent_name }}</span>
+				<span v-if="item.parent_name" class="text-secondary">{{ item.parent_name }} <i class="bi bi-chevron-double-right"></i> </span>
 				{{ item.name }}
 			</td>
 
@@ -80,7 +82,9 @@ export default {
 					</span>
 				</span>
 			</td>
+
 			<td @click="goToCompany(item.id)"></td>
+
 		</template>
 	</Grid>
 

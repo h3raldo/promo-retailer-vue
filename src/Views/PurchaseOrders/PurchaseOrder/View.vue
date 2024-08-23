@@ -69,6 +69,7 @@ export default{
 				purchaseOrderStore.po.id = entity_data.id;
 
 				if( entity_data.source && entity_data.source_id ) {
+					console.log(d);
 					utils.ajax(self.symfony.orders.order.get.replace(':id', entity_data.source_id), r => {
 						const order = JSON.parse(r.data);
 						order.logos.forEach( l => purchaseOrderStore.logos.push(l));

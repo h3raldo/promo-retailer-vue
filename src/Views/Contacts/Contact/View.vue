@@ -1,6 +1,5 @@
 <script setup>
 import Loader from "@/components/globals/Loader.vue";
-import Modal from "@/components/globals/bootstrap/Modal.vue";
 import Search from "@/EntityComponents/Company/Search.vue";
 </script>
 <script>
@@ -99,9 +98,7 @@ export default {
 			</div>
 			<div class="col">
 				<label class="form-label">&nbsp;</label><br>
-				<Modal :id="'company-search'" :title="'Search Companies'" :buttonText="'Set Company'" :buttonClasses="'btn btn-primary'" :icon="'bi-pencil'">
-					<Search :onSelect="selectParent" />
-				</Modal>
+				<Search :onSelect="selectParent" :buttonText="'Set Company'" :buttonIcon="'bi-pencil'" />
 			</div>
 		</div>
 		<br>
