@@ -12,7 +12,7 @@ import entity from "@/js/entity.js";
 export default {
 	data(){
 		return {
-			loading: false,
+			loading: true,
 			saving: false,
 			id: this.$route.params.id,
 			selectedParent: {},
@@ -25,8 +25,9 @@ export default {
 		tabs(){
 			return [
 			  'Main',
+			  'Quickbooks',
 			  'Contacts',
-			  'Children'
+			  'Children',
 			]
 		}
 	},
@@ -91,6 +92,10 @@ export default {
 			this.company.data.external.quickbooks.id = customer.Id;
 			this.company.data.external.quickbooks.display_name = customer.DisplayName;
 			this.company.data.external.quickbooks.company_name = customer.CompanyName;
+		},
+		deletePrefilledData(){
+			if( this.company.name === 'New Company' )
+				this.company.name = '';
 		}
 	},
 	mounted() {
@@ -114,7 +119,7 @@ export default {
 
 	<Loader v-if="loading"/>
 
-	<template v-if="!loading && company.name">
+	<template v-if="!loading">
 
 		<div class="text-end pb-3 bg-gray p-3 mb-2 d-flex justify-content-between align-items-center">
 			<button @click="$router.go(-1)" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></button>
@@ -129,7 +134,7 @@ export default {
 		<div class="row">
 			<div class="col-9">
 				<label class="form-label">Name</label>
-				<input class="form-control" type="text" v-model="company.name" />
+				<input class="form-control" type="text" v-model="company.name" @focus="deletePrefilledData" />
 			</div>
 			<div class="col">
 				<label class="form-label">Type</label>
@@ -162,7 +167,7 @@ export default {
 		<Tabs :labels="tabs">
 			<template #Main>
 
-				<div class="row pt-4">
+				<div class="row pt-2">
 					<div class="col">
 
 						<!--
@@ -178,18 +183,6 @@ export default {
 
 						<br>
 						-->
-
-						<h5>Quickbooks Customer</h5>
-						<div v-if="!company.data.external.quickbooks.id" class="">
-							<p class="text-danger">*Required. Needs a quickbook customer to match for invoicing.</p>
-							<SearchCustomers :selected="selectQuickbooksCustomer"/>
-						</div>
-						<div v-else>
-							<button class="btn btn-sm btn-outline-primary me-2" @click="clearQuickbooksCustomer"><i class="bi bi-pencil"></i></button>
-							{{ company.data.external.quickbooks.company_name }} - {{ company.data.external.quickbooks.display_name }}
-						</div>
-
-						<br>
 
 						<details class="mb-3">
 							<summary class="bg-light p-2">Billing Address</summary>
@@ -265,6 +258,96 @@ export default {
 				</div>
 				<div v-else>
 					<p>No children companies.</p>
+				</div>
+
+			</template>
+
+			<template #Quickbooks>
+
+				<h5>Quickbooks Customer</h5>
+				 <div class="p-3 bg-light col-6">
+					<div v-if="!company.data.external.quickbooks.id" class="">
+						<p class="text-danger">*Required. Needs a quickbook customer to match for invoicing.</p>
+						<SearchCustomers :selected="selectQuickbooksCustomer"/>
+					</div>
+					<div v-else>
+						<button class="btn btn-sm btn-outline-primary me-2" @click="clearQuickbooksCustomer"><i class="bi bi-pencil"></i></button>
+						{{ company.data.external.quickbooks.company_name }} - {{ company.data.external.quickbooks.display_name }}
+					</div>
+				 </div>
+
+				<div v-if="extra.quickbooks_data" class="pt-3 row">
+					<div class="col">
+
+						 <div class="mb-2" v-if="extra.quickbooks_data.PrimaryEmailAddr">
+							<label class="form-label">Primary Email</label>
+							<input class="form-control" v-model="extra.quickbooks_data.PrimaryEmailAddr.Address">
+						 </div>
+
+						<div class="row">
+							<div class="col">
+								<div class="mb-2">
+									<label class="form-label">Primary First Name</label>
+									<input class="form-control" v-model="extra.quickbooks_data.GivenName">
+								</div>
+							</div>
+							<div class="col">
+								<div class="mb-2">
+									<label class="form-label">Primary Last Name</label>
+									<input class="form-control" v-model="extra.quickbooks_data.FamilyName">
+								</div>
+							</div>
+						</div>
+
+						<div class="mb-2">
+							<label class="form-label">Payment Method Ref</label>
+							<input class="form-control" v-model="extra.quickbooks_data.PaymentMethodRef">
+						 </div>
+
+						<div class="mb-2">
+							<label class="form-label">Sales Term Ref</label>
+							<input class="form-control" v-model="extra.quickbooks_data.SalesTermRef">
+						</div>
+
+
+						<div class="mb-2">
+							<label class="form-label">Tax Code Ref</label>
+							<input class="form-control" v-model="extra.quickbooks_data.DefaultTaxCodeRef">
+						 </div>
+
+
+					</div>
+
+					<div class="col">
+						<div class="mb-2" v-if="extra.quickbooks_data.BillAddr">
+							<address>
+								<h5>Billing Address</h5>
+								<span class="d-block">{{ extra.quickbooks_data.BillAddr.Line1 }}</span>
+								<span class="d-block">{{ extra.quickbooks_data.BillAddr.Line2 }}</span>
+								<span class="d-block">{{ extra.quickbooks_data.BillAddr.City }},</span>
+								<span class="d-block">{{ extra.quickbooks_data.BillAddr.CountrySubDivisionCode }}</span>
+								<span class="d-block">{{ extra.quickbooks_data.BillAddr.PostalCode }}</span>
+							</address>
+						</div>
+
+						<div class="mb-2 pt-3" v-if="extra.quickbooks_data.ShipAddr">
+							<address>
+								<h5>Shipping Address</h5>
+								<span class="d-block">{{ extra.quickbooks_data.ShipAddr.Line1 }}</span>
+								<span class="d-block">{{ extra.quickbooks_data.ShipAddr.Line2 }}</span>
+								<span class="d-block">{{ extra.quickbooks_data.ShipAddr.City }},</span>
+								<span class="d-block">{{ extra.quickbooks_data.ShipAddr.CountrySubDivisionCode }}</span>
+								<span class="d-block">{{ extra.quickbooks_data.ShipAddr.PostalCode }}</span>
+							</address>
+						</div>
+
+						<div class="mb-2">
+							<label class="form-check-label">
+								<input class="form-check-input me-1" type="checkbox" v-model="extra.quickbooks_data.BillWithParent">
+								<span>Bill Parent?</span>
+							</label>
+						</div>
+					</div>
 				</div>
 
 			</template>

@@ -204,6 +204,14 @@ export default {
 				<label for="status">Status</label>
 			</div>
 		</div>
+		<div>
+			<div class="form-floating">
+				<select class="form-select" id="type" v-model="order.info.type">
+					<option v-for="type in entity.order.default.types" :value="type.value">{{ type.title }}</option>
+				</select>
+				<label for="type">Type</label>
+			</div>
+		</div>
 		<div class="flex-grow-1">
 			<div class="form-floating">
 				<input type="text" class="form-control" id="client" placeholder="Quote Name" v-model="order.info.title">

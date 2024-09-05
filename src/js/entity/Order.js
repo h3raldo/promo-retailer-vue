@@ -11,6 +11,7 @@ function create(id){
         info: {
             title: 'New Order',
             status: 'new',
+            type: 'default',
             statuses: {
               shipped: false,
               invoiced: false,
@@ -66,10 +67,15 @@ function create(id){
 let statuses = [
     { value: 'new', title: 'New'},
     { value: 'sent', title: 'Sent'},
-    { value: 'bulk', title: 'Bulk'},
     { value: 'confirmed', title: 'Confirmed'},
     { value: 'closed', title: 'Closed'},
     { value: 'complete', title: 'Complete'},
+];
+
+let types = [
+    { value: 'default', title: '-'},
+    { value: 'bulk', title: 'Bulk'},
+    { value: 'inventory', title: 'Inventory'},
 ];
 
 let company = {
@@ -394,7 +400,7 @@ function addSubitems( subitems, order )
 export default {
     create,
     default: {
-      statuses
+      statuses, types
     },
     patchData,
     convertFromQuote,

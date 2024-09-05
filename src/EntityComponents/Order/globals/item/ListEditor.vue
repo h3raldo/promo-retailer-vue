@@ -19,6 +19,24 @@ export default {
 			if( this.deleted ) this.deleted(JSON.parse(JSON.stringify(toRaw(this.list[index]))));
 			this.list.splice(index, 1);
 		},
+
+		move(fromIndex, direction) {
+			let toIndex = fromIndex;
+
+			switch (direction){
+				case 'up':
+					toIndex--;
+					break;
+				case 'down':
+					toIndex++;
+					break;
+			}
+
+			let element = this.list[fromIndex];
+			this.list.splice(fromIndex, 1);
+			this.list.splice(toIndex, 0, element);
+		},
+
 		isRemovable(index){
 			if( this.list.length > this.minimum ) return true;
 
@@ -31,7 +49,7 @@ export default {
 
 <template>
 
-	<ListEditorItem v-for="(item, i) in list" :item="item" :itemIndex="i" :textAttributes="textAttributes" :editedName="editedName" :remove="remove" :isRemovable="isRemovable(i)" />
+	<ListEditorItem v-for="(item, i) in list" :item="item" :itemIndex="i" :textAttributes="textAttributes" :editedName="editedName" :remove="remove" :move="move" :isRemovable="isRemovable(i)" />
 
 	<div class="pt-2 d-flex gap-2">
 		<button class="btn btn-primary" @click="add"><i class="bi bi-plus-square"></i> Add</button>

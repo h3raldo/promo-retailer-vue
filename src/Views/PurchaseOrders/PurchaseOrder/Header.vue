@@ -119,6 +119,12 @@ export default {
 			</div>
 		</div>
 
+		<div class="col-2" v-if="po.info.references && po.info.references[0]">
+			<div class="form-floating">
+				<input type="text" class="form-control" placeholder="Sales Order Number" :value="po.info.references[0].reference_number" disabled>
+				<label>Sales Order Number</label>
+			</div>
+		</div>
 
 		<div class="col-2">
 			<div class="input-group">

@@ -55,7 +55,6 @@ export default {
 	<div class="d-flex pt-3">
 		<div class="flex-fill">
 			<form @submit="search" class="pt-1">
-				<input type="hidden" name="page" value="1" v-model="searchParams.page" ref="page">
 				<div class="row align-items-center">
 					<div class="col">
 						<!-- quote search -->
@@ -107,6 +106,19 @@ export default {
 							<div v-for="status in entity.order.default.statuses">
 								<label class="form-check-label bg-gray px-2 rounded small">
 									<input class="form-check-input me-1" type="checkbox" name="status[]" :value="status.value" v-model="searchParams.status">
+									<span>{{ status.title }}</span>
+								</label>
+							</div>
+
+						</div>
+					</div>
+					<div>
+						<div class="d-flex gap-2">
+							<label class="fw-bold">Type: </label>
+
+							<div v-for="status in entity.order.default.types">
+								<label class="form-check-label bg-gray px-2 rounded small">
+									<input class="form-check-input me-1" type="checkbox" name="type[]" :value="status.value" v-model="searchParams.type">
 									<span>{{ status.title }}</span>
 								</label>
 							</div>

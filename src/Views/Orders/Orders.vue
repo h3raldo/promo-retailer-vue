@@ -16,12 +16,13 @@ export default {
 			columns: {
 				'ID': { id: 'id' },
 				'Status': { id: 'status' },
+				'Type': { id: 'type' },
 				'Pushed Date': { id: 'date' },
 				// 'Reference Number': { id: 'reference_number' },
 				'Origin/Client': { id: 'client' },
 				'Ship By': { id: 'date_ship_by' },
 				'In-Hands': { id: 'date_deliver_by' },
-				'Events': {  },
+				'-': {  },
 				'Total': { id: 'total' },
 				'Profit': { id: 'total_profit'  },
 				'Margin': { id: 'total_margin' }
@@ -129,6 +130,15 @@ export default {
 				</EditableColumn>
 			</td>
 
+			<td>
+				<EditableColumn :type="'select'" :item="item" :column="'type'" :options="entity.order.default.types" :entity="'order'">
+					<span :class="getStatusColor(item.type)" @click="editing = item.id">
+						<span v-if="item.type === 'default'">-</span>
+						<span v-else>{{ item.type }}</span>
+					</span>
+				</EditableColumn>
+			</td>
+
 			<td @click="viewQuote(item.id)">{{ formatDate(item.date) }}</td>
 
 			<td @click="viewQuote(item.id)">
@@ -161,7 +171,16 @@ export default {
 			<td>
 				<span v-if="item.invoice_quickbooks_id" class="badge text-bg-success">
 					<i class="bi bi-currency-dollar"></i> Invoiced
+				</span><br v-if="item.invoice_quickbooks_id">
+
+				<span v-if="item.statuses.paid" class="badge text-bg-success">
+					Paid
+				</span><br v-if="item.statuses.paid">
+
+				<span v-if="item.statuses.shipped" class="badge text-bg-primary">
+					Shipped
 				</span>
+
 				<!--
 				<details class=" p-1 mb-1" v-for="event in item.events">
 					<summary style="text-transform: capitalize">{{ event.type }}: {{ formatDate(event.date) }}</summary>

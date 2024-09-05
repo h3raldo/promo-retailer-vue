@@ -66,11 +66,11 @@ export default {
 
 	<main class="d-flex">
 
-		<aside class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark">
+		<aside class="main-menu-sidebar d-flex flex-column flex-shrink-0 p-3 text-white bg-dark">
 			<Nav />
 		</aside>
 
-		<div class="p-4 flex-grow-1" style="min-height: 100vh">
+		<div class="main-body p-4 flex-grow-1" style="min-height: 100vh">
 			<main>
 				<div v-if="alert.enabled" class="toast-container position-fixed bottom-0 end-0 p-4">
 					<div id="liveToast" :class="'toast show text-bg-'+alert.type" role="alert" aria-live="assertive" aria-atomic="true">

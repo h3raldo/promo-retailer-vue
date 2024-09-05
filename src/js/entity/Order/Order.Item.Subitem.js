@@ -57,9 +57,19 @@ let size = {
 
 function setQtyForSize( qty, size_object, subitem )
 {
+    if( qty === 0 ){
+        removeSize(size_object, subitem);
+        return;
+    }
+
     if( !subitem.sizes[size_object.name] ) subitem.sizes[size_object.name] = size.create( size_object.name );
     // console.log( size_object, qty, subitem.sizes[size_object.name] )
     subitem.sizes[size_object.name].qty = qty;
+}
+
+function removeSize( size, subitem )
+{
+    delete subitem.sizes[size.name];
 }
 
 export default {

@@ -194,7 +194,7 @@ export default {
 				<thead>
 					<tr>
 						<th v-if="bulkEdits"></th>
-						<th v-for="(col, title) in columns" @click="orderBy(col.id)" class="text-nowrap">
+						<th v-for="(col, title) in columns" @click="orderBy(col.id)" :class="'text-nowrap ' + (col.align ? `text-${col.align}` : '')">
 							{{ title }}
 							<span v-if="col.id && searchState.order_by === col.id"><i :class="caretClasses"></i></span>
 						</th>

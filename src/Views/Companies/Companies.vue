@@ -16,9 +16,12 @@ export default {
 				'ID': { id: 'id' },
 				'Type': { id: 'type' },
 				'Name': { id: 'name' },
-				'QB ID': { },
-				'Supplier': { },
-				'Decorator': { },
+				'QB ID': { align: 'center' },
+				'QB Email': { align: 'center' },
+				'QB Name': { align: 'center' },
+				'QB Address': { align: 'center' },
+				'Supplier': { align: 'center' },
+				'Decorator': { align: 'center' },
 			},
 		}
 	},
@@ -67,16 +70,34 @@ export default {
 				</span>
 			</td>
 
-			<td @click="goToCompany(item.id)">
-				<span v-if="item.type === 'vendor'" class="text-center">
+			<td @click="goToCompany(item.id)" class="text-center">
+				<span v-if="item.data && item.data.external && item.data.external.quickbooks.id && !item.external.quickbooks.email" class="text-danger badge">
+					<i class="bi bi-info-circle pe-1"></i> Email
+				</span>
+			</td>
+
+			<td @click="goToCompany(item.id)" class="text-center">
+				<span v-if="item.data && item.data.external && item.data.external.quickbooks.id && !item.external.quickbooks.first_name" class="text-danger badge">
+					<i class="bi bi-info-circle pe-1"></i> Name
+				</span>
+			</td>
+
+			<td @click="goToCompany(item.id)" class="text-center">
+				<span v-if="item.data && item.data.external && item.data.external.quickbooks.id && !item.external.quickbooks.billing_address.address_line_1" class="text-danger badge">
+					<i class="bi bi-info-circle pe-1"></i> Address
+				</span>
+			</td>
+
+			<td @click="goToCompany(item.id)" class="text-center">
+				<span v-if="item.type === 'vendor'">
 					<span v-if="item.data && item.data.type && item.data.type.supplier">
 						<i class="bi bi-check-square-fill"></i>
 					</span>
 				</span>
 			</td>
 
-			<td @click="goToCompany(item.id)">
-				<span v-if="item.type === 'vendor'" class="text-center">
+			<td @click="goToCompany(item.id)" class="text-center">
+				<span v-if="item.type === 'vendor'">
 					<span v-if="item.data && item.data.type && item.data.type.decorator">
 						<i class="bi bi-check-square-fill"></i>
 					</span>

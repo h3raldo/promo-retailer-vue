@@ -140,7 +140,7 @@ export default
 
         quote.totals.total = this.round(total_price);
 
-        if( quote.totals.paid >= quote.totals.total ) quote.info.statuses.paid = true;
+        if( (quote.totals.paid >= quote.totals.total) && quote.totals.total > 0 ) quote.info.statuses.paid = true;
     },
 
     calculateTax( price, tax=8.25 )

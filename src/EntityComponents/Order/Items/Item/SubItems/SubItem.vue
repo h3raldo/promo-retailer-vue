@@ -46,9 +46,6 @@ export default {
 			if( value !== '' ) qty = parseInt(e.target.value);
 			entity.order.item.subitem.setQtyForSize( qty, size, this.subitem);
 		},
-		removeSize( size ){
-			delete this.subitem.sizes[size];
-		},
 		hasSize( size ){
 			return typeof this.subitem.sizes[size.name] === 'object'
 		},

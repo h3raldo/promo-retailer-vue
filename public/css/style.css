@@ -37,3 +37,10 @@ main > .container{
 .source-order{
     background-color: blue;
 }
+
+.main-menu-sidebar{
+    width: 233px;
+}
+.main-menu-sidebar > div{
+    position: fixed;
+}

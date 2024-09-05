@@ -61,6 +61,7 @@ function create(id){
 let statuses = [
     { value: 'draft', title: 'Draft'},
     { value: 'bulk', title: 'Bulk'},
+    { value: 'inventory', title: 'Inventory'},
     { value: 'sent', title: 'Sent'},
     { value: 'confirmed', title: 'Confirmed'},
     { value: 'pushed', title: 'Pushed'},
