@@ -2,6 +2,7 @@
 import Tier from "@/EntityComponents/Order/globals/cost/Tier.vue";
 import Modal from "@/components/globals/bootstrap/Modal.vue";
 import VendorSelect from "@/EntityComponents/Order/globals/item/VendorSelect.vue";
+import entity from "@/js/entity.js";
 </script>
 
 <script>
@@ -58,22 +59,31 @@ export default {
 			<div class="d-flex align-items-center justify-content-end gap-2">
 				<Modal :id="'fee-edit-'+feeIndex" :title="'Edit Fee'"  :icon="'bi-pencil-square'" :buttonType="'link'">
 					<div class="row pb-3">
-						<div class="col">
-							<label class="form-label">Name:</label>
+						<div class="col-12">
+							<label class="form-label">Fee Name:</label>
 							<input type="text" class="form-control" v-model="fee.name"/>
 						</div>
-						<div class="col">
+					</div>
+					<div class="row pb-3">
+						<div class="col-2">
+							<label class="form-label">Type:</label>
+							<select class="form-select" v-model="fee.type">
+								<option v-for="type in entity.order.fee.default.types" :value="type.value">{{ type.title }}</option>
+							</select>
+						</div>
+						<div class="col-4">
 							<label class="form-label">Item:</label>
 							<select class="form-select" @change="addItemNameToFee">
 								<option value="">--</option>
 								<option v-for="(item, i) in order.items" :value="i">{{ item.info.name }}</option>
 							</select>
 						</div>
-						<div class="col">
+						<div class="col-6">
 							<label class="form-label">Vendor:</label>
 							<VendorSelect v-model="fee.vendor" />
 						</div>
 					</div>
+
 					<Tier :tier="fee.tier" :index="feeIndex" :removeTier="remove" :canDelete="false" />
 
 					<div class="form-check form-switch pt-3">

@@ -117,8 +117,10 @@ function patchData( data, init )
     order.info.deliver_by = init.dateDeliverBy || '';
     order.info.ship_by = init.dateShipBy || '';
 
+    let new_fee = OrderFee.create();
     order.fees.forEach( f => {
-        if( typeof f.config === 'undefined' ) f.config = {tax: {enabled: true}}
+        if( typeof f.config === 'undefined' ) f.config = new_fee.config;
+        if( typeof f.type === 'undefined' ) f.type = 'fee'; // because existing orders can't be guessed
     })
 
     return order;

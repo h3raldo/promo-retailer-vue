@@ -60,7 +60,7 @@ function create(id){
 let statuses = [
     { value: 'open', title: 'Open'},
     { value: 'sent', title: 'Sent'},
-    { value: 'closed', title: 'Closed'},
+    { value: 'complete', title: 'Complete'},
 ];
 
 function patchData( po, init )

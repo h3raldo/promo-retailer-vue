@@ -10,6 +10,7 @@ function create(){
         vendor: {},
         qty: 1,
         tier: tier,
+        type: 'setup',
         config: {
             tax: {
                 enabled: true
@@ -29,6 +30,29 @@ function create(){
     }
 }
 
+const types = [
+    {
+        value: 'shipping',
+        title: 'Shipping'
+    },
+    {
+        value: 'setup',
+        title: 'Setup Charge'
+    },
+    {
+        value: 'run',
+        title: 'Run Charge'
+    },
+    {
+        value: 'rush',
+        title: 'Rush Charge'
+    },
+    {
+        value: 'fee',
+        title: 'Fee'
+    },
+]
+
 function addCompany( company, item )
 {
     item.vendor.id = company.id;
@@ -38,5 +62,8 @@ function addCompany( company, item )
 
 export default {
     create,
+    default: {
+      types
+    },
     addCompany
 }
