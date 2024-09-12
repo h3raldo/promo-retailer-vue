@@ -1,5 +1,6 @@
 <script setup>
 import Search from "@/EntityComponents/Company/Search.vue";
+import Modal from "@/components/globals/bootstrap/Modal.vue";
 </script>
 <script>
 import LogoSearch from "@/EntityComponents/Order/Logos/Search.vue";
@@ -17,7 +18,7 @@ export default {
 		}
 	},
 
-	inject: ['order', 'logos', 'vendors', 'updatePricing', 'hasEdited', 'alert', 'symfony', 'urls', 'init'],
+	inject: ['order', 'logos', 'vendors', 'updatePricing', 'hasEdited', 'alert', 'symfony', 'urls', 'init', 'entities'],
 
 	computed: {
 		ableToInvoice(){
@@ -34,6 +35,14 @@ export default {
 		},
 		saveUrl() {
 			return this.urls.save;
+		},
+		deleteUrl()
+		{
+			return this.symfony.orders.order.delete.replace(':id', this.order.id);
+		},
+		duplicateUrl()
+		{
+			return this.symfony.orders.order.duplicate.replace(':id', this.order.id);
 		},
 		companyName()
 		{
@@ -78,6 +87,7 @@ export default {
 
 		onVendorSelect( company )
 		{
+			this.entities.company = company;
 			this.order.info.company.name = company.name;
 			this.order.info.company.id = company.id
 			this.order.info.company.parent_name = company.parent
@@ -183,13 +193,40 @@ export default {
 		</div>
 		<div>
 			<div class="text-end d-flex gap-2">
-				<a :href="printView" class="btn btn-outline-primary"><i class="bi bi-printer"></i> Print View</a>
-				<a :href="publicUrl" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Public View</a>
-				<a :href="packingSlip" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Packing Slip</a>
-				<button v-if="ableToInvoice" class="btn btn-outline-success" :disabled="loading" @click="invoice"><i class="bi bi-currency-dollar"></i> Invoice</button>
-				<Modal :id="'create-po'" :title="'Create POs'" :buttonText="'Create POs'" :buttonClasses="'btn btn-primary'" :icon="'bi-node-plus'" ref="poModal">
-					<CreatePOs :goToPurchaseOrder="goToPurchaseOrder"  />
-				</Modal>
+
+				<div class="btn-group">
+					<button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+						View
+					</button>
+					<ul class="dropdown-menu">
+						<li><a class="dropdown-item" :href="publicUrl"><i class="bi bi-eye"></i> Public View</a></li>
+						<li><a class="dropdown-item" :href="printView"><i class="bi bi-printer"></i> Print View</a></li>
+						<li><a class="dropdown-item" :href="packingSlip"><i class="bi bi-receipt"></i> Packing Slip</a></li>
+					</ul>
+				</div>
+
+				<div class="btn-group">
+					<button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+						Actions
+					</button>
+					<ul class="dropdown-menu">
+						<li>
+							<Modal :id="'create-po'" :title="'Create POs'" :buttonText="'Create POs'" :buttonClasses="'dropdown-item'" :icon="'bi-node-plus'" ref="poModal">
+								<CreatePOs :goToPurchaseOrder="goToPurchaseOrder"  />
+							</Modal>
+						</li>
+						<li v-if="ableToInvoice"><button class="dropdown-item" :disabled="loading" @click="invoice"><i class="bi bi-currency-dollar"></i> Invoice</button></li>
+						<li><hr class="dropdown-divider"></li>
+						<li><a class="dropdown-item" :href="duplicateUrl"><i class="bi bi-copy"></i> Duplicate</a></li>
+						<li>
+							<Modal :id="'delete-order'" :title="'Are you sure?'" :buttonText="'Delete'" :icon="'bi-trash'" :buttonClasses="'dropdown-item text-danger'">
+								<p>Will be deleted permanently. Cannot be undone.</p>
+								<a class="btn btn-danger" :href="deleteUrl"><i class="bi bi-trash"></i> DELETE</a>
+							</Modal>
+						</li>
+					</ul>
+				</div>
+
 				<button class="btn btn-primary" :disabled="loading" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
 			</div>
 		</div>

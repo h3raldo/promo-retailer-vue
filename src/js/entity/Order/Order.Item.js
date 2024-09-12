@@ -24,6 +24,7 @@ function create(){
         },
         notes: {
             public: '',
+            decorator: '',
             private: '',
             flags: []
         },

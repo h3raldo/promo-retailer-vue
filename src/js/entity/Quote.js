@@ -112,6 +112,10 @@ function patchData( data, init )
         if( typeof f.pricing.tax === 'undefined' ) f.pricing.tax = { subtotal: 0 }
     })
 
+    quote.items.forEach( i => {
+        if( typeof i.notes.decorator === 'undefined' ) i.notes.decorator = '';
+    })
+
     return quote;
 }
 

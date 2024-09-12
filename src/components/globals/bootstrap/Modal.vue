@@ -43,23 +43,25 @@ export default {
 	</template>
 
 
-	<div class="modal modal-xl fade text-start" :id="id" tabindex="-1" ref="modal">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="search_modalLabel">{{ title }}</h1>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
+	<Teleport to="body">
+		<div class="modal modal-xl fade text-start" :id="id" tabindex="-1" ref="modal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="search_modalLabel">{{ title }}</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
 
-				<div class="modal-body">
-					<slot></slot>
-				</div>
+					<div class="modal-body">
+						<slot></slot>
+					</div>
 
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" ref="closeModalButton">Close</button>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" ref="closeModalButton">Close</button>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	</Teleport>
 
 </template>

@@ -24,7 +24,7 @@
                 global_sheets: '/admin/global-sheets/',
                 images_update: '/admin/update-cdn-images/',
                 images_upload: '/admin/upload-image/',
-                reports_orders: '/admin/reports/magento/',
+                reports_orders: '/admin/reports/orders/',
                 purchase_orders: '/admin/purchase-orders/',
                 purchase_orders_purchase_order: '/admin/purchase-orders/order/:id/',
                 companies: '/admin/companies/',
@@ -43,11 +43,13 @@
                     company: {
                         get: 'https://tools.promoretailer.dev/api/companies/company/:id/',
                         save: 'https://tools.promoretailer.dev/api/companies/save/',
-                        new: 'https://tools.promoretailer.dev/api/companies/create/'
+                        new: 'https://tools.promoretailer.dev/api/companies/create/',
+                        contacts: 'https://tools.promoretailer.dev/api/companies/company/:id/contacts/',
                     }
                 },
 				orders: {
 					export: 'https://tools.promoretailer.dev/admin/orders/export/',
+					report: 'https://tools.promoretailer.dev/api/report/orders/',
 					order: {
 						packing_slip: 'https://tools.promoretailer.dev/admin/orders/order/:id/packing-slip/',
 						print: 'https://tools.promoretailer.dev/admin/orders/order/:id/print/',

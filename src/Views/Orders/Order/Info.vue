@@ -1,19 +1,29 @@
 <script setup>
 import Events from "@/components/globals/properties/Events.vue";
 import Address from "@/components/globals/properties/Address.vue";
+import List from "@/EntityComponents/Contact/List.vue";
 </script>
 <script>
 import entity from "@/js/entity.js";
 import utils from "@/js/utils.js";
 
 export default {
-	inject: ['order'],
+	inject: ['order', 'entities'],
 	computed: {
 		isShippingSameAsBilling(){
 			return this.order.client.billing === this.order.client.shipping;
+		},
+		companyId()
+		{
+			if( !this.order.info.company || !this.order.info.company.id ) return false
+			return this.order.info.company.id;
 		}
 	},
 	methods: {
+		onContactSelect( contact )
+		{
+			console.log( contact );
+		},
 		addAttribute()
 		{
 			this.order.info.attributes.push( entity.order.attribute.create() );
@@ -32,6 +42,12 @@ export default {
 			} else {
 				this.order.client.billing = entity.customer.address.create(this.order.client.billing)
 			}
+		},
+		copyAddressFromCompany(type){
+			if( !this.entities || !this.entities.company ) return;
+
+			let address = this.entities.company.data[type].address;
+			this.order.client[type] = address;
 		}
 	}
 }
@@ -142,6 +158,10 @@ export default {
 				<div class="form-text">DO NOT USE. Use Shipping Address Instead.</div>
 			</div>
 
+			<div class="mb-3 row">
+				<List :company="companyId" />
+			</div>
+
 			<div class="mb-3">
 				<label class="form-label">Shipping Method:</label>
 				<textarea class="form-control" v-model="order.info.delivery_method"></textarea>
@@ -152,6 +172,7 @@ export default {
 				<div>
 					<Address :address="order.client.shipping" />
 				</div>
+				<button v-if="companyId" class="btn btn-sm btn-outline-primary" @click="copyAddressFromCompany('shipping')">Copy from Company</button>
 			</div>
 
 			<div class="mb-3">
@@ -165,6 +186,7 @@ export default {
 				<div v-if="!isShippingSameAsBilling">
 					<Address :address="order.client.billing" />
 				</div>
+				<button v-if="companyId" class="btn btn-sm btn-outline-primary" @click="copyAddressFromCompany('billing')">Copy from Company</button>
 			</div>
 
 			<div class="mb-3">

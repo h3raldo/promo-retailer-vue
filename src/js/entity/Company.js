@@ -8,6 +8,9 @@ function create()
                 supplier: false,
                 decorator: false
             },
+            config: {
+                contacts_from_order: true,
+            },
             contacts: {
                 primary: {},
             },
@@ -43,6 +46,7 @@ function patch( company )
     if( !company.data.billing ) company.data.billing = base.data.billing;
     if( !company.data.shipping ) company.data.shipping = base.data.shipping;
     if( !company.data.external ) company.data.external = base.data.external;
+    if( typeof company.data.config === 'undefined' ) company.data.config = base.data.config;
 
     if( typeof company.data.billing.address.company === 'undefined' ) company.data.billing.address.company = '';
     if( typeof company.data.shipping.address.company === 'undefined' ) company.data.shipping.address.company = '';

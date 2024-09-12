@@ -26,7 +26,7 @@ const routes = [
         path: window.symfony.views.purchase_orders_purchase_order,
         component: () => import('@/Views/PurchaseOrders/PurchaseOrder/View.vue')
     },
-    { path: window.symfony.views.reports_orders, component: () => import('@/Views/Reports/Magento.vue') },
+    { path: window.symfony.views.reports_orders, component: () => import('@/Views/Reports/Orders.vue') },
     { path: window.symfony.views.images_upload, component: () => import('@/Views/Images/UploadImage.vue') },
     { path: window.symfony.views.images_update, component: () => import('@/Views/Images/UpdateImages.vue') },
     { path: window.symfony.views.global_sheets, component: () => import('@/Views/GlobalSheets.vue') },

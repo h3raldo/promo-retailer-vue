@@ -96,6 +96,20 @@ export default {
 		deletePrefilledData(){
 			if( this.company.name === 'New Company' )
 				this.company.name = '';
+		},
+		copyQBAddressToCompany( qb_address, type ) {
+			let address = this.company.data.billing.address;
+			if( type === 'shipping')
+				address = this.company.data.shipping.address;
+
+			address.company = ( this.company.parent_name ? this.company.parent_name : this.company.name ) ;
+			address.first_name = this.extra.quickbooks_data.GivenName;
+			address.last_name =this.extra.quickbooks_data.FamilyName;
+			address.address_line_1 = qb_address.Line1;
+			address.address_line_2 = qb_address.Line2;
+			address.city = qb_address.City;
+			address.state = qb_address.CountrySubDivisionCode;
+			address.postal_code = qb_address.PostalCode;
 		}
 	},
 	mounted() {
@@ -117,7 +131,7 @@ export default {
 
 <template>
 
-	<Loader v-if="loading"/>
+	<Loader v-if="loading" />
 
 	<template v-if="!loading">
 
@@ -197,6 +211,14 @@ export default {
 								<Address :address="company.data.shipping.address" />
 							</div>
 						</details>
+
+						<hr>
+
+						<div class="mt-2">
+							<label class="form-check-label">
+								<input class="form-check-input me-1" type="checkbox" v-model="company.data.config.contacts_from_order"><span>Generate Contacts from Orders</span>
+							</label>
+						</div>
 
 					</div>
 					<div class="col">
@@ -281,38 +303,38 @@ export default {
 
 						 <div class="mb-2" v-if="extra.quickbooks_data.PrimaryEmailAddr">
 							<label class="form-label">Primary Email</label>
-							<input class="form-control" v-model="extra.quickbooks_data.PrimaryEmailAddr.Address">
+							<input class="form-control" v-model="extra.quickbooks_data.PrimaryEmailAddr.Address" readonly disabled>
 						 </div>
 
 						<div class="row">
 							<div class="col">
 								<div class="mb-2">
 									<label class="form-label">Primary First Name</label>
-									<input class="form-control" v-model="extra.quickbooks_data.GivenName">
+									<input class="form-control" v-model="extra.quickbooks_data.GivenName" readonly disabled>
 								</div>
 							</div>
 							<div class="col">
 								<div class="mb-2">
 									<label class="form-label">Primary Last Name</label>
-									<input class="form-control" v-model="extra.quickbooks_data.FamilyName">
+									<input class="form-control" v-model="extra.quickbooks_data.FamilyName" readonly disabled>
 								</div>
 							</div>
 						</div>
 
 						<div class="mb-2">
 							<label class="form-label">Payment Method Ref</label>
-							<input class="form-control" v-model="extra.quickbooks_data.PaymentMethodRef">
+							<input class="form-control" v-model="extra.quickbooks_data.PaymentMethodRef" readonly disabled>
 						 </div>
 
 						<div class="mb-2">
 							<label class="form-label">Sales Term Ref</label>
-							<input class="form-control" v-model="extra.quickbooks_data.SalesTermRef">
+							<input class="form-control" v-model="extra.quickbooks_data.SalesTermRef" readonly disabled>
 						</div>
 
 
 						<div class="mb-2">
 							<label class="form-label">Tax Code Ref</label>
-							<input class="form-control" v-model="extra.quickbooks_data.DefaultTaxCodeRef">
+							<input class="form-control" v-model="extra.quickbooks_data.DefaultTaxCodeRef" readonly disabled>
 						 </div>
 
 
@@ -328,6 +350,7 @@ export default {
 								<span class="d-block">{{ extra.quickbooks_data.BillAddr.CountrySubDivisionCode }}</span>
 								<span class="d-block">{{ extra.quickbooks_data.BillAddr.PostalCode }}</span>
 							</address>
+							<button class="btn btn-sm btn-outline-primary" @click="copyQBAddressToCompany(extra.quickbooks_data.BillAddr, 'billing')">Copy to Primary Billing</button>
 						</div>
 
 						<div class="mb-2 pt-3" v-if="extra.quickbooks_data.ShipAddr">
@@ -339,6 +362,7 @@ export default {
 								<span class="d-block">{{ extra.quickbooks_data.ShipAddr.CountrySubDivisionCode }}</span>
 								<span class="d-block">{{ extra.quickbooks_data.ShipAddr.PostalCode }}</span>
 							</address>
+							<button class="btn btn-sm btn-outline-primary" @click="copyQBAddressToCompany(extra.quickbooks_data.ShipAddr, 'shipping')">Copy to Primary Shipping</button>
 						</div>
 
 						<div class="mb-2">

@@ -53,6 +53,11 @@ export default {
 			</div>
 
 			<div class="form-floating">
+				<textarea class="form-control" placeholder="Decorator Notes" v-model="item.notes.decorator" style="height: 100px;"></textarea>
+				<label>Decorator Notes</label>
+			</div>
+
+			<div class="form-floating">
 				<textarea class="form-control" placeholder="Notes (Private)" v-model="item.notes.private" style="height: 100px;"></textarea>
 				<label>Notes (Private)</label>
 			</div>

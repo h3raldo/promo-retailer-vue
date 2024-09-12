@@ -7,7 +7,7 @@ import utils from "@/js/utils.js";
 export default {
 	data(){
 		return {
-			pages: [1,2,3,4]
+
 		}
 	},
 	props: ['getEntities', 'searchParams'],
@@ -17,23 +17,6 @@ export default {
 			e.preventDefault();
 			let params = utils.form.toGetParams(e.target);
 			this.getEntities(params);
-		},
-		createNew()
-		{
-			let self = this;
-
-			utils.ajax( this.symfony.orders.order.new, (data) => {
-
-				if( data.error === true || !data.id ){
-					self.alert(data.message, 'danger');
-					return;
-				}
-
-				self.$router.push( self.symfony.views.orders_order.replace(':id', data.id) )
-
-			}, (error) => {
-				this.alert('Error creating new order', 'danger');
-			})
 		},
 		getPageClasses( page )
 		{
@@ -45,13 +28,6 @@ export default {
 
 <template>
 
-	<div class="text-end pb-3 bg-gray p-3 mb-2 d-flex justify-content-between align-items-center">
-		<div>
-			<h3 class="mb-0"><i class="bi bi-table"></i> Sales Orders</h3>
-		</div>
-		<button class="btn btn-primary p-3" @click="createNew"><i class="bi bi-plus-square-fill"></i> Create New</button>
-	</div>
-
 	<div class="d-flex pt-3">
 		<div class="flex-fill">
 			<form @submit="search" class="pt-1">
@@ -61,7 +37,7 @@ export default {
 						<div class="pb-2">
 							<div class="form-floating">
 								<input class="form-control" type="text" name="data_string" id="data_string" placeholder="Search anything in quote" v-model="searchParams.data_string">
-								<label class="form-label" for="data_string">Quote Search</label>
+								<label class="form-label" for="data_string">Content Search</label>
 							</div>
 						</div>
 					</div>

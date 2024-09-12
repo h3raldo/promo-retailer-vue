@@ -36,6 +36,7 @@ function create(id){
                 flags: []
             },
             company: company.create(),
+            contact: { id: null },
         },
         config: {
             tax: {
@@ -102,6 +103,7 @@ function patchData( data, init )
     if( typeof order.totals.tax === 'undefined' ) order.totals.tax = 0;
     if( typeof order.totals.paid === 'undefined' ) order.totals.paid = 0;
     if( typeof order.info.company === 'undefined' ) order.info.company = company.create();
+    if( typeof order.info.contact === 'undefined' ) order.info.contact = blank.info.contact;
     if( typeof order.info.events === 'undefined' ) order.info.events = [];
     if( typeof order.info.delivery_method === 'undefined' ) order.info.delivery_method = '';
     if( typeof order.info.payment_method === 'undefined' ) order.info.payment_method = '';
@@ -121,6 +123,10 @@ function patchData( data, init )
     order.fees.forEach( f => {
         if( typeof f.config === 'undefined' ) f.config = new_fee.config;
         if( typeof f.type === 'undefined' ) f.type = 'fee'; // because existing orders can't be guessed
+    })
+
+    order.items.forEach( i => {
+        if( typeof i.notes.decorator === 'undefined' ) i.notes.decorator = '';
     })
 
     return order;
