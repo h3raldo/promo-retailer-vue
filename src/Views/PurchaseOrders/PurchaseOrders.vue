@@ -79,7 +79,24 @@ export default {
 			if( statuses[status] ) className = statuses[status];
 
 			return `badge text-bg-${className}`;
-		}
+		},
+		createNew()
+		{
+			let self = this;
+
+			utils.ajax( this.symfony.api.purchase_orders.order.new, (data) => {
+
+				if( data.error === true || !data.id ){
+					self.alert(data.message, 'danger');
+					return;
+				}
+
+				self.$router.push( self.symfony.views.purchase_orders_purchase_order.replace(':id', data.id) )
+
+			}, (error) => {
+				this.alert('Error creating new order', 'danger');
+			})
+		},
 	},
 	created() {
 		if( typeof this.search.purchase_orders === 'undefined' ) this.search.purchase_orders = {}
@@ -88,6 +105,13 @@ export default {
 </script>
 
 <template>
+
+	<div class="text-end pb-3 bg-gray p-3 mb-2 d-flex justify-content-between align-items-center">
+		<div>
+			<h3 class="mb-0"><i class="bi bi-cash-coin"></i> Purchase Orders</h3>
+		</div>
+		<button class="btn btn-primary p-3" @click="createNew"><i class="bi bi-plus-square-fill"></i> Create New</button>
+	</div>
 
 	<Grid :api="symfony.api.purchase_orders.search" :columns="columns" :searchState="searchState" :bulkEdits="bulkEdits" :entity="'po'">
 

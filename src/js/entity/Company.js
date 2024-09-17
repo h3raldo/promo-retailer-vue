@@ -22,7 +22,10 @@ function create()
             shipping: {
                 address: entity.customer.address.create()
             },
-            properties: [],
+            properties: [
+                {"name": "username", "value": ""},
+                {"name": "password", "value": ""}
+            ],
             external: {
                 quickbooks: {
                     id: '',

@@ -1,7 +1,8 @@
 <script setup>
 import Loader from "@/components/globals/Loader.vue";
 import utils from "@/js/utils.js";
-import Search from "@/Views/Orders/Search.vue";
+import OrderSearch from "@/Views/Orders/Search.vue";
+import POSearch from "@/Views/PurchaseOrders/Search.vue";
 </script>
 
 <script>
@@ -12,6 +13,8 @@ export default {
 	data(){
 		return {
 			loading: true,
+			entity: 'orders',
+			available: ['orders', 'purchase_orders'],
 			report: {},
 			searchParams: {},
 			group: '',
@@ -25,7 +28,18 @@ export default {
 			let self = this;
 			if( !params ) params = '';
 
-			let url = this.symfony.api.orders.report + '?' + params
+			let base_url;
+
+			switch (this.entity){
+				case 'orders':
+					base_url = this.symfony.api.orders.report;
+					break;
+				case 'purchase_orders':
+					base_url = this.symfony.api.purchase_orders.report;
+					break;
+			}
+
+			let url = base_url + '?' + params
 
 			self.loading = true;
 			utils.ajax(url, (data) => {
@@ -50,11 +64,26 @@ export default {
 
 	<div class="text-end pb-3 bg-gray p-3 mb-2 d-flex justify-content-between align-items-center">
 		<div>
-			<h3 class="mb-0"><i class="bi bi-table"></i> Report - Orders</h3>
+			<h3 class="mb-0"><i class="bi bi-table"></i> Report - <span class="text-capitalize">{{ entity }}</span></h3>
+		</div>
+		<div class="d-flex gap-2 align-items-center">
+			<div>
+				Report Type:
+			</div>
+			<div>
+				<select v-model="entity" class="form-select">
+					<option v-for="type in available" :value="type" class="text-capitalize">{{ type.toUpperCase() }}</option>
+				</select>
+			</div>
 		</div>
 	</div>
 
-	<Search :getEntities="getReport" :searchParams="searchParams" />
+	<template v-if="entity === 'orders'">
+		<OrderSearch :getEntities="getReport" :searchParams="searchParams" />
+	</template>
+	<template v-else>
+		<POSearch :getEntities="getReport" :searchParams="searchParams" />
+	</template>
 
 	<br><hr>
 

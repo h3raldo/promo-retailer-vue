@@ -163,23 +163,42 @@ export default {
 				</EditableColumn>
 			</td>
 
-			<td @click="viewQuote(item.id)">{{ formatDate(item.date) }}</td>
+			<td @click="viewQuote(item.id)">
+				{{ formatDate(item.date) }}
+			</td>
 
 			<td @click="viewQuote(item.id)">
-				<span class="d-block">
-					<span :class="'fw-normal badge source-'+item.source">
-						{{ item.source.charAt(0).toUpperCase() }} -
-						{{ item.referenceNumber || '' }}
-					</span>
 
-					<span v-if="!item.company || !item.quickbooksID" class="text-danger badge">
-						<i class="bi bi-info-circle pe-1"></i>
-						<span v-if="!item.company">Company</span>
-						<span v-if="item.company && !item.quickbooksID">QB ID</span>
-					</span>
-				</span>
-				<span class="d-block">{{ item.title }}</span>
-				<span class="d-block small">{{ item.client }}</span>
+				<div class="d-flex align-items-center">
+					<div class="flex-grow-1">
+						<span class="d-block">
+							<span :class="'fw-normal badge source-'+item.source">
+								{{ item.source.charAt(0).toUpperCase() }} -
+								{{ item.referenceNumber || '' }}
+							</span>
+
+							<span v-if="!item.company || !item.quickbooksID" class="text-danger badge">
+								<i class="bi bi-info-circle pe-1"></i>
+								<span v-if="!item.company">Company</span>
+								<span v-if="item.company && !item.quickbooksID">QB ID</span>
+							</span>
+						</span>
+						<span class="d-block">{{ item.title }}</span>
+						<span class="d-block small">{{ item.client }}</span>
+					</div>
+					<div>
+						<div v-if="item.events" class="pr-tooltip">
+							<span class="badge text-bg-warning"><i class="bi bi-calendar-event"></i></span>
+							<div class="pr-tooltip--content bg-light p-2 border text-start" style="width: 200px;">
+								<p class=" p-1 mb-1" v-for="event in item.events">
+									<b class="text-capitalize d-block">{{ event.type }}: {{ formatDate(event.date) }}</b>
+									{{event.note}}
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
 			</td>
 
 			<td>

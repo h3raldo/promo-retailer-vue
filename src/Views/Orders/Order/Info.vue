@@ -158,7 +158,7 @@ export default {
 				<div class="form-text">DO NOT USE. Use Shipping Address Instead.</div>
 			</div>
 
-			<div class="mb-3 row">
+			<div class="mb-3 row d-none">
 				<List :company="companyId" />
 			</div>
 

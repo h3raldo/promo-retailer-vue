@@ -9,23 +9,6 @@ export default {
 	props: ['getEntities', 'searchParams'],
 	inject: ['symfony', 'alert'],
 	methods: {
-		createNew()
-		{
-			let self = this;
-
-			utils.ajax( this.symfony.api.purchase_orders.order.new, (data) => {
-
-				if( data.error === true || !data.id ){
-					self.alert(data.message, 'danger');
-					return;
-				}
-
-				self.$router.push( self.symfony.views.purchase_orders_purchase_order.replace(':id', data.id) )
-
-			}, (error) => {
-				this.alert('Error creating new order', 'danger');
-			})
-		},
 		search(e){
 			e.preventDefault();
 			let params = utils.form.toGetParams(e.target);
@@ -36,13 +19,6 @@ export default {
 </script>
 
 <template>
-
-	<div class="text-end pb-3 bg-gray p-3 mb-2 d-flex justify-content-between align-items-center">
-		<div>
-			<h3 class="mb-0"><i class="bi bi-cash-coin"></i> Purchase Orders</h3>
-		</div>
-		<button class="btn btn-primary p-3" @click="createNew"><i class="bi bi-plus-square-fill"></i> Create New</button>
-	</div>
 
 	<div class="d-flex pt-3">
 		<div class="flex-fill">
@@ -63,7 +39,7 @@ export default {
 						<!-- client -->
 						<div class="pb-2">
 							<div class="form-floating">
-								<input class="form-control" type="text" name="client" id="client" placeholder="Client" v-model="searchParams.client">
+								<input class="form-control" type="text" name="client" id="client" placeholder="Client" v-model="searchParams.vendor">
 								<label class="form-label" for="client">Vendor</label>
 							</div>
 						</div>
