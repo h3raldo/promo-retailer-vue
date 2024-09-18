@@ -13,7 +13,7 @@ export default {
 		}
 	},
 
-	inject: ['item', 'logos'],
+	inject: ['item', 'logos', 'order'],
 
 	computed:{
 
@@ -25,6 +25,38 @@ export default {
 		},
 		remove(index){
 			this.item.decoration.placements.splice(index, 1);
+		},
+		copyPlacementsToAll()
+		{
+			let decorators = this.item.decoration.available;
+			let placements = this.item.decoration.placements;
+
+			placements.forEach( placement => {
+				placement.decorator
+			})
+
+			this.order.items.forEach(item => {
+				if( this.item === item ) return;
+
+				let new_decorators = JSON.parse(JSON.stringify(decorators));
+				item.decoration.available =new_decorators;
+
+				item.decoration.placements.length = 0;
+				placements.forEach( placement => {
+					let new_placement = JSON.parse(JSON.stringify(placement));
+					new_placement.logo = placement.logo;
+
+					new_decorators.forEach( decorator => {
+						if( decorator.info.id !== placement.decorator.info.id ) return;
+						decorator.sheets.forEach( sheet => {
+							if( sheet.name !== placement.decorator.name ) return;
+							new_placement.decorator = sheet;
+						})
+					})
+
+					item.decoration.placements.push( new_placement );
+				});
+			})
 		}
 	}
 }
@@ -87,6 +119,10 @@ export default {
 
 	<div class="pt-1">
 		<button class="btn btn-primary btn-sm" @click="add"><i class="bi bi-plus-circle"></i> Add Placement</button>
+	</div>
+
+	<div class="pt-3 text-center">
+		<button class="btn btn-outline-secondary btn-sm" @click="copyPlacementsToAll"><i class="bi bi-copy"></i> Copy Placements to All Items</button>
 	</div>
 
 </template>

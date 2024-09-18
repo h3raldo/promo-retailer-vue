@@ -59,6 +59,18 @@ export default {
 		addDefaultSizes()
 		{
 			entity.order.item.defaults.sizes().forEach( s => this.item.sizes.push(s) );
+		},
+		copyCostsToAll()
+		{
+			let tiers = this.item.cost.material.tiers;
+			this.order.items.forEach( item => {
+				if( item === this.item ) return;
+
+				item.cost.material.tiers.length = 0;
+				tiers.forEach( tier => {
+					item.cost.material.tiers.push( JSON.parse(JSON.stringify(tier)) );
+				})
+			})
 		}
 	}
 }
@@ -122,9 +134,10 @@ export default {
 					<input class="form-check-input" type="checkbox" role="switch" v-model="item.cost.material.visible">
 					<label class="form-check-label">Show Cost Table</label>
 				</div>
-				<div class="bg-light border">
+				<div class="bg-light border pb-2 pe-2">
 					<Tiers :tiers="item.cost.material.tiers" :showMargin="true" />
 				</div>
+
 				<div class="mt-2">
 					<h6>Price should overwrite: </h6>
 					<div>
@@ -152,6 +165,11 @@ export default {
 						</label>
 					</div>
 				</div>
+
+				<div class="pt-3">
+					<button class="btn btn-outline-secondary btn-sm" @click="copyCostsToAll"><i class="bi bi-copy"></i> Copy Cost to All Items</button>
+				</div>
+
 			</div>
 		</div>
 
