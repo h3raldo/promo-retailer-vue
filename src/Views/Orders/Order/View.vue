@@ -17,6 +17,7 @@ import utils from "@/js/utils.js";
 const data = reactive({
 	id: route.params.id,
 	loading: true,
+	error: false,
 	references: [],
 	entities: {},
 	init: {},
@@ -107,6 +108,9 @@ function setup()
 
 
 		afterDataRetrieval(entity_data, init);
+	}, e => {
+		data.error = true;
+		data.loading = false;
 	})
 }
 
@@ -154,7 +158,7 @@ provide('event', {
 
 	<Loader v-if="data.loading" />
 
-	<template v-if="!data.loading">
+	<template v-if="!data.loading && !data.error">
 		<Header />
 		<Order>
 			<template #info>
@@ -162,5 +166,9 @@ provide('event', {
 			</template>
 		</Order>
 	</template>
+
+	<div v-if="!data.loading && data.error">
+		<h2>Error: Order Not Found</h2>
+	</div>
 
 </template>

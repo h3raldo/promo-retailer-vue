@@ -1,7 +1,9 @@
 import pricing from "@/js/pricing.js";
+import config from "@/js/utils/config.js"
 
 export default
 {
+    config,
     ajax: ( url, callback, errorCallback, data ) => {
 
         let init = {

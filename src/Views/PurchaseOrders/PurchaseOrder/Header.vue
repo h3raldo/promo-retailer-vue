@@ -1,6 +1,7 @@
 <script setup>
 import Modal from "@/components/globals/bootstrap/Modal.vue";
 import Search from "@/EntityComponents/Company/Search.vue";
+import entity from "@/js/entity.js";
 </script>
 
 <script>
@@ -104,9 +105,7 @@ export default {
 		<div>
 			<div class="form-floating">
 				<select class="form-select" id="status" v-model="po.info.status">
-					<option value="open">Open</option>
-					<option value="sent">Sent</option>
-					<option value="closed">Closed</option>
+					<option v-for="status in entity.purchaseOrder.default.statuses" :value="status.value">{{ status.title }}</option>
 				</select>
 				<label for="status">Status</label>
 			</div>

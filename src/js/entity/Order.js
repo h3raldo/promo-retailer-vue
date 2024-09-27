@@ -13,9 +13,10 @@ function create(id){
             status: 'new',
             type: 'default',
             statuses: {
-              shipped: false,
-              invoiced: false,
-              paid: false,
+                shipped: false,
+                invoiced: false,
+                paid: false,
+                emailed: false,
             },
             category: 'standard',
             reference_number: '',
@@ -113,6 +114,7 @@ function patchData( data, init )
     if( typeof order.client.billing.phone === 'undefined' ) order.client.billing.phone = '';
     if( typeof order.info.ship_by === 'undefined' ) order.info.ship_by = '';
     if( typeof order.info.statuses === 'undefined' ) order.info.statuses = blank.info.statuses;
+    if( typeof order.info.statuses.shipped === 'undefined' ) order.info.statuses.shipped = blank.info.statuses.shipped;
     if( typeof order.info.shipped === 'undefined' ) order.info.shipped = blank.info.shipped;
 
     order.info.status = init.status;

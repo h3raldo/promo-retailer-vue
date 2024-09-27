@@ -31,6 +31,7 @@ const routes = [
     { path: window.symfony.views.images_update, component: () => import('@/Views/Images/UpdateImages.vue') },
     { path: window.symfony.views.global_sheets, component: () => import('@/Views/GlobalSheets.vue') },
     { path: window.symfony.views.companies, component: () => import('@/Views/Companies/Companies.vue') },
+    { path: window.symfony.views.config, component: () => import('@/Views/Config/Config.vue') },
     {
         name: 'companies_company',
         path: window.symfony.views.companies_company,

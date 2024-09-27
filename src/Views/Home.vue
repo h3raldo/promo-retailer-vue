@@ -80,6 +80,7 @@ export default {
 			<thead>
 			<tr>
 				<th>Date</th>
+				<th>Status</th>
 				<th>Type</th>
 				<th>Note</th>
 				<th></th>
@@ -89,6 +90,9 @@ export default {
 			<tr v-for="item in items" class="align-middle">
 				<td>
 					{{ formatDate(item.date) }}
+				</td>
+				<td>
+					{{ item.entity_status }}
 				</td>
 				<td>
 					<span class="d-block small">{{ item.entity.toUpperCase() }} {{ item.entity_id }}</span>

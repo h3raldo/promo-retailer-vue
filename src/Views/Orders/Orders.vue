@@ -119,6 +119,10 @@ export default {
 
 			return `badge text-bg-${className}`;
 		},
+		hasPRPurchaseOrder( purchaseOrders )
+		{
+			return purchaseOrders.filter( p => p.company_id === 17 || p.company_id === 6 ).length > 0;
+		}
 	},
 
 	created() {
@@ -129,7 +133,7 @@ export default {
 
 <template>
 
-	<div class="text-end pb-3 bg-gray p-3 mb-2 d-flex justify-content-between align-items-center">
+	<div class="text-end pb-3 bg-gray p-3 mb-2 d-flex justify-content-between align-items-center d-print-none">
 		<div>
 			<h3 class="mb-0"><i class="bi bi-table"></i> Sales Orders</h3>
 		</div>
@@ -185,6 +189,14 @@ export default {
 						</span>
 						<span class="d-block">{{ item.title }}</span>
 						<span class="d-block small">{{ item.client }}</span>
+						<template v-if="item.purchaseOrders.length">
+							<span class="d-block small">
+								<span class="badge text-bg-primary">
+									<i class="bi bi-cash-coin"></i> x {{ item.purchaseOrders.length }} <span v-if="hasPRPurchaseOrder(item.purchaseOrders)">(contains PR)</span>
+								</span>
+							</span>
+						</template>
+
 					</div>
 					<div>
 						<div v-if="item.events" class="pr-tooltip">
@@ -235,7 +247,7 @@ export default {
 			<td @click="viewQuote(item.id)">{{ formatPricing(item.totalProfit) }}</td>
 			<td @click="viewQuote(item.id)">{{ item.totalMargin }}%</td>
 
-			<td class="delete text-end">
+			<td class="delete text-end d-print-none">
 				<a class="btn btn-outline-primary me-1" :href="getDuplicateUrl(item.id)"><i class="bi bi-copy"></i></a>
 				<Modal :id="'deleteQuote-'+item.id" :title="'Are you sure?'"  :icon="'bi-trash'" :buttonClasses="'btn btn-danger'">
 					<p>Quote will be deleted permanently. Cannot be undone.</p>
@@ -273,8 +285,39 @@ export default {
 		</template>
 	</Grid>
 
-	<div class="text-center">
+	<div class="text-center d-print-none">
 		<a class="btn btn-outline-primary" :href="exportLink" target="_blank">Export to CSV</a>
 	</div>
 
 </template>
+
+<style>
+@media print {
+	.main-menu-sidebar{
+		display: none !important;
+	}
+	.badge{
+		background: transparent !important;
+		color: black !important;
+		font-weight: bold !important;
+	}
+	.text-bg-secondary{
+		color: #000 !important;
+	}
+	.text-bg-success{
+		color: green !important;
+	}
+	.text-bg-primary{
+		color: blue !important;
+	}
+	.source-magento{
+		color: orange !important;
+	}
+	.source-order{
+		color: blue !important;
+	}
+	.source-quote{
+		color: green !important;
+	}
+}
+</style>

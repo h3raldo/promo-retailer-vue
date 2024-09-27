@@ -155,7 +155,6 @@ export default
      */
     postCreation( item, vendors )
     {
-        console.log(item);
         let matched_vendor = vendors.filter( v => v.sage_id === item.info.supplier.sage_id );
         if( matched_vendor.length > 0 ){
             item.info.supplier = matched_vendor[0];

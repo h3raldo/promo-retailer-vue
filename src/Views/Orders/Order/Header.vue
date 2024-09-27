@@ -21,14 +21,17 @@ export default {
 	inject: ['order', 'logos', 'vendors', 'updatePricing', 'hasEdited', 'alert', 'symfony', 'urls', 'init', 'entities'],
 
 	computed: {
+		ableToSendEmail(){
+			return ( this.entities.company && this.entities.company.data && this.entities.company.data.contacts.approval && this.entities.company.data.contacts.approval.email)
+		},
 		ableToInvoice(){
 			return !this.init.invoice_quickbooks_id && !this.invoiced && this.init.company_quickbooks_id
 		},
 		printView() {
-			return this.symfony.api.orders.order.print.replace(':id', this.order.id);
+			return this.symfony.api.orders.order.print.replace(':id', this.order.id );
 		},
 		publicUrl() {
-			return this.urls.public.replace(':id', this.order.id);
+			return this.urls.public.replace(':id', this.init.public_id );
 		},
 		packingSlip(){
 			return this.symfony.api.orders.order.packing_slip.replace(':id', this.order.id);
@@ -54,6 +57,59 @@ export default {
 	},
 
 	methods: {
+		email(){
+			let mail = document.createElement("a");
+			let self = this;
+
+			function fillInVariables( string ){
+
+				let variables = [
+					{
+						variable: '[company_name]',
+						value: self.entities.company.name,
+					},
+					{
+						variable: '[client_name]',
+						value: self.order.client.name,
+					},
+					{
+						variable: '[approver_name]',
+						value: self.entities.company.data.contacts.approval.first_name,
+					},
+					{
+						variable: '[approver_email]',
+						value: self.entities.company.data.contacts.approval.email,
+					},
+					{
+						variable: '[reference_number]',
+						value: self.order.info.reference_number,
+					},
+					{
+						variable: '[sales_order_url]',
+						value: self.publicUrl,
+					}
+				]
+
+				variables.forEach( v => {
+					string = string.replaceAll( v.variable, v.value );
+				})
+
+				string = string.replace(/(?:\r\n|\r|\n)/g, '%0D%0A');
+
+				return string;
+			}
+
+			utils.config.get.approvalEmail( (response) => {
+				if( !response ) return;
+				let body = fillInVariables( response.body );
+				let subject = fillInVariables( response.subject );
+				mail.href = `mailto:${self.entities.company.data.contacts.approval.email}?subject=${subject}&body=${body}`;
+				self.order.info.statuses.emailed = true;
+				self.save();
+				mail.click();
+			} )
+
+		},
 		invoice()
 		{
 			let self = this;
@@ -216,6 +272,7 @@ export default {
 							</Modal>
 						</li>
 						<li v-if="ableToInvoice"><button class="dropdown-item" :disabled="loading" @click="invoice"><i class="bi bi-currency-dollar"></i> Invoice</button></li>
+						<li v-if="ableToSendEmail"><button class="dropdown-item" @click="email"><i class="bi bi-envelope"></i> Email</button></li>
 						<li><hr class="dropdown-divider"></li>
 						<li><a class="dropdown-item" :href="duplicateUrl"><i class="bi bi-copy"></i> Duplicate</a></li>
 						<li>
@@ -292,6 +349,12 @@ export default {
 			<label class="form-check-label bg-gray px-2 rounded small">
 				<input class="form-check-input me-1" type="checkbox" @change="toggleShipped" v-model="order.info.statuses.shipped">
 				<span>Shipped</span>
+			</label>
+		</div>
+		<div>
+			<label class="form-check-label bg-gray px-2 rounded small">
+				<input class="form-check-input me-1" type="checkbox" v-model="order.info.statuses.emailed">
+				<span>Emailed</span>
 			</label>
 		</div>
 	</div>

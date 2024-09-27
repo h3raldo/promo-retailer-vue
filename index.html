@@ -32,6 +32,7 @@
                 contacts: '/admin/contacts/',
                 contacts_contact: '/admin/contacts/contact/:id/',
                 website: '/admin/website/',
+				config: '/admin/config',
             },
             api: {
 				entity: {
@@ -80,6 +81,10 @@
 					customer: {
 						search: 'https://tools.promoretailer.dev/api/quickbooks/customers/search/'
 					}
+				},
+				config: {
+					get: 'https://tools.promoretailer.dev/api/config/get/',
+					save: 'https://tools.promoretailer.dev/api/config/save/',
 				}
             },
             quotes: {

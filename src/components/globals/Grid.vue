@@ -134,13 +134,15 @@ export default {
 <template>
 	<div class="grid">
 
-		<slot name="header" :search="getEntities"></slot>
+		<div class="grid--header d-print-none">
+			<slot name="header" :search="getEntities"></slot>
+		</div>
 
 		<Loader v-if="loading" :align="'center'" />
 
 		<div :style="loading ? 'opacity: .3;' : ''">
 
-			<div class="row pt-4 align-items-center pb-2">
+			<div class="grid--toolbar row pt-4 align-items-center pb-2 d-print-none">
 				<div class="col">
 					<div class=" border py-2 px-3" v-if="bulkEdits && selected.length > 0">
 						<form @submit="submitBulkEdits" class="d-flex align-items-center gap-2" ref="bulkEditForm">
@@ -193,18 +195,18 @@ export default {
 			<table class="table align-middle table-hover">
 				<thead>
 					<tr>
-						<th v-if="bulkEdits"></th>
+						<th v-if="bulkEdits" class="d-print-none"></th>
 						<th v-for="(col, title) in columns" @click="orderBy(col.id)" :class="'text-nowrap ' + (col.align ? `text-${col.align}` : '')">
 							{{ title }}
 							<span v-if="col.id && searchState.order_by === col.id"><i :class="caretClasses"></i></span>
 						</th>
-						<th style="width: 120px"></th>
+						<th style="width: 120px" class="d-print-none"></th>
 					</tr>
 				</thead>
 				<tbody>
 					<template v-for="item in entities">
 						<tr class="quote-row">
-							<td v-if="bulkEdits"><input class="form-check-input p-2" type="checkbox" v-model="selected" :value="item.id"></td>
+							<td v-if="bulkEdits" class="d-print-none"><input class="form-check-input p-2" type="checkbox" v-model="selected" :value="item.id"></td>
 							<slot name="item" :item="item"></slot>
 						</tr>
 					</template>

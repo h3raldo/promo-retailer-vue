@@ -4,6 +4,7 @@ import Address from "@/components/globals/properties/Address.vue";
 import Tabs from "@/components/globals/Tabs.vue";
 import Search from "@/EntityComponents/Company/Search.vue";
 import SearchCustomers from "@/components/api/Quickbooks/Search.Customers.vue";
+import Info from "@/Views/Quotes/Quote/Info.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -213,6 +214,21 @@ export default {
 						</details>
 
 						<hr>
+
+						<div class="mt-2 pb-2">
+							<label class="form-label">Approval Email</label>
+							<input type="email" class="form-control" v-model="company.data.contacts.approval.email" />
+						</div>
+
+						<div class="mt-2 pb-2">
+							<label class="form-label">Approval First Name</label>
+							<input type="email" class="form-control" v-model="company.data.contacts.approval.first_name" />
+						</div>
+
+						<div class="mt-2 pb-2">
+							<label class="form-label">Approval Last Name</label>
+							<input type="email" class="form-control" v-model="company.data.contacts.approval.last_name" />
+						</div>
 
 						<div class="mt-2">
 							<label class="form-check-label">

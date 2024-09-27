@@ -55,10 +55,10 @@ export const useOrderStore = defineStore('order', () => {
                 // api.sage.postCreation(item, vendors);
                 fn.item.add(item);
             },
-            replaceWithSageItem( index, sage_item )
+            async replaceWithSageItem( index, sage_item )
             {
                 let item = order.items[index];
-                let sageItem = api.sage.toQuoteItem(sage_item);
+                let sageItem = await api.sage.toQuoteItem(sage_item);
                 console.log(sageItem);
                 api.sage.postCreation(sageItem, vendors);
                 item.info.name = sageItem.info.name;

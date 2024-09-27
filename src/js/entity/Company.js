@@ -13,6 +13,11 @@ function create()
             },
             contacts: {
                 primary: {},
+                approval: {
+                    email: '',
+                    first_name: '',
+                    last_name: '',
+                }
             },
             billing: {
                 email: '',
@@ -44,6 +49,7 @@ function patch( company )
     if( !company.data ) company.data = base.data;
     if( !company.data.properties ) company.data.properties = base.data.properties;
     if( !company.data.contacts ) company.data.contacts = base.data.contacts;
+    if( typeof company.data.contacts.approval === 'undefined' ) company.data.contacts.approval = base.data.contacts.approval;
     if( !company.data.type ) company.data.type = base.data.type;
     if( !company.data.info ) company.data.info = base.data.info;
     if( !company.data.billing ) company.data.billing = base.data.billing;
