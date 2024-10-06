@@ -18,6 +18,7 @@ export default {
 			columns: {
 				'ID': { id: 'id' },
 				'SO#': {},
+				'SO Ref#': {},
 				'Status': { id: 'status' },
 				'Date': { id: 'date_updated' },
 				'Title': { },
@@ -121,7 +122,15 @@ export default {
 
 		<template #item="{item}">
 			<td @click="viewSingle(item.id)">{{ item.id }}</td>
-			<td @click="viewSingle(item.id)">#{{ item.reference_number }}</td>
+			<td @click="viewSingle(item.id)">
+				#{{ item.reference_number }}
+			</td>
+			<td @click="viewSingle(item.id)">
+				<span v-if="item.reference_order" :class="'fw-normal badge source-'+item.reference_order.source">
+					<span v-if="item.reference_order.source">{{ item.reference_order.source.charAt(0).toUpperCase() }} -</span>
+					{{ item.reference_order.reference_number || '' }}
+				</span>
+			</td>
 			<td>
 				<EditableColumn :type="'select'" :item="item" :column="'status'" :options="entity.purchaseOrder.default.statuses" :entity="'po'">
 					<span :class="getStatusColor(item.status)" @click="editing = item.id">

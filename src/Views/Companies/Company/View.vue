@@ -28,6 +28,7 @@ export default {
 			  'Main',
 			  'Quickbooks',
 			  'Contacts',
+			  'Decorators',
 			  'Children',
 			]
 		}
@@ -298,6 +299,41 @@ export default {
 					<p>No children companies.</p>
 				</div>
 
+			</template>
+
+			<template #Decorators>
+				<h3>Decorators</h3>
+				<div v-for="decorator in extra.decorators" class="py-2 col-6">
+					<details class="bg-light p-2">
+						<summary class="p-2 fw-bold"><span>{{ decorator.name }}</span> <span class="float-end"><code>{{ decorator.decorator_id }}</code></span></summary>
+
+						<div v-for="unit_sheet in decorator.sheets.unit" class="pb-1 px-2">
+							<table class="table table-sm table-bordered">
+								<thead>
+								<tr>
+									<th>{{ unit_sheet.filters[0].value.from }} {{ unit_sheet.filters[0].attr }}
+										- {{ unit_sheet.filters[0].value.to }} {{ unit_sheet.filters[0].attr }}</th>
+									<th>Time</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr>
+									<td>Setup time: </td>
+									<td>{{ unit_sheet.production.time_setup }}</td>
+								</tr>
+								<tr>
+									<td>Group Size: </td>
+									<td>{{ unit_sheet.production.time_group_size }}</td>
+								</tr>
+								<tr>
+									<td>Time Per Group:</td>
+									<td>{{ unit_sheet.production.time_per_group }}</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</details>
+				</div>
 			</template>
 
 			<template #Quickbooks>

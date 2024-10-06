@@ -57,7 +57,6 @@ export default {
 				})
 				self.searchState.urlParams = params;
 				self.loading = false;
-				console.log('current state', self.searchState);
 			})
 		},
 		orderBy( type )
@@ -125,7 +124,6 @@ export default {
 		}
 	},
 	mounted() {
-		console.log('api', this.api);
 		if( this.entities.length > 0 ) return;
 		this.getEntities()
 	}

@@ -220,7 +220,12 @@ export default {
 			</td>
 			<td>
 				<EditableColumn :type="'date'" :item="item" :column="'dateDeliverBy'" :entity="'order'">
-					{{ formatDate(item.dateDeliverBy) }}
+					<span v-if="item.dateDeliverByFirm" class="badge text-bg-danger">
+						{{ formatDate(item.dateDeliverBy) }}
+					</span>
+					<span v-else>
+						{{ formatDate(item.dateDeliverBy) }}
+					</span>
 				</EditableColumn>
 			</td>
 			<td>

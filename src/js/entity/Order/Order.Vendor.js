@@ -17,15 +17,16 @@ let default_vendors = [
 ];
 
 let default_decorators = [
-        { id: 'proemba', company_id: '6' },
-        { id: 'proemb1', company_id: '6' },
-        { id: 'proscra', company_id: '6' },
-        { id: 'proemb', company_id: '6' },
-        { id: 'prolas', company_id: '6' },
+        { id: 'proemba', company_id: '199' },
+        { id: 'proemb1', company_id: '199' },
+        { id: 'proscra', company_id: '200' },
+        { id: 'proscrb', company_id: '200' },
+        { id: 'proemb', company_id: '199' },
+        { id: 'prolas', company_id: '201' },
         { id: 'prouvp', company_id: '6' },
         { id: 'provin', company_id: '6' },
         { id: 'prodtg', company_id: '6' },
-        { id: 'proscr', company_id: '6' },
+        { id: 'proscr', company_id: '200' },
         { id: 'pippp1', company_id: '11' },
         { id: 'pipsp3', company_id: '11' },
         { id: 'pipsp2', company_id: '11' },
