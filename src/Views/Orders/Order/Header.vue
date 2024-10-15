@@ -1,16 +1,16 @@
 <script setup>
 import Search from "@/EntityComponents/Company/Search.vue";
 import Modal from "@/components/globals/bootstrap/Modal.vue";
+import HeaderEmail from "@/Views/Orders/Order/Header.Email.vue";
 </script>
 <script>
 import LogoSearch from "@/EntityComponents/Order/Logos/Search.vue";
-import Modal from "@/components/globals/bootstrap/Modal.vue";
 import CreatePOs from "@/Views/Orders/Order/CreatePOs.vue"
 import utils from "@/js/utils.js";
 import entity from "@/js/entity.js";
 
 export default {
-	components: {Modal, LogoSearch, CreatePOs},
+	components: {LogoSearch, CreatePOs},
 	data() {
 		return {
 			loading: false,
@@ -272,7 +272,9 @@ export default {
 							</Modal>
 						</li>
 						<li v-if="ableToInvoice"><button class="dropdown-item" :disabled="loading" @click="invoice"><i class="bi bi-currency-dollar"></i> Invoice</button></li>
-						<li v-if="ableToSendEmail"><button class="dropdown-item" @click="email"><i class="bi bi-envelope"></i> Email</button></li>
+						<li v-if="ableToSendEmail">
+							<HeaderEmail :save="save" :publicUrl="publicUrl" />
+						</li>
 						<li><hr class="dropdown-divider"></li>
 						<li><a class="dropdown-item" :href="duplicateUrl"><i class="bi bi-copy"></i> Duplicate</a></li>
 						<li>

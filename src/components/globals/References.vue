@@ -71,6 +71,7 @@ export default {
 			<th class="col-1">Type</th>
 			<th class="col-2">Reference Number</th>
 			<th class="col-3"></th>
+			<th class="col-3">Status</th>
 			<th></th>
 		</tr>
 		</thead>
@@ -79,6 +80,7 @@ export default {
 			<td>{{ reference.source.toUpperCase() }}</td>
 			<td>{{ reference.reference_number }}</td>
 			<td>{{ reference.title }}</td>
+			<td>{{ reference.status }}</td>
 			<td>
 				<div class="d-flex gap-3">
 					<template v-for="action in referenceAction(reference)">

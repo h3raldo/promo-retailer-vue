@@ -44,16 +44,16 @@ export const usePurchaseOrderStore = defineStore('purchaseOrder', () => {
                 po.items.splice(fromIndex, 1);
                 po.items.splice(toIndex, 0, element);
             },
-            addSageItem( sage_item )
+            async addSageItem( sage_item )
             {
-                let item = api.sage.toQuoteItem(sage_item);
+                let item = await api.sage.toQuoteItem(sage_item);
                 api.sage.postCreation(item, vendors);
                 fn.item.add(item);
             },
-            replaceWithSageItem( index, sage_item )
+            async replaceWithSageItem( index, sage_item )
             {
                 let item = po.items[index];
-                let sageItem = api.sage.toQuoteItem(sage_item);
+                let sageItem = await api.sage.toQuoteItem(sage_item);
                 console.log(sageItem);
                 api.sage.postCreation(sageItem, vendors);
                 item.info.name = sageItem.info.name;

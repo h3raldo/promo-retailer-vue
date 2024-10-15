@@ -27,7 +27,6 @@ export default {
 </script>
 
 <template>
-
 	<div class="d-flex pt-3">
 		<div class="flex-fill">
 			<form @submit="search" class="pt-1">
@@ -90,7 +89,7 @@ export default {
 					</div>
 					<div>
 						<div class="d-flex gap-2">
-							<label class="fw-bold">Type: </label>
+							<label class="fw-bold border-start ps-3">Type: </label>
 
 							<div v-for="status in entity.order.default.types">
 								<label class="form-check-label bg-gray px-2 rounded small">
@@ -125,7 +124,41 @@ export default {
 						</div>
 					</div>
 				</div>
+				<div>
+					<div class="d-flex gap-2 pt-2">
+						<div>
+							<select name="status_paid" class="form-select-sm" v-model="searchParams.status_paid">
+								<option value="null">Paid: Any</option>
+								<option value="true">Paid: Yes</option>
+								<option value="false">Paid: No</option>
+							</select>
+						</div>
+						<div>
+							<select name="status_invoiced" class="form-select-sm" v-model="searchParams.status_invoiced">
+								<option value="null">Invoiced: Any</option>
+								<option value="true">Invoiced: Yes</option>
+								<option value="false">Invoiced: No</option>
+							</select>
+						</div>
+						<div>
+							<select name="status_shipped" class="form-select-sm" v-model="searchParams.status_shipped">
+								<option value="null">Shipped: Any</option>
+								<option value="true">Shipped: Yes</option>
+								<option value="false">Shipped: No</option>
+							</select>
+						</div>
+						<div>
+							<select name="status_emailed" class="form-select-sm" v-model="searchParams.status_emailed">
+								<option value="null">Emailed: Any</option>
+								<option value="true">Emailed: Yes</option>
+								<option value="false">Emailed: No</option>
+							</select>
+						</div>
+					</div>
+				</div>
 			</form>
+		</div>
+		<div>
 		</div>
 	</div>
 </template>

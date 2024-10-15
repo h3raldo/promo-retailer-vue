@@ -85,7 +85,8 @@ function setup()
 			data.references.push({
 				source: 'po',
 				reference_number: r.reference_number,
-				title: r.title
+				title: r.title,
+				status: r.status || ''
 			})
 		})
 

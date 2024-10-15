@@ -171,6 +171,12 @@ export default {
 									<div class="row">
 										<div class="col-8">
 											<a :href="logo_id" target="_blank">{{logo_id.replace('https://res.cloudinary.com/promo-retailer/image/upload/logos/', '')}}</a>
+											<details>
+												<summary>POs</summary>
+												<ul>
+													<li v-for="(value, key) in logo.pos"><a :href="`/admin/purchase-orders/order/${key}/`" target="_blank">{{ key }}</a></li>
+												</ul>
+											</details>
 										</div>
 										<div class="col">
 											<img :class="logo_id.includes('dark') ? 'bg-secondary' : ''" :src="logo_id" height="20" />
