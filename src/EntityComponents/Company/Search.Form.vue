@@ -47,7 +47,6 @@ export default {
 			<tr>
 				<th class="col-1"></th>
 				<th>Name</th>
-				<th>Parent</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -56,10 +55,8 @@ export default {
 					<button class="btn btn-sm btn-primary" @click="selected(company)">Select</button>
 				</td>
 				<td class="align-middle">
+					<span class="text-secondary" v-if="company.parent_name">{{ company.parent_name }} <i class="bi bi-chevron-double-right"></i></span>
 					{{ company.name }}
-				</td>
-				<td class="align-middle">
-					{{ company.parent }}
 				</td>
 			</tr>
 			</tbody>

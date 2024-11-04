@@ -17,7 +17,10 @@ export default {
 	methods: {
 		add( isShipping ) {
 			let fee = {};
-			if( isShipping ) fee.name = 'Estimated Shipping';
+			if( isShipping ){
+				fee.name = 'Estimated Shipping';
+				fee.type = 'shipping';
+			}
 			this.fn.fee.add(fee)
 		}
 	},

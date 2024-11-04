@@ -30,6 +30,7 @@ export default {
 			  'Contacts',
 			  'Decorators',
 			  'Children',
+			  'Websites'
 			]
 		}
 	},
@@ -426,6 +427,32 @@ export default {
 					</div>
 				</div>
 
+			</template>
+
+			<template #Websites>
+
+				<table v-if="extra.websites.length" class="table">
+					<thead>
+					<tr>
+						<th>ID</th>
+						<th>Handle</th>
+						<th>Name</th>
+						<th>Link</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr v-for="website in extra.websites">
+						<td>{{ website.id }}</td>
+						<td>{{ website.handle }}</td>
+						<td>{{ website.name }}</td>
+						<td><a :href="`https://${website.handle}.promoretailer.com`" target="_blank">View Website</a> </td>
+					</tr>
+					</tbody>
+				</table>
+
+				<div v-else>
+					<h3>No Websites Found</h3>
+				</div>
 			</template>
 		</Tabs>
 

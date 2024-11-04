@@ -74,6 +74,7 @@ export default {
 		changePage(page) {
 			this.searchState.page = page;
 			this.getEntities();
+			window.scrollTo(0,0);
 		},
 		getPageClasses( page ) {
 			return 'page-item' + (page === parseInt(this.searchState.page) ? ' active' : '');
@@ -213,6 +214,33 @@ export default {
 					<slot name="footer" :response="response"></slot>
 				</tfoot>
 			</table>
+
+			<div class="grid--toolbar row pt-4 align-items-center pb-2 d-print-none">
+				<div class="col">
+
+				</div>
+				<div class="col-4">
+					<nav class="pb-2">
+						<ul class="pagination justify-content-end mb-0">
+							<li class="page-item">
+								<button class="page-link" @click="getEntities(false)"><i class="bi bi-arrow-clockwise"></i></button>
+							</li>
+
+							<li class="page-item">
+								<button class="page-link" @click="changePage(1)"><span aria-hidden="true">&laquo;</span></button>
+							</li>
+
+							<li v-for="index in pageCount" :class="getPageClasses(index)">
+								<button class="page-link" @click="changePage(index)">{{ index }}</button>
+							</li>
+
+							<li class="page-item">
+								<button class="page-link" @click="changePage(pageCount)"><span aria-hidden="true">&raquo;</span></button>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
 
 		</div>
 

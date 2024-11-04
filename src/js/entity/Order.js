@@ -118,6 +118,7 @@ function patchData( data, init )
     if( typeof order.info.shipped === 'undefined' ) order.info.shipped = blank.info.shipped;
 
     order.info.status = init.status;
+    order.info.statuses = init.statuses;
     order.info.deliver_by = init.dateDeliverBy || '';
     order.info.ship_by = init.dateShipBy || '';
 

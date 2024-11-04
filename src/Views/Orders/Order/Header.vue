@@ -220,6 +220,9 @@ export default {
 		togglePaid(e){
 			if( e.target.checked ){
 				this.order.totals.paid = this.order.totals.total + this.order.totals.tax;
+
+				if( this.order.info.statuses )
+					this.order.info.statuses.invoiced = true;
 			} else {
 				this.order.totals.paid = 0;
 			}

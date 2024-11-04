@@ -7,7 +7,18 @@ import References from "@/components/globals/References.vue";
 
 <script>
 export default {
+	inject: ['init'],
+	computed: {
+		POsCostAccurate(){
+			if( !this.init || !this.init.qa || !this.init.qa.POs ) return true;
 
+			return this.init.qa.POs.difference < 5;
+		},
+		POsCostDifferential(){
+			if( !this.init.qa || !this.init.qa.POs ) return 100;
+			return this.init.qa.POs.difference
+		}
+	}
 }
 </script>
 
@@ -19,7 +30,13 @@ export default {
 			<button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-items" type="button">Items</button>
 			<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-logos" type="button">Logos</button>
 			<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-vendors" type="button">Vendors</button>
-			<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-references" type="button">References</button>
+			<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-references" type="button">
+				References
+				<span v-if="!POsCostAccurate" class="badge text-bg-danger">
+					<i class="bi bi-exclamation-circle"></i>
+					{{ Math.round(POsCostDifferential) }}% PO Diff
+				</span>
+			</button>
 		</div>
 	</nav>
 

@@ -194,6 +194,9 @@ export default {
 								<span class="badge text-bg-primary">
 									<i class="bi bi-cash-coin"></i> x {{ item.purchaseOrders.length }} <span v-if="hasPRPurchaseOrder(item.purchaseOrders)">(contains PR)</span>
 								</span>
+								<span class="badge text-bg-danger ms-2" v-if="item.qa.POs.difference && item.qa.POs.difference > 5">
+									<i class="bi bi-cash-coin"></i> {{ Math.round(item.qa.POs.difference) }}% Diff
+								</span>
 							</span>
 						</template>
 
