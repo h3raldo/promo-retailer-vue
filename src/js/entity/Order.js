@@ -27,6 +27,7 @@ function create(id){
             deliver_by_strict: false,
             ship_by: '',
             shipped: '',
+            tracking_number: '',
             delivery_method: '',
             payment_method: '',
             attributes: [],
@@ -116,6 +117,7 @@ function patchData( data, init )
     if( typeof order.info.statuses === 'undefined' ) order.info.statuses = blank.info.statuses;
     if( typeof order.info.statuses.shipped === 'undefined' ) order.info.statuses.shipped = blank.info.statuses.shipped;
     if( typeof order.info.shipped === 'undefined' ) order.info.shipped = blank.info.shipped;
+    if( typeof order.info.tracking_number === 'undefined' ) order.info.tracking_number = blank.info.tracking_number;
 
     order.info.status = init.status;
     order.info.statuses = init.statuses;

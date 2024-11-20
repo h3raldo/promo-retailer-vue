@@ -6,21 +6,57 @@ import App from './App.vue'
 const pinia = createPinia()
 
 const routes = [
-    { path: window.symfony.views.dashboard, component: () => import('@/Views/Home.vue') },
-    { path: window.symfony.views.quotes, component: () => import('@/Views/Quotes/Quotes.vue') },
+    {
+        name: 'home',
+        path: window.symfony.views.dashboard,
+        component: () => import('@/Views/Home.vue') },
+    {
+        name: 'quotes',
+        path: window.symfony.views.quotes,
+        component: () => import('@/Views/Quotes/Quotes.vue') },
     {
         name: 'quotes_quote',
         path: window.symfony.views.quotes_quote,
         component: () => import('@/Views/Quotes/Quote/View.vue')
     },
-    { path: window.symfony.views.orders, component: () => import('@/Views/Orders/Orders.vue') },
+    {
+        name: 'orders',
+        path: window.symfony.views.orders,
+        component: () => import('@/Views/Orders/Orders.vue') },
     {
         name: 'orders_order',
         path: window.symfony.views.orders_order,
         component: () => import('@/Views/Orders/Order/View.vue')
     },
-    { path: window.symfony.views.website, component: () => import('@/Views/Website/Website.vue') },
-    { path: window.symfony.views.purchase_orders, component: () => import('@/Views/PurchaseOrders/PurchaseOrders.vue') },
+    {
+        name: 'decorators',
+        path: window.symfony.views.decorators,
+        component: () => import('@/Views/Decorators/Decorators.vue')
+    },
+    {
+        name: 'decorators_decorator',
+        path: window.symfony.views.decorators_decorator,
+        component: () => import('@/Views/Decorators/Decorator/View.vue')
+    },
+    {
+        name: 'websites',
+        path: window.symfony.views.websites,
+        component: () => import('@/Views/Websites/Websites.vue')
+    },
+    {
+        name: 'websites_website',
+        path: window.symfony.views.websites_website,
+        component: () => import('@/Views/Websites/Website/View.vue')
+    },
+    {
+        name: 'logos_logo',
+        path: window.symfony.views.logos_logo,
+        component: () => import('@/Views/Logos/Logo/View.vue')
+    },
+    {
+        name: 'purchase_orders',
+        path: window.symfony.views.purchase_orders,
+        component: () => import('@/Views/PurchaseOrders/PurchaseOrders.vue') },
     {
         name: 'purchase_orders_purchase_order',
         path: window.symfony.views.purchase_orders_purchase_order,

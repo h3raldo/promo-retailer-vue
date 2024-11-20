@@ -31,7 +31,11 @@
                 companies_company: '/admin/companies/company/:id/',
                 contacts: '/admin/contacts/',
                 contacts_contact: '/admin/contacts/contact/:id/',
-                website: '/admin/website/',
+                websites: '/admin/websites/',
+                websites_website: '/admin/websites/website/:id/',
+				decorators: '/admin/decorators/',
+				decorators_decorator: '/admin/decorators/decorator/:id/',
+                logos_logo: '/admin/logos/logo/:id/',
 				config: '/admin/config',
             },
             api: {
@@ -83,6 +87,24 @@
 					connect: 'https://tools.promoretailer.dev/',
 					customer: {
 						search: 'https://tools.promoretailer.dev/api/quickbooks/customers/search/'
+					}
+				},
+				decorators: {
+					search: 'https://tools.promoretailer.dev/api/decorators/',
+					decorator: {
+						get: 'https://tools.promoretailer.dev/api/decorators/decorator/:id/',
+					}
+				},
+				websites: {
+					search: 'https://tools.promoretailer.dev/api/websites/',
+					website: {
+						get: 'https://tools.promoretailer.dev/api/websites/website/:id/',
+					}
+				},
+				logos: {
+					search: 'https://tools.promoretailer.dev/api/logos/',
+					logo: {
+						get: 'https://tools.promoretailer.dev/api/logos/logo/:id/',
 					}
 				},
 				config: {

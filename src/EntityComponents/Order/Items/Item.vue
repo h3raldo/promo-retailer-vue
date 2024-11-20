@@ -110,7 +110,7 @@ export default {
 
 			<div class="mb-2">
 
-				<div v-if="item.info.image.primary.length > 0">
+				<div v-if="item.info.image.primary && item.info.image.primary.length > 0">
 					<a :href="item.info.image.primary" target="_blank"><img :src="item.info.image.primary" height="100" style="border-radius: 20px" /></a>
 				</div>
 

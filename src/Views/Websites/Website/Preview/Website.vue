@@ -1,6 +1,6 @@
 <script setup>
 import Loader from "@/components/globals/Loader.vue";
-import Items from "@/Views/Website/Items.vue";
+import Items from "@/Views/Websites/Website/Preview/Items.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";

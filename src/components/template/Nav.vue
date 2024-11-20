@@ -78,10 +78,16 @@ export default {
 					type: 'vue'
 				},
 				{
+					title: 'Decorators',
+					icon: 'bi bi-brush',
+					url: self.symfony.views.decorators,
+					type: 'vue'
+				},
+				{
 					title: 'Websites',
-					icon: 'bi bi-box-arrow-up-left',
-					url: 'https://promoretailer.prismic.io/documents/working?k=website&amp;l=en-us',
-					type: 'external'
+					icon: 'bi bi-columns',
+					url: self.symfony.views.websites,
+					type: 'vue'
 				},
 			]
 		}

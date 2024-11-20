@@ -193,6 +193,11 @@ export default {
 				<label class="form-label">Date Shipped:</label>
 				<input class="form-control" type="date" v-model="order.info.shipped">
 			</div>
+
+			<div class="mb-3">
+				<label class="form-label">Tracking Number:</label>
+				<input class="form-control" type="text" v-model="order.info.tracking_number">
+			</div>
 		</div>
 
 	</div>

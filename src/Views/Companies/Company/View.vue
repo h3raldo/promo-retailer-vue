@@ -4,7 +4,7 @@ import Address from "@/components/globals/properties/Address.vue";
 import Tabs from "@/components/globals/Tabs.vue";
 import Search from "@/EntityComponents/Company/Search.vue";
 import SearchCustomers from "@/components/api/Quickbooks/Search.Customers.vue";
-import Info from "@/Views/Quotes/Quote/Info.vue";
+import LogoSearch from "@/EntityComponents/Logo/Search.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -30,7 +30,8 @@ export default {
 			  'Contacts',
 			  'Decorators',
 			  'Children',
-			  'Websites'
+			  'Websites',
+			  'Logos'
 			]
 		}
 	},
@@ -46,6 +47,12 @@ export default {
 				entity.company.patch(self.company);
 				self.loading = false;
 			})
+		},
+		goToWebsite(id){
+			this.$router.push( this.symfony.views.websites_website.replace(':id', id) )
+		},
+		goToDecorator(id){
+			this.$router.push( this.symfony.views.decorators_decorator.replace(':id', id) )
 		},
 		save() {
 			let self = this;
@@ -113,6 +120,9 @@ export default {
 			address.city = qb_address.City;
 			address.state = qb_address.CountrySubDivisionCode;
 			address.postal_code = qb_address.PostalCode;
+		},
+		onLogoSelect(logo){
+			console.log('selected', logo);
 		}
 	},
 	mounted() {
@@ -140,10 +150,10 @@ export default {
 
 		<div class="text-end pb-3 bg-gray p-3 mb-2 d-flex justify-content-between align-items-center">
 			<button @click="$router.go(-1)" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></button>
-			<h2 class="m-0 text-center">
-				{{ company.name }}<br>
-				<span class="h4" v-if="company.parent_name">Under: {{ company.parent_name }}</span>
-			</h2>
+			<h3 class="m-0 text-center">
+				<span class="text-secondary" v-if="company.parent_name">{{ company.parent_name }} <i class="bi bi-chevron-double-right"></i></span>
+				{{ company.name }}
+			</h3>
 			<button class="btn btn-primary p-3" @click="save" :disabled="saving"><i class="bi bi-floppy-fill"></i> Save Changes</button>
 		</div>
 
@@ -306,7 +316,10 @@ export default {
 				<h3>Decorators</h3>
 				<div v-for="decorator in extra.decorators" class="py-2 col-6">
 					<details class="bg-light p-2">
-						<summary class="p-2 fw-bold"><span>{{ decorator.name }}</span> <span class="float-end"><code>{{ decorator.decorator_id }}</code></span></summary>
+						<summary class="p-2 fw-bold">
+							<span>{{ decorator.name }}</span> <span class="float-end"><code>{{ decorator.decorator_id }}</code></span>
+							<button class="btn btn-outline-primary btn-sm ms-2" @click="goToDecorator(decorator.id)">Edit</button>
+						</summary>
 
 						<div v-for="unit_sheet in decorator.sheets.unit" class="pb-1 px-2">
 							<table class="table table-sm table-bordered">
@@ -434,6 +447,7 @@ export default {
 				<table v-if="extra.websites.length" class="table">
 					<thead>
 					<tr>
+						<td></td>
 						<th>ID</th>
 						<th>Handle</th>
 						<th>Name</th>
@@ -442,6 +456,7 @@ export default {
 					</thead>
 					<tbody>
 					<tr v-for="website in extra.websites">
+						<td><button @click="goToWebsite(website.id)" class="btn btn-sm btn-primary">View/Edit</button></td>
 						<td>{{ website.id }}</td>
 						<td>{{ website.handle }}</td>
 						<td>{{ website.name }}</td>
@@ -453,6 +468,10 @@ export default {
 				<div v-else>
 					<h3>No Websites Found</h3>
 				</div>
+			</template>
+
+			<template #Logos>
+				<LogoSearch :onSelect="onLogoSelect" :buttonText="'Add Existing Logo'" />
 			</template>
 		</Tabs>
 

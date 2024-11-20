@@ -4,6 +4,8 @@ import purchaseOrder from "@/js/entity/PurchaseOrder.js";
 import customer from "@/js/entity/Customer.js";
 import event from "@/js/entity/Event.js";
 import company from  "@/js/entity/Company.js"
+import decorator from "@/js/entity/Decorator.js";
+import logo from "@/js/entity/Logo.js";
 
 export default {
     order,
@@ -12,4 +14,6 @@ export default {
     customer,
     event,
     company,
+    decorator,
+    logo,
 }
