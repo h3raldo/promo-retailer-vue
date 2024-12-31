@@ -122,6 +122,7 @@ function fromOrder( order, company_id, decorator_code)
 
     order.fees.forEach( f => {
         if( !f.vendor || !f.vendor.company_id || f.vendor.company_id !== company_id ) return;
+        if( f.type === 'shipping' ) return;
         f.tier.price = f.tier.cost;
         f.tier.margin = 0;
         f.tier.fixed = true;

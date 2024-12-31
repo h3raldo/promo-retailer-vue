@@ -162,7 +162,7 @@ export default
 
     showPrice( quote )
     {
-        if( !quote.config || typeof quote.config.price == 'undefined' )
+        if( !quote || !quote.config || typeof quote.config.price == 'undefined' )
             return true;
 
         return ( quote.config.price )

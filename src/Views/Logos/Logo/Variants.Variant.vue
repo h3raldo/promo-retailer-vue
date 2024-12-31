@@ -1,3 +1,8 @@
+<script setup>
+import Upload from "@/Views/Logos/Logo/Variant/Upload.vue";
+import Modal from "@/components/globals/bootstrap/Modal.vue";
+import Edit from "@/Views/Logos/Logo/Variant/Edit.vue";
+</script>
 <script>
 import entity from "@/js/entity.js";
 
@@ -7,74 +12,56 @@ export default {
 			contrast: false,
 		}
 	},
+	props: ['variant', 'decorators', 'apply_type', 'editable'],
+	inject: ['logo', 'assets'],
 	computed: {
 		apply_types(){
 			return entity.logo.variant.types;
+		},
+		typeAssets(){
+			if( !this.assets ) return;
+			return this.assets[this.apply_type];
+		},
+		webVersion(){
+			if( !this.typeAssets ) return '';
+
+			return this.typeAssets.filter( i => i.file === 'web.png' )[0];
 		}
 	},
-	props: ['variant', 'decorators', 'edit'],
+	methods: {
+
+	}
 }
 </script>
 <template>
-	<div  class="col col-6 mb-3">
-		<div class="row align-items-center">
+	<div class="row align-items-center">
 
-			<div class="col text-center">
+		<div class="col text-center">
+			<div v-if="variant.url !== ''">
 				<a :href="variant.url" target="_blank"><img :class="contrast ? 'bg-secondary p-2' : 'p-2'" :src="variant.url" alt="" width="200"></a>
-				<br><a class="btn btn-sm btn-outline-secondary mt-3" @click="contrast = !contrast">Toggle BG</a>
-
-				<a class="ms-2 btn btn-sm btn-outline-primary mt-3" @click="contrast = !contrast">Replace Image</a>
 			</div>
+			<div v-else>
+				IMAGE MISSING
+			</div>
+			<a class="btn btn-sm btn-outline-secondary mt-3" @click="contrast = !contrast">Toggle BG</a>
+		</div>
 
-			<div class="col">
-				<div class="bg-light p-2">
-					<template v-if="edit">
+		<div class="col">
+			<div class="bg-light p-2">
 
-						<div class="mb-2">
-							<label class="form-label">ID:</label>
-							<input type="text" class="form-control" placeholder="ID" v-model="variant.uid" disabled>
-						</div>
-						<div class="mb-2">
-							<label class="form-label">Applies To:</label>
-							<select class="form-select" v-model="variant.apply_to">
-								<option v-for="type in apply_types" :value="type">{{ type }}</option>
-							</select>
-						</div>
-						<div class="mb-2">
-							<label class="form-label">Color Count:</label>
-							<input type="number" class="form-control" placeholder="Color Count" v-model="variant.color_count">
-						</div>
-						<div class="mb-2">
-							<label class="form-label">thread_count:</label>
-							<input type="number" class="form-control" placeholder="thread_count" v-model="variant.thread_count">
-						</div>
-						<div class="mb-2">
-
-							<details>
-								<summary>
-									<label class="form-label">Decorators:</label>
-								</summary>
-								<div v-for="decorator in decorators">
-									<label class="form-check-label bg-gray px-2 rounded small">
-										<input class="form-check-input me-1" type="checkbox" v-model="variant.decorators" :value="decorator.handle">
-										<span>{{ decorator.name }}</span>
-									</label>
-								</div>
-							</details>
-						</div>
-
-					</template>
-					<template v-else>
-						<span class="badge text-bg-secondary me-1">ID: {{ variant.uid }}</span>
-						<span class="badge text-bg-primary">{{ variant.apply_to }}</span>
-						<div>Color count: {{ variant.color_count }}</div>
-						<div>Thread count: {{ variant.thread_count }}</div>
-						<div>Decorators:
-							<span v-for="(decorator) in variant.decorators">{{ decorator }}, </span>
-						</div>
-					</template>
-
+				<div>Color count: {{ variant.color_count }}</div>
+				<div>Thread count: {{ variant.thread_count }}</div>
+				<div>
+					Decorators:
+					<span v-for="(decorator) in variant.decorators">{{ decorator }}, </span>
 				</div>
+
+				<div class="mt-2" v-if="editable">
+					<Modal :id="'upload-variant-assets--'+variant.uid" :title="`Manage Assets (${variant.apply_to})`"  :icon="''" :buttonClasses="'btn btn-outline-primary'" :buttonText="'Edit'">
+						<Edit :variant="variant" :decorators="decorators" :apply_type="variant.apply_to" />
+					</Modal>
+				</div>
+
 			</div>
 		</div>
 	</div>

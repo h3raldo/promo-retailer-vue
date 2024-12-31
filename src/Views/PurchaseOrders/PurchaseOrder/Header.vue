@@ -14,7 +14,7 @@ export default {
 		}
 	},
 
-	inject: ['po', 'edited', 'alert','urls', 'fn'],
+	inject: ['po', 'edited', 'alert','urls', 'fn', 'entities', 'symfony'],
 
 	computed: {
 		publicUrl(){
@@ -22,11 +22,24 @@ export default {
 		},
 		saveUrl(){
 			return this.urls.save;
+		},
+		series(){
+			let series = this.entities.po.series;
+
+			if( !series ) return false;
+
+			let current = series.filter( s => s.id === parseInt(this.po.id) )[0];
+
+			console.log(series);
+
+			return {
+				position: current.position,
+				total: series.length
+			}
 		}
 	},
 
 	created() {
-		console.log('created header', this.po.items);
 	},
 
 	methods: {
@@ -34,6 +47,11 @@ export default {
 			return {
 				po: this.po,
 			}
+		},
+
+		getPOLink( id )
+		{
+			return this.symfony.views.purchase_orders_purchase_order.replace(':id', id);
 		},
 
 		onVendorSelect( company )
@@ -90,6 +108,34 @@ export default {
 			</div>
 			<div class="fw-bold fs-4">
 				PO #{{ po.id }} <span v-if="po.info.vendor.name">-- {{ po.info.vendor.name }}</span> <span class="text-capitalize"> -- {{ po.info.type }}</span>
+			</div>
+			<div v-if="series">
+				<Modal title="POs in Series" :button-text="`PO Series ${series.position} / ${series.total}`" id="po-series" button-classes="btn btn-sm btn-outline-secondary">
+					<p>List of POs created from the same order</p>
+					<table class="table">
+						<thead>
+						<tr>
+							<th>Position</th>
+							<th>ID</th>
+							<th>Status</th>
+							<th></th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr v-for="series in entities.po.series">
+							<td>{{ series.position }}</td>
+							<td>PO# {{ series.id }} </td>
+							<td>{{ series.status }}</td>
+							<td>
+								<template v-if="series.id === parseInt(po.id)">
+									<button class="btn btn-sm btn-outline-primary" disabled>Current</button>
+								</template>
+								<a v-else class="btn btn-sm btn-outline-primary" :href="getPOLink(series.id)" target="_blank">View PO <i class="bi bi-arrow-right"></i></a>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</Modal>
 			</div>
 		</div>
 		<div>

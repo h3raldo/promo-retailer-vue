@@ -4,10 +4,12 @@ import Loader from "@/components/globals/Loader.vue";
 import Tabs from "@/components/globals/Tabs.vue";
 import Products from "@/Views/Websites/Website/Products.vue";
 import Variants from "@/Views/Logos/Logo/Variants.vue";
+import LogoSearch from "@/EntityComponents/Logo/Search.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
 import {computed} from "vue";
+import entity from "@/js/entity.js";
 
 export default {
 	inject: ['symfony'],
@@ -26,25 +28,26 @@ export default {
 			},
 			urls: this.symfony.api.websites.website,
 			tabs: ['Configuration', 'Logos', 'Products', 'Categories'],
-			logo_types: [
-				'primary',
-				'primary2',
-				'secondary',
-				'additional',
-				'other',
-				'secondary2',
-				'none',
-			]
 		}
 	},
 
 	computed: {
+		logo_types(){
+			return entity.website.default.logo_types
+		},
+		websiteLogos(){
+			if( !this.entities.website.config ) return [];
+			return this.entities.website.config.logos;
+		},
 		organizedLogos(){
 			let organized = {}
 			this.logo_types.forEach(type => organized[type] = []);
 
-			this.entities.website.config.logos.forEach(logo => {
-				logo.types.forEach(type => organized[type].push(logo));
+			this.websiteLogos.forEach(logo => {
+				if( logo.types.length )
+					logo.types.forEach(type => organized[type].push(logo));
+				else
+					organized['none'].push(logo);
 			})
 
 			return organized;
@@ -57,13 +60,29 @@ export default {
 		}
 	},
 
+	watch: {
+
+	},
+
 	methods: {
 		getLogo( handle ){
-			return this.entities.logo.filter( l => l.handle === handle )[0];
+			let logo = this.entities.logo.filter( l => l.handle === handle )[0];
+			if( !logo ) return {
+				name: 'LOGO HANDLE NOT FOUND',
+				id: null,
+				variants: []
+			}
+
+			return logo;
 		},
 		viewLogo( id ){
 			this.$router.push( this.symfony.views.logos_logo.replace(':id', id) )
 		},
+		addLogo( logo ){
+			this.entities.logo.push(logo)
+			this.websiteLogos.push({id: logo.handle, types: []})
+			this.editing.logos = true;
+		}
 	},
 
 	created() {
@@ -146,8 +165,14 @@ export default {
 
 				<template #Logos>
 
-					<div class="pb-3">
-						<button class="btn btn-primary" @click="editing.logos = !editing.logos">Edit Website Logos</button>
+					<div class="pb-3 d-flex align-items-center justify-content-center gap-3">
+						<LogoSearch :buttonText="'Add Logo'" :buttonIcon="'bi bi-plus-circle'" :on-select="addLogo" :company-id="entities.website.company.id" />
+						<template v-if="editing.logos">
+							<button class="btn btn-outline-success" @click="editing.logos = !editing.logos"><i class="bi bi-check2"></i> Done</button>
+						</template>
+						<template v-else>
+							<button class="btn btn-primary" @click="editing.logos = !editing.logos"><i class="bi bi-bookmarks"></i> Edit Logo Categories</button>
+						</template>
 					</div>
 
 					<template v-if="editing.logos">
@@ -166,11 +191,7 @@ export default {
 								</div>
 							</div>
 
-							<Variants :variants="getLogo(logo.id).variants" />
-
-							<div>
-								<button class="btn btn-sm btn-outline-primary" @click="viewLogo(getLogo(logo.id).id)">View/Edit Logo Details</button>
-							</div>
+							<Variants :logo="getLogo(logo.id)" />
 						</div>
 					</template>
 
@@ -180,17 +201,21 @@ export default {
 
 							<template v-if="logo_ids.length > 0">
 
-								<h2 class="text-uppercase">{{ type }}</h2>
+								<h2 :class="type === 'none' ? 'text-uppercase text-danger' : 'text-uppercase' ">{{ type }}</h2>
 
 								<div v-for="logo in logo_ids" class="bg-light p-3 mb-2">
 
 									<div class="d-flex gap-2 align-items-center pb-2">
-										<div>
-											<h5 class="mb-0">{{ getLogo(logo.id).name }}</h5>
+										<div class="d-flex align-items-center gap-2">
+											<h5 class="mb-0">{{ getLogo(logo.id).name }} </h5>
 										</div>
 									</div>
 
-									<Variants :variants="getLogo(logo.id).variants" />
+									<Variants :logo="getLogo(logo.id)" />
+
+									<div>
+										<button class="btn btn-sm btn-outline-primary" @click="viewLogo(getLogo(logo.id).id)">Edit Logo Details</button>
+									</div>
 
 								</div>
 

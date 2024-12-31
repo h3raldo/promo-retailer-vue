@@ -58,7 +58,9 @@ export default {
 						refresher.count += d.count;
 						marker = d.marker;
 						refresher.calls++;
-						d.items.forEach( i => addItem(i));
+
+						if( self.group !== 'GET_ALL' )
+							d.items.forEach( i => addItem(i));
 
 						self.refreshingStatus = `Total calls: ${refresher.calls}. ${refresher.count} product variants refreshed...`;
 

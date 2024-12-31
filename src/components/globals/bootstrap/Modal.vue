@@ -16,14 +16,16 @@ export default {
 
 	},
 
-	props: ['id', 'title', 'buttonText', 'buttonClasses', 'buttonType', 'icon'],
+	props: ['id', 'title', 'buttonText', 'buttonClasses', 'buttonType', 'icon', 'openOnCreation'],
 
 	methods: {
 
 	},
 
 	mounted() {
-
+		if( this.openOnCreation ){
+			this.$refs.openModalButton.click();
+		}
 	}
 }
 </script>
@@ -57,7 +59,9 @@ export default {
 					</div>
 
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" ref="closeModalButton">Close</button>
+						<slot name="footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" ref="closeModalButton">Close</button>
+						</slot>
 					</div>
 				</div>
 			</div>

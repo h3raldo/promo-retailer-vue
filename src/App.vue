@@ -18,6 +18,9 @@ export default {
 				data: '',
 			},
 			search: {},
+			cache: {
+				component: {}
+			}
 		}
 	},
 
@@ -49,6 +52,7 @@ export default {
 			alert: this.showAlert,
 			symfony: computed(() => this.symfony),
 			search: computed(() => this.search),
+			cache: computed(() => this.cache),
 		}
 	},
 

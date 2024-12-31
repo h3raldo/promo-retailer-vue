@@ -1,0 +1,71 @@
+<script setup>
+	import Grid from "@/components/globals/Grid.vue";
+	import Search from "@/Views/Products/Search.vue";
+</script>
+<script>
+
+export default {
+	data(){
+		return {
+			loading: false,
+			columns: {
+				'ID': { id: 'id' },
+				'Status': { id: 'status' },
+				'Sku': { id: 'sku' },
+				'Name': { id: 'name' },
+				'Supplier': { },
+			},
+		}
+	},
+	inject: ['symfony', 'search'],
+	computed: {
+		searchState(){
+			return this.search.products;
+		},
+	},
+	methods: {
+		viewSingle( id ){
+			this.$router.push( this.symfony.views.products_product.replace(':id', id) )
+		},
+	},
+	created() {
+		if( typeof this.search.products === 'undefined' ) this.search.products = {}
+	},
+}
+</script>
+
+<template>
+
+	<div class="text-end pb-3 bg-gray p-3 mb-2 d-flex justify-content-between align-items-center">
+		<div>
+			<h3 class="mb-0"><i class="bi bi-box-seam"></i> Products</h3>
+		</div>
+		<button class="btn btn-primary p-3" disabled><i class="bi bi-plus-square-fill"></i> Create New</button>
+	</div>
+
+	<Grid :api="symfony.api.products.search" :columns="columns" :searchState="searchState" :entity="'website'">
+		<template #header="{search}">
+			<Search :getEntities="search" :searchParams="searchState" />
+		</template>
+
+		<template #item="{item}">
+			<td @click="viewSingle(item.id)">{{ item.id }}</td>
+			<td @click="viewSingle(item.id)">
+				{{ item.status }}
+			</td>
+			<td @click="viewSingle(item.id)">
+				{{ item.sku }}
+			</td>
+			<td @click="viewSingle(item.id)">
+				{{ item.name }}
+			</td>
+			<td @click="viewSingle(item.id)">
+				{{ item.company.name }}
+			</td>
+			<td @click="viewSingle(item.id)">
+
+			</td>
+		</template>
+	</Grid>
+
+</template>

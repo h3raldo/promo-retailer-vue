@@ -49,6 +49,16 @@ const routes = [
         component: () => import('@/Views/Websites/Website/View.vue')
     },
     {
+        name: 'products',
+        path: window.symfony.views.products,
+        component: () => import('@/Views/Products/Products.vue')
+    },
+    {
+        name: 'products_product',
+        path: window.symfony.views.products_product,
+        component: () => import('@/Views/Products/Product/View.vue')
+    },
+    {
         name: 'logos_logo',
         path: window.symfony.views.logos_logo,
         component: () => import('@/Views/Logos/Logo/View.vue')
@@ -62,12 +72,34 @@ const routes = [
         path: window.symfony.views.purchase_orders_purchase_order,
         component: () => import('@/Views/PurchaseOrders/PurchaseOrder/View.vue')
     },
-    { path: window.symfony.views.reports_orders, component: () => import('@/Views/Reports/Orders.vue') },
-    { path: window.symfony.views.images_upload, component: () => import('@/Views/Images/UploadImage.vue') },
-    { path: window.symfony.views.images_update, component: () => import('@/Views/Images/UpdateImages.vue') },
-    { path: window.symfony.views.global_sheets, component: () => import('@/Views/GlobalSheets.vue') },
-    { path: window.symfony.views.companies, component: () => import('@/Views/Companies/Companies.vue') },
-    { path: window.symfony.views.config, component: () => import('@/Views/Config/Config.vue') },
+    {
+        path: window.symfony.views.reports_orders,
+        component: () => import('@/Views/Reports/Orders.vue')
+    },
+    {
+        path: window.symfony.views.images_upload,
+        component: () => import('@/Views/Images/UploadImage.vue')
+    },
+    {
+        path: window.symfony.views.images_update,
+        component: () => import('@/Views/Images/UpdateImages.vue')
+    },
+    {
+        path: window.symfony.views.global_sheets,
+        component: () => import('@/Views/GlobalSheets.vue')
+    },
+    {
+        path: window.symfony.views.companies,
+        component: () => import('@/Views/Companies/Companies.vue')
+    },
+    {
+        path: window.symfony.views.config,
+        component: () => import('@/Views/Config/Config.vue')
+    },
+    {
+        path: window.symfony.views.config_section,
+        component: () => import('@/Views/Config/Config.vue')
+    },
     {
         name: 'companies_company',
         path: window.symfony.views.companies_company,

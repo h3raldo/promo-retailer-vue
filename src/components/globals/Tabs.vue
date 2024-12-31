@@ -28,7 +28,7 @@ export default {
 	<div class="pt-4">
 
 		<div class="nav nav-tabs" role="tablist">
-			<button v-for="label in labels" :key="label" @click="onLabelClick(label)" :class="tabClasses(label)">{{ label }}</button>
+			<button v-for="label in labels" :key="label" @click="onLabelClick(label)" :class="tabClasses(label)">{{ label.replace('_', ' ') }}</button>
 		</div>
 
 		<div class="tab-content pt-3">

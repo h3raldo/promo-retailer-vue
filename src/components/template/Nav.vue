@@ -23,6 +23,7 @@ export default {
 					url: self.symfony.views.dashboard,
 					type: 'vue'
 				},
+
 				{
 					title: 'Quotes',
 					icon: 'bi bi-calculator',
@@ -54,27 +55,15 @@ export default {
 					type: 'vue'
 				},
 				{
+					title: 'Products',
+					icon: 'bi bi-box-seam',
+					url: self.symfony.views.products,
+					type: 'vue'
+				},
+				{
 					title: 'Global Sheets',
 					icon: 'bi bi-database',
 					url: self.symfony.views.global_sheets,
-					type: 'vue'
-				},
-				{
-					title: 'Upload Image',
-					icon: 'bi bi-cloud-arrow-up',
-					url: self.symfony.views.images_upload,
-					type: 'vue'
-				},
-				{
-					title: 'Refresh CDN Images',
-					icon: 'bi bi-arrow-clockwise',
-					url: self.symfony.views.images_update,
-					type: 'vue'
-				},
-				{
-					title: 'Reports',
-					icon: 'bi-bar-chart-line-fill',
-					url: self.symfony.views.reports_orders,
 					type: 'vue'
 				},
 				{
@@ -87,6 +76,31 @@ export default {
 					title: 'Websites',
 					icon: 'bi bi-columns',
 					url: self.symfony.views.websites,
+					type: 'vue'
+				},
+				{
+					title: 'Images',
+					icon: 'bi bi-card-image',
+					type: 'dropdown',
+					children: [
+						{
+							title: 'Upload Image',
+							icon: 'bi bi-cloud-arrow-up',
+							url: self.symfony.views.images_upload,
+							type: 'vue'
+						},
+						{
+							title: 'Refresh CDN Images',
+							icon: 'bi bi-arrow-clockwise',
+							url: self.symfony.views.images_update,
+							type: 'vue'
+						},
+					]
+				},
+				{
+					title: 'Reports',
+					icon: 'bi-bar-chart-line-fill',
+					url: self.symfony.views.reports_orders,
 					type: 'vue'
 				},
 			]
@@ -118,13 +132,37 @@ export default {
 
 		<ul class="nav nav-pills flex-column mb-auto">
 
-			<li v-for="link in nav" class="nav-item">
-				<RouterLink v-if="link.type === 'vue'" class="nav-link text-white" :active-class="'nav-link active'" :to="link.url"><i :class="link.icon"></i> {{ link.title }}</RouterLink>
-				<a v-else class="nav-link text-white" :href="link.url"><i :class="link.icon"></i> {{ link.title }}</a>
-			</li>
+			<template v-for="link in nav">
+
+				<template v-if="link.type === 'vue'">
+				<li class="nav-item">
+					<RouterLink class="nav-link text-white" :active-class="'nav-link active'" :to="link.url"><i :class="link.icon"></i> {{ link.title }}</RouterLink>
+				</li>
+				</template>
+
+				<template v-else-if="link.type === 'dropdown'">
+				<li class="nav-item dropdown">
+					<a class="nav-link text-white dropdown-toggle" data-bs-toggle="dropdown" href="#"><i :class="link.icon"></i> {{ link.title }}</a>
+					<ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+						<li v-for="child in link.children">
+							<RouterLink class="nav-link text-white" :active-class="'nav-link active'" :to="child.url"><i :class="child.icon"></i> {{ child.title }}</RouterLink>
+						</li>
+					</ul>
+				</li>
+				</template>
+
+				<template v-else>
+				<li class="nav-item">
+					<a class="nav-link text-white" :href="link.url"><i :class="link.icon"></i> {{ link.title }}</a>
+				</li>
+				</template>
+
+
+			</template>
+
 		</ul>
 		<hr>
-		<div class="dropdown">
+		<div class="">
 			<a href="#" class="d-flex align-items-center text-white gap-2 text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
 				<span><i class="bi bi-person-circle"></i></span>
 				<strong>{{ symfony.user }}</strong>
@@ -138,5 +176,6 @@ export default {
 				<li><a class="dropdown-item" :href="symfony.logoutUrl">Sign out</a></li>
 			</ul>
 		</div>
+
 	</div>
 </template>

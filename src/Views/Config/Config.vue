@@ -1,126 +1,69 @@
 <script setup>
-import Loader from "@/components/globals/Loader.vue";
+import Email from "@/Views/Config/Section/Email.vue";
+import Categories from "@/Views/Config/Section/Categories.vue";
+import Decorations from "@/Views/Config/Section/Decorations.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
 	export default {
 		data(){
 			return {
-				loading: false,
-				saving: false,
-				approval_body: '',
-				approval_subject: '',
+				id: this.$route.params.section,
+			}
+		},
+		computed: {
+			section(){
+				return this.id || false;
 			}
 		},
 		inject: ['symfony', 'alert'],
 		methods: {
-			save(){
-				let self = this;
+			goToSection(section){
+				if( section )
+					this.$router.push( this.symfony.views.config_section.replace(':section', section) );
 
-				function success( response ){
-					self.saving = false;
-					self.alert('Saved!');
-				}
-
-				function error( response ){
-					self.saving = false;
-					self.alert('Error saving, see console.!', 'danger');
-				}
-
-				let data = {
-					path: 'email/order/approval',
-					value: {
-						body: self.approval_body,
-						subject: self.approval_subject
-					}
-				}
-
-				this.saving = true;
-				utils.ajax(this.symfony.api.config.save, success, error, data );
-			},
-			retrieve(){
-				let self = this;
-				self.loading = true;
-
-				utils.config.get.approvalEmail( (response) => {
-					self.loading = false;
-
-					if( !response ) return;
-					self.approval_body = response.body;
-					self.approval_subject = response.subject;
-				} )
+				this.id = section;
 			}
 		},
 		mounted() {
-			this.retrieve();
+
 		}
 	}
 </script>
 <template>
 
-	<div class="text-end pb-3 bg-gray p-3 mb-2 d-flex justify-content-between align-items-center d-print-none">
-		<div>
-			<h3 class="mb-0"><i class="bi bi-gear-fill"></i> Configuration</h3>
-		</div>
-		<button class="btn btn-primary p-3" @click="save" :disabled="saving"><i class="bi bi-floppy-fill"></i> Save</button>
+	<div class="text-end pb-3 bg-gray p-3 mb-4 d-flex justify-content-between align-items-center">
+		<h3 class="m-0"><i class="bi bi-person"></i> Config</h3>
+		<button class="btn btn-outline-secondary p-3" @click="goToSection('')">View All</button>
 	</div>
 
-	<br>
+	<div v-if="section">
+		<Email v-if="id === 'email'" />
+		<Categories v-if="id === 'categories'" />
+		<Decorations v-if="id === 'decorations'" />
+	</div>
 
-	<h2>Sales Order - Approval Email</h2>
-	<p>Template for sending approval emails. Following placeholders are available</p>
-
-	<hr>
-
-	<Loader v-if="loading" />
-
-	<div class="row" v-else>
-		<div class="col">
-			<div class="mb-2">
-				<label class="form-label">Email Subject</label>
-				<input type="text" class="form-control" v-model="approval_subject">
-			</div>
-
-			<div class="mb-2">
-				<label class="form-label">Email Body</label>
-				<textarea class="form-control" rows="15" v-model="approval_body"></textarea>
-			</div>
+	<div v-else>
+		<div>
+			<h5>Email Settings</h5>
+			<p>Approval email template</p>
+			<button class="btn btn-primary" @click="goToSection('email')">Email Settings</button>
 		</div>
-		<div class="col">
-			<table class="table">
-				<thead>
-				<tr>
-					<th>Variable</th>
-					<th>Description</th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr>
-					<td>[company_name]</td>
-					<td>Company Name</td>
-				</tr>
-				<tr>
-					<td>[client_name]</td>
-					<td>Name of user that placed the order</td>
-				</tr>
-				<tr>
-					<td>[approver_name]</td>
-					<td>Name of approver</td>
-				</tr>
-				<tr>
-					<td>[approver_email]</td>
-					<td>Email of approver</td>
-				</tr>
-				<tr>
-					<td>[reference_number]</td>
-					<td>Reference number of order</td>
-				</tr>
-				<tr>
-					<td>[sales_order_url]</td>
-					<td>Link to view sales order</td>
-				</tr>
-				</tbody>
-			</table>
+
+		<hr>
+
+		<div>
+			<h5>Global Categories</h5>
+			<p>Categories used globally for all products.</p>
+			<button class="btn btn-primary" @click="goToSection('categories')">Edit Categories</button>
+		</div>
+
+		<hr>
+
+		<div>
+			<h5>Decorations</h5>
+			<p>Global decoration settings</p>
+			<button class="btn btn-primary" @click="goToSection('decorations')">Edit Decorations</button>
 		</div>
 	</div>
 

@@ -1,8 +1,10 @@
-<script>
+<script setup>
 import Search from "@/EntityComponents/Company/Search.vue";
+</script>
+<script>
+import utils from "@/js/utils.js";
 
 export default {
-	components: {Search},
 	data(){
 		return {
 
@@ -20,6 +22,10 @@ export default {
 			console.log('selected', company);
 			this.logo.company.id = company.id;
 			this.logo.company.name = company.name;
+		},
+		nameChange(){
+			if( this.logo.handle !== '' ) return;
+			this.logo.handle = utils.slugify(this.logo.name);
 		}
 	}
 }
@@ -56,7 +62,7 @@ export default {
 
 		<div class="flex-grow-1">
 			<div class="form-floating">
-				<input type="text" class="form-control" id="name" placeholder="Name" v-model="logo.name">
+				<input type="text" class="form-control" id="name" placeholder="Name" v-model="logo.name" @change="nameChange">
 				<label for="name">Name</label>
 			</div>
 		</div>

@@ -12,7 +12,7 @@ export default {
 		}
 	},
 	inject: ['symfony'],
-	props: ['selected', 'buttonText', 'buttonIcon'],
+	props: ['selected', 'companyId'],
 	methods: {
 		getFirstImage(logo){
 			let found_version = '';
@@ -22,9 +22,13 @@ export default {
 			return found_version.image
 		},
 		search(e){
-			e.preventDefault();
+			if( e ) e.preventDefault();
+
 			let self = this;
 			let url = this.symfony.api.logos.search + '?name=' + this.query;
+
+			if( this.companyId ) url += '&company_id=' + this.companyId;
+
 			self.loading = true;
 			utils.ajax( url, d => {
 				self.results = d.results;
@@ -32,7 +36,11 @@ export default {
 			}, e => {
 				self.loading = false;
 			})
-		}
+		},
+	},
+	mounted(){
+		if( !this.companyId ) return;
+		this.search();
 	}
 }
 </script>

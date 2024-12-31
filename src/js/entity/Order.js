@@ -119,6 +119,11 @@ function patchData( data, init )
     if( typeof order.info.shipped === 'undefined' ) order.info.shipped = blank.info.shipped;
     if( typeof order.info.tracking_number === 'undefined' ) order.info.tracking_number = blank.info.tracking_number;
 
+    // for duplicated orders where paid has been undone
+    if( order.info.statuses.paid === true && init.statuses.paid === false ){
+        order.totals.paid = 0;
+    }
+
     order.info.status = init.status;
     order.info.statuses = init.statuses;
     order.info.deliver_by = init.dateDeliverBy || '';

@@ -4,11 +4,13 @@ import Address from "@/components/globals/properties/Address.vue";
 import Tabs from "@/components/globals/Tabs.vue";
 import Search from "@/EntityComponents/Company/Search.vue";
 import SearchCustomers from "@/components/api/Quickbooks/Search.Customers.vue";
-import LogoSearch from "@/EntityComponents/Logo/Search.vue";
+import Logos from "@/Views/Companies/Company/Logos.vue";
+import Websites from "@/Views/Companies/Company/Websites.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
 import entity from "@/js/entity.js";
+import {computed} from "vue";
 
 export default {
 	data(){
@@ -19,6 +21,7 @@ export default {
 			selectedParent: {},
 			company: {},
 			extra: {},
+			entities: {},
 		}
 	},
 	inject: ['symfony', 'alert'],
@@ -26,12 +29,12 @@ export default {
 		tabs(){
 			return [
 			  'Main',
-			  'Quickbooks',
-			  'Contacts',
-			  'Decorators',
 			  'Children',
 			  'Websites',
-			  'Logos'
+			  'Logos',
+			  'Contacts',
+			  'Decorators',
+			  'Quickbooks',
 			]
 		}
 	},
@@ -44,12 +47,10 @@ export default {
 			utils.ajax(url, (data) => {
 				self.company = data.entity;
 				self.extra = data.extra;
+				self.entities = data.entities;
 				entity.company.patch(self.company);
 				self.loading = false;
 			})
-		},
-		goToWebsite(id){
-			this.$router.push( this.symfony.views.websites_website.replace(':id', id) )
 		},
 		goToDecorator(id){
 			this.$router.push( this.symfony.views.decorators_decorator.replace(':id', id) )
@@ -123,6 +124,12 @@ export default {
 		},
 		onLogoSelect(logo){
 			console.log('selected', logo);
+		}
+	},
+	provide() {
+		return {
+			company: computed(() => this.company),
+			entities: computed(() => this.entities),
 		}
 	},
 	mounted() {
@@ -443,35 +450,11 @@ export default {
 			</template>
 
 			<template #Websites>
-
-				<table v-if="extra.websites.length" class="table">
-					<thead>
-					<tr>
-						<td></td>
-						<th>ID</th>
-						<th>Handle</th>
-						<th>Name</th>
-						<th>Link</th>
-					</tr>
-					</thead>
-					<tbody>
-					<tr v-for="website in extra.websites">
-						<td><button @click="goToWebsite(website.id)" class="btn btn-sm btn-primary">View/Edit</button></td>
-						<td>{{ website.id }}</td>
-						<td>{{ website.handle }}</td>
-						<td>{{ website.name }}</td>
-						<td><a :href="`https://${website.handle}.promoretailer.com`" target="_blank">View Website</a> </td>
-					</tr>
-					</tbody>
-				</table>
-
-				<div v-else>
-					<h3>No Websites Found</h3>
-				</div>
+				<Websites />
 			</template>
 
 			<template #Logos>
-				<LogoSearch :onSelect="onLogoSelect" :buttonText="'Add Existing Logo'" />
+				<Logos />
 			</template>
 		</Tabs>
 

@@ -20,6 +20,7 @@ export default {
 				logo: {},
 				decorators: [],
 			},
+			assets: {},
 			urls: this.symfony.api.logos.logo,
 			tabs: ['Variants', 'Configuration']
 		}
@@ -29,6 +30,7 @@ export default {
 		return {
 			logo: computed(() => this.entities.logo),
 			decorators: computed(() => this.entities.decorators),
+			assets: computed(() => this.assets),
 		}
 	},
 
@@ -52,6 +54,7 @@ export default {
 			}
 
 			self.entities.logo = d.entities.logo;
+			self.assets = d.assets;
 			d.entities.decorators.forEach( d => self.entities.decorators.push( d ));
 		});
 	}
@@ -74,7 +77,12 @@ export default {
 				<template #Configuration>
 				</template>
 				<template #Variants>
-					<Variants :variants="entities.logo.variants" :editable="true" :decorators="entities.decorators" />
+					<div v-if="entities.logo.handle.trim().length > 3">
+						<Variants :logo="entities.logo" :editable="true" :decorators="entities.decorators" :assets="assets" />
+					</div>
+					<div v-else>
+						Logo handle (id) is required.
+					</div>
 				</template>
 			</Tabs>
 

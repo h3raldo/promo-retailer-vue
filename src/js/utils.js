@@ -199,6 +199,36 @@ export default
         }
     },
 
+    slugify(str) {
+        str = str.replace(/^\s+|\s+$/g, ''); // trim leading/trailing white space
+        str = str.toLowerCase(); // convert string to lowercase
+        str = str.replace(/[^a-z0-9& -]/g, '') // remove any non-alphanumeric characters
+            .replace(/\s+/g, '-') // replace spaces with hyphens
+            .replace(/-+/g, '-'); // remove consecutive hyphens
+        return str;
+    },
+
+    array: {
+
+        move(direction, fromIndex, items) {
+            let toIndex = fromIndex;
+
+            switch (direction){
+                case 'up':
+                    toIndex--;
+                    break;
+                case 'down':
+                    toIndex++;
+                    break;
+            }
+
+            let element = items[fromIndex];
+            items.splice(fromIndex, 1);
+            items.splice(toIndex, 0, element);
+        },
+
+    },
+
     form: {
         toGetParams( form ){
             let params = [];
@@ -237,5 +267,9 @@ export default
 
             return params;
         }
+    },
+
+    entity: {
+
     }
 }

@@ -24,7 +24,7 @@ export default{
 			urls: this.symfony.api.purchase_orders.order,
 			po: purchaseOrderStore.po,
 			entities: {
-				order: {}
+				order: {},
 			},
 			tabs: ['Info', 'Items', 'Vendor', 'Logos', 'References']
 		}
@@ -60,8 +60,13 @@ export default{
 			let entity_data = d.data;
 			let init = d.init;
 
-			if( d.entities && d.entities.order ){
-				self.entities.order = JSON.parse( d.entities.order.data );
+			if( d.entities ){
+
+				if( d.entities.order )
+					self.entities.order = JSON.parse( d.entities.order.data );
+
+				if( d.entities.po )
+					self.entities.po = d.entities.po;
 			}
 
 			if ( !entity_data.po ) {

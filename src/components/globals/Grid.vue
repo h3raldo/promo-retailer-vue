@@ -126,7 +126,7 @@ export default {
 	},
 	mounted() {
 		if( this.entities.length > 0 ) return;
-		this.getEntities()
+		this.getEntities();
 	}
 }
 </script>

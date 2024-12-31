@@ -33,10 +33,13 @@
                 contacts_contact: '/admin/contacts/contact/:id/',
                 websites: '/admin/websites/',
                 websites_website: '/admin/websites/website/:id/',
+				products: '/admin/products/',
+				products_product: '/admin/products/product/:id/',
 				decorators: '/admin/decorators/',
 				decorators_decorator: '/admin/decorators/decorator/:id/',
                 logos_logo: '/admin/logos/logo/:id/',
 				config: '/admin/config',
+				config_section: '/admin/config/:section/',
             },
             api: {
 				email: {
@@ -93,23 +96,45 @@
 					search: 'https://tools.promoretailer.dev/api/decorators/',
 					decorator: {
 						get: 'https://tools.promoretailer.dev/api/decorators/decorator/:id/',
+						save: 'https://tools.promoretailer.dev/admin/decorators/decorator/save/',
+						new: 'https://tools.promoretailer.dev/api/decorators/create/',
+					}
+				},
+				products: {
+					search: 'https://tools.promoretailer.dev/api/products/',
+					product: {
+						get: 'https://tools.promoretailer.dev/api/products/product/:id/',
+						save: 'https://tools.promoretailer.dev/admin/products/product/save/',
+						create: 'https://tools.promoretailer.dev/api/products/create/',
 					}
 				},
 				websites: {
 					search: 'https://tools.promoretailer.dev/api/websites/',
 					website: {
 						get: 'https://tools.promoretailer.dev/api/websites/website/:id/',
+						new: 'https://tools.promoretailer.dev/admin/websites/website/',
+						save: 'https://tools.promoretailer.dev/admin/websites/website/',
 					}
 				},
 				logos: {
 					search: 'https://tools.promoretailer.dev/api/logos/',
 					logo: {
 						get: 'https://tools.promoretailer.dev/api/logos/logo/:id/',
+						new: 'https://tools.promoretailer.dev/admin/logos/logo/create/',
+						variant: {
+							upload: 'https://tools.promoretailer.dev/api/logos/logo/:id/',
+						}
 					}
 				},
 				config: {
 					get: 'https://tools.promoretailer.dev/api/config/get/',
 					save: 'https://tools.promoretailer.dev/api/config/save/',
+				},
+				editor: {
+					placements: {
+						get: 'https://tools.promoretailer.dev/api/editor/group/info/:group/',
+						push: 'https://tools.promoretailer.dev/admin/editor/placement/push/:group/',
+					}
 				}
             },
             quotes: {

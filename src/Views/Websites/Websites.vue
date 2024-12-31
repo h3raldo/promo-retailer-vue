@@ -40,7 +40,7 @@ export default {
 		<div>
 			<h3 class="mb-0"><i class="bi bi-columns"></i> Websites</h3>
 		</div>
-		<button class="btn btn-primary p-3" @click="createNew"><i class="bi bi-plus-square-fill"></i> Create New</button>
+		<button class="btn btn-primary p-3" disabled><i class="bi bi-plus-square-fill"></i> Create New</button>
 	</div>
 
 	<Grid :api="symfony.api.websites.search" :columns="columns" :searchState="searchState" :entity="'website'">

@@ -13,7 +13,7 @@ export default {
 		}
 	},
 	inject: ['symfony'],
-	props: ['onSelect', 'buttonText', 'buttonIcon', 'type'],
+	props: ['onSelect', 'buttonText', 'buttonIcon', 'type', 'companyId'],
 	computed: {
 		getType() {
 			if (typeof this.type === 'undefined') return 'modal';
@@ -34,7 +34,7 @@ export default {
 
 	<template v-if="getType === 'modal'">
 		<Modal :id="'logo-search'" :title="'Search Logos'" :buttonText="buttonText" :icon="buttonIcon" :buttonClasses="'btn btn-primary'" ref="modal">
-			<SearchForm :selected="selected" />
+			<SearchForm :selected="selected" :companyId="companyId" />
 		</Modal>
 	</template>
 	<template v-else-if="getType === 'details'">

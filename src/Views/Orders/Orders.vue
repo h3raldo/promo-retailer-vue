@@ -50,7 +50,7 @@ export default {
 		}
 	},
 
-	inject: ['symfony', 'search'],
+	inject: ['symfony', 'search', 'cache'],
 
 	computed: {
 		searchState(){
@@ -64,8 +64,9 @@ export default {
 
 			return this.symfony.api.orders.export +'?' + params ?? ''
 		},
-		api(){
-
+		lastOpened(){
+			console.log(this.cache.component.grid.orders.last_opened);
+			return this.cache.component.grid.orders.last_opened;
 		}
 	},
 
@@ -79,6 +80,7 @@ export default {
 			return utils.time.dateToNiceString(date, true);
 		},
 		viewQuote( id ){
+			this.cache.component.grid.orders.last_opened = id;
 			this.$router.push( this.symfony.views.orders_order.replace(':id', id) );
 		},
 		getDuplicateUrl( id )
@@ -127,6 +129,11 @@ export default {
 
 	created() {
 		if( typeof this.search.orders === 'undefined' ) this.search.orders = {}
+		if( typeof this.cache.component.grid === 'undefined' ) this.cache.component.grid = {
+			orders: {
+				last_opened: 0
+			}
+		}
 	},
 }
 </script>
@@ -171,7 +178,7 @@ export default {
 				{{ formatDate(item.date) }}
 			</td>
 
-			<td @click="viewQuote(item.id)">
+			<td @click="viewQuote(item.id)" :class="lastOpened === item.id ? 'bg-warning-subtle' : ''">
 
 				<div class="d-flex align-items-center">
 					<div class="flex-grow-1">
@@ -186,6 +193,8 @@ export default {
 								<span v-if="!item.company">Company</span>
 								<span v-if="item.company && !item.quickbooksID">QB ID</span>
 							</span>
+
+							<small v-if="lastOpened === item.id" class="text-warning-emphasis float-end"><i class="bi bi-mouse2"></i> Last Opened</small>
 						</span>
 						<span class="d-block">{{ item.title }}</span>
 						<span class="d-block small">{{ item.client }}</span>

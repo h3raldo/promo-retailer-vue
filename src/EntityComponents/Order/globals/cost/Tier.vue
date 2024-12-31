@@ -11,14 +11,14 @@ export default {
 		}
 	},
 
-	props: ['tier', 'index','removeTier', 'showMargin', 'canDelete'],
-	inject: ['order'],
+	props: ['tier', 'index','removeTier', 'showMargin', 'canDelete', 'order'],
 
 	computed:{
 		editableMargin(){
 			return this.showMargin
 		},
 		showPrice(){
+			if( !this.order ) return true;
 			return pricing.showPrice(this.order);
 		},
 		deletable(){

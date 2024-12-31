@@ -12,12 +12,13 @@ export default {
 		}
 	},
 	inject: ['symfony'],
-	props: ['selected', 'buttonText', 'buttonIcon'],
+	props: ['selected', 'buttonText', 'buttonIcon', 'type'],
 	methods: {
 		search(e){
 			e.preventDefault();
 			let self = this;
-			let url = this.symfony.api.companies.search + '?name=' + this.query;
+			let url = this.symfony.api.companies.search + '?name=' + encodeURIComponent(this.query);
+			if( this.type ) url += '&type=' + this.type;
 			self.loading = true;
 			utils.ajax( url, d => {
 				self.results = d.results;

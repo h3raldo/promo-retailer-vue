@@ -1,7 +1,10 @@
 <script>
+import utils from "@/js/utils.js";
+
 export default {
 	data(){
 		return {
+			loading: false,
 			types: [
 				'Screenprinting',
 				'Embroidery',
@@ -20,11 +23,33 @@ export default {
 			]
 		}
 	},
-	inject: ['decorator'],
+	inject: ['decorator', 'symfony', 'alert'],
 	computed: {
+		saveData() {
+			return {
+				entities: {
+					decorator: this.decorator,
+				}
+			}
+		}
+	},
+	methods: {
 		save()
 		{
+			let self = this;
+			this.loading = true;
 
+			function onSuccess( r ){
+				if( r.error === false ) self.alert('Saved')
+				else self.alert('Error Saving', 'danger', r.message);
+				self.loading = false;
+			}
+
+			function onError( e ){
+				self.alert('Error Saving', 'danger', e);
+			}
+
+			utils.ajax( this.symfony.api.decorators.decorator.save, onSuccess, onError, this.saveData )
 		}
 	}
 }
@@ -41,7 +66,7 @@ export default {
 		</div>
 		<div>
 			<div class="text-end d-flex gap-2">
-				<button class="btn btn-primary" :disabled="true" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
+				<button class="btn btn-primary" :disabled="loading" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
 			</div>
 		</div>
 	</div>

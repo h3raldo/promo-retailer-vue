@@ -2,6 +2,8 @@
 import Search from "@/EntityComponents/Company/Search.vue";
 </script>
 <script>
+import utils from "@/js/utils.js";
+
 export default {
 	data() {
 		return {
@@ -9,15 +11,40 @@ export default {
 		}
 	},
 	props: [],
-	inject: ['website'],
+	inject: ['website', 'symfony', 'alert'],
 	computed: {
 		publicUrl(){
 			return `https://${this.website.handle}.promoretailer.com`;
+		},
+		companyLink(){
+			if( !this.website.company.id ) return false;
+			return this.symfony.views.companies_company.replace(':id', this.website.company.id)
+		},
+		saveData() {
+			return {
+				entities: {
+					website: this.website,
+				}
+			}
 		}
 	},
 	methods: {
-		save(){
+		save()
+		{
+			let self = this;
+			this.loading = true;
 
+			function onSuccess( r ){
+				if( r.error === false ) self.alert('Saved')
+				else self.alert('Error Saving', 'danger', r.message);
+				self.loading = false;
+			}
+
+			function onError( e ){
+				self.alert('Error Saving', 'danger', e);
+			}
+
+			utils.ajax( this.symfony.api.websites.website.save, onSuccess, onError, this.saveData )
 		},
 
 		onCompanySelect( company )
@@ -42,12 +69,12 @@ export default {
 		</div>
 		<div>
 			<div class="text-end d-flex gap-2">
-				<button class="btn btn-primary" :disabled="true" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
+				<button class="btn btn-primary" :disabled="loading" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
 			</div>
 		</div>
 	</div>
 
-	<div class="d-flex gap-3 align-items-center">
+	<div class="d-flex gap-3 align-items-start">
 
 		<div>
 			<div class="form-floating">
@@ -89,6 +116,7 @@ export default {
 				</div>
 				<Search :on-select="onCompanySelect" :button-text="''" :button-icon="'bi-pencil'" />
 			</div>
+			<div class="form-text" v-if="companyLink"><RouterLink :to="companyLink">View Company</RouterLink></div>
 		</div>
 
 	</div>

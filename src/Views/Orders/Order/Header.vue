@@ -22,7 +22,7 @@ export default {
 
 	computed: {
 		ableToSendEmail(){
-			return ( this.entities.company && this.entities.company.data && this.entities.company.data.contacts.approval && this.entities.company.data.contacts.approval.email)
+			return ( this.entities.company && this.entities.company.data && this.entities.company.data.contacts && this.entities.company.data.contacts.approval && this.entities.company.data.contacts.approval.email)
 		},
 		ableToInvoice(){
 			return !this.init.invoice_quickbooks_id && !this.invoiced && this.init.company_quickbooks_id
@@ -121,10 +121,12 @@ export default {
 					self.alert('Invoice successfully created!');
 					self.loading = false;
 					self.invoiced = true;
+					self.$refs.invoiceModal.$refs.closeModalButton.click();
 				},
 				error(r) {
 					self.alert(`Error creating invoice. ${r.message}`, 'danger');
 					self.loading = false;
+					self.$refs.invoiceModal.$refs.closeModalButton.click();
 				}
 			}
 
@@ -274,7 +276,12 @@ export default {
 								<CreatePOs :goToPurchaseOrder="goToPurchaseOrder"  />
 							</Modal>
 						</li>
-						<li v-if="ableToInvoice"><button class="dropdown-item" :disabled="loading" @click="invoice"><i class="bi bi-currency-dollar"></i> Invoice</button></li>
+						<li v-if="ableToInvoice">
+							<Modal :id="'create-invoice'" :title="'Create Invoice'" :buttonText="'Invoice'" :buttonClasses="'dropdown-item'" icon="bi-currency-dollar" ref="invoiceModal">
+								<p>Are you sure you'd like to create an invoice?</p>
+								<button class="btn btn-success" :disabled="loading" @click="invoice"><i class="bi bi-currency-dollar"></i> Create Invoice</button>
+							</Modal>
+						</li>
 						<li v-if="ableToSendEmail">
 							<HeaderEmail :save="save" :publicUrl="publicUrl" />
 						</li>

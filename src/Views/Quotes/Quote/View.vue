@@ -17,7 +17,9 @@ import utils from "@/js/utils.js";
 const data = reactive({
 	id: route.params.id,
 	loading: true,
+	init: {},
 	references: [],
+	entities: {},
 	urls: inject('symfony').value.quotes.quote,
 })
 
@@ -29,7 +31,12 @@ function setup()
 	utils.ajax(url, (d) => {
 
 		let entity_data = JSON.parse(d.data);
+
+		if( d.entities ) data.entities = d.entities;
+
 		let init = d.init;
+		data.init = d.init;
+
 		if( init.order ) {
 			data.references.push({
 				source: 'order',
@@ -85,6 +92,8 @@ provide('logos', computed(() => quoteStore.logos))
 provide('vendors', computed(() => quoteStore.vendors))
 provide('urls', computed(() => data.urls))
 provide('references', computed(() => data.references))
+provide('entities', computed(() => data.entities))
+provide('init', computed(() => data.init))
 
 provide('hasEdited', quoteStore.hasEdited)
 provide('updatePricing', quoteStore.updatePricing)
