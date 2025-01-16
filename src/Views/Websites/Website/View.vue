@@ -21,7 +21,7 @@ export default {
 			notFound: false,
 			entities: {
 				website: {},
-				logo: []
+				logos: []
 			},
 			editing: {
 				logos: false,
@@ -66,14 +66,21 @@ export default {
 
 	methods: {
 		getLogo( handle ){
-			let logo = this.entities.logo.filter( l => l.handle === handle )[0];
+			let logo = this.entities.logos.filter( l => l.logo.handle === handle )[0];
 			if( !logo ) return {
 				name: 'LOGO HANDLE NOT FOUND',
 				id: null,
 				variants: []
 			}
 
-			return logo;
+			return logo.logo;
+		},
+		getLogoVariants( handle ){
+			console.log('getLogo',handle);
+			let logo = this.entities.logos.filter( l => l.logo.handle === handle )[0];
+			console.log('variant!',logo);
+			if( !logo ) return []
+			return logo.logo_variants;
 		},
 		viewLogo( id ){
 			this.$router.push( this.symfony.views.logos_logo.replace(':id', id) )
@@ -99,8 +106,7 @@ export default {
 			}
 
 			self.entities.website = d.entities.website;
-			self.entities.logo = d.entities.logo;
-
+			self.entities.logos = d.entities.logos;
 		});
 	}
 }
@@ -166,20 +172,21 @@ export default {
 				<template #Logos>
 
 					<div class="pb-3 d-flex align-items-center justify-content-center gap-3">
-						<LogoSearch :buttonText="'Add Logo'" :buttonIcon="'bi bi-plus-circle'" :on-select="addLogo" :company-id="entities.website.company.id" />
 						<template v-if="editing.logos">
 							<button class="btn btn-outline-success" @click="editing.logos = !editing.logos"><i class="bi bi-check2"></i> Done</button>
 						</template>
 						<template v-else>
-							<button class="btn btn-primary" @click="editing.logos = !editing.logos"><i class="bi bi-bookmarks"></i> Edit Logo Categories</button>
+							<button class="btn btn-primary" @click="editing.logos = !editing.logos"><i class="bi bi-pencil"></i> Edit Websites Logos</button>
 						</template>
+						<LogoSearch :buttonText="'Add Logo'" :buttonIcon="'bi bi-plus-circle'" :on-select="addLogo" :company-id="entities.website.company.id" />
 					</div>
 
 					<template v-if="editing.logos">
-						<div v-for="logo in entities.website.config.logos" class="bg-light p-3 mb-2">
+						<div v-for="(logo, li) in entities.website.config.logos" class="bg-light p-3 mb-2">
 
-							<h5 class="mb-0">
-								{{ getLogo(logo.id).name }}
+							<h5 class="mb-0 d-flex justify-content-between align-items-center">
+								<span>{{ getLogo(logo.id).name }}</span>
+								<button class="btn btn-danger" @click="entities.website.config.logos.splice( li, 1 )"><i class="bi bi-x"></i> Remove</button>
 							</h5>
 
 							<div class="d-flex gap-3 align-items-center pt-2 pb-2 border my-2">
@@ -191,7 +198,7 @@ export default {
 								</div>
 							</div>
 
-							<Variants :logo="getLogo(logo.id)" />
+							<Variants :logo="getLogo(logo.id)" :logo_variants="getLogoVariants(logo.id)" />
 						</div>
 					</template>
 
@@ -211,7 +218,7 @@ export default {
 										</div>
 									</div>
 
-									<Variants :logo="getLogo(logo.id)" />
+									<Variants :logo="getLogo(logo.id)" :logo_variants="getLogoVariants(logo.id)" />
 
 									<div>
 										<button class="btn btn-sm btn-outline-primary" @click="viewLogo(getLogo(logo.id).id)">Edit Logo Details</button>
@@ -233,7 +240,7 @@ export default {
 				</template>
 
 				<template #Categories>
-					<p>Here will be the categories when that gets added!</p>
+					<p>Coming soon.</p>
 				</template>
 			</Tabs>
 		</template>

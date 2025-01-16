@@ -16,10 +16,12 @@ export default {
 
 	},
 
-	props: ['id', 'title', 'buttonText', 'buttonClasses', 'buttonType', 'icon', 'openOnCreation'],
+	props: ['id', 'title', 'buttonText', 'buttonClasses', 'buttonType', 'icon', 'openOnCreation', 'onOpen'],
 
 	methods: {
-
+		clickedOpenButton(){
+			if( this.onOpen ) this.onOpen();
+		}
 	},
 
 	mounted() {
@@ -33,12 +35,12 @@ export default {
 <template>
 
 	<template v-if="buttonType === 'link'">
-		<a href="#" data-bs-toggle="modal" :data-bs-target="'#'+id" ref="openModalButton">
+		<a href="#" data-bs-toggle="modal" :data-bs-target="'#'+id" ref="openModalButton" @click="clickedOpenButton">
 			<i v-if="icon && icon.length > 0" :class="'bi '+ icon"></i> {{ buttonText }}
 		</a>
 	</template>
 	<template v-else>
-		<button type="button" :class="buttonClasses" data-bs-toggle="modal" :data-bs-target="'#'+id" ref="openModalButton">
+		<button type="button" :class="buttonClasses" data-bs-toggle="modal" :data-bs-target="'#'+id" ref="openModalButton" @click="clickedOpenButton">
 			<i v-if="icon && icon.length > 0" :class="'bi '+ icon"></i>
 			{{ buttonText }}
 		</button>

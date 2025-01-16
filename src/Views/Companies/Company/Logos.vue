@@ -39,18 +39,21 @@ export default {
 
 	<div v-if="entities.logo.length > 0">
 
-		<table class="table">
+		<table class="table align-middle">
 			<thead>
 			<tr>
+				<th></th>
 				<th>ID</th>
 				<th>Status</th>
 				<th>Name</th>
 				<th>Handle</th>
-				<th></th>
 			</tr>
 			</thead>
 			<tbody>
 				<tr v-for="logo in entities.logo">
+					<td>
+						<button class="btn btn-primary btn-sm" @click="goToLogo(logo.id)"><i class="bi bi-pencil"></i> Edit</button>
+					</td>
 					<td>
 						{{ logo.id }}
 					</td>
@@ -58,13 +61,10 @@ export default {
 						{{ logo.status }}
 					</td>
 					<td>
-						<h4>{{ logo.name }}</h4>
+						<b>{{ logo.name }}</b>
 					</td>
 					<td>
 						{{ logo.handle }}
-					</td>
-					<td>
-						<button class="btn btn-outline-primary" @click="goToLogo(logo.id)">View Logo <i class="bi bi-arrow-right"></i></button>
 					</td>
 				</tr>
 			</tbody>

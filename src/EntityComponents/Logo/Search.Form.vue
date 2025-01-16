@@ -16,9 +16,13 @@ export default {
 	methods: {
 		getFirstImage(logo){
 			let found_version = '';
-			['all', 'dark', 'light', 'laser-engrave'].forEach( type => {
-				if( logo.variants[type] && found_version === '' ) found_version = logo.variants[type];
+
+			if( !logo.variants.length ) return found_version;
+
+			logo.variants.forEach( v => {
+				if( v.image ) found_version = v;
 			})
+
 			return found_version.image
 		},
 		search(e){
@@ -66,15 +70,15 @@ export default {
 			</tr>
 			</thead>
 			<tbody>
-			<tr v-for="company in results">
+			<tr v-for="logo in results">
 				<td>
-					<button class="btn btn-sm btn-primary" @click="selected(company)">Select</button>
+					<button class="btn btn-sm btn-primary" @click="selected(logo)">Select</button>
 				</td>
 				<td>
-					<img class="bg-secondary p-2" :src="getFirstImage(company)" width="100">
+					<img class="bg-secondary p-2" :src="getFirstImage(logo)" width="100">
 				</td>
 				<td class="align-middle">
-					{{ company.name }} ({{ Object.keys(company.variants).length }} logos)
+					{{ logo.name }} ({{ Object.keys(logo.variants).length }} logos)
 				</td>
 			</tr>
 			</tbody>

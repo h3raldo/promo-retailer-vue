@@ -56,6 +56,7 @@ export default {
 		},
 		addImage( variant )
 		{
+			if( !variant.images ) variant.images = [];
 			variant.images.push(entity.product.variant.image.create())
 		},
 		removeImage( i, variant )
@@ -104,6 +105,16 @@ export default {
 			this.available.colors.length = 0;
 			this.generate.colors.length = 0;
 
+		},
+
+		removeVariant( index )
+		{
+			let variant = this.variants[index];
+
+			if( variant.id )
+				variant.status = 'delete';
+			else
+				this.variants.splice( index, 1 );
 		}
 	},
 
@@ -207,7 +218,7 @@ export default {
 			</thead>
 
 			<tbody>
-			<tr class="mb-3 align-middle" v-for="(variant, vi) in variants">
+			<tr :class="`mb-3 align-middle ${variant.status === 'delete' ? 'to-delete' : ''}`" v-for="(variant, vi) in variants">
 
 				<td>
 					<template  v-if="variant.images && variant.images.length">
@@ -380,7 +391,7 @@ export default {
 					</Modal>
 				</td>
 
-				<td><button class="btn btn-outline-danger btn-sm" @click="variants.splice(vi, 1)"><i class="bi bi-x"></i></button></td>
+				<td><button class="btn btn-outline-danger btn-sm" @click="removeVariant(vi)" :disabled="variant.status === 'delete'"><i class="bi bi-x"></i></button></td>
 			</tr>
 			</tbody>
 		</table>
@@ -390,3 +401,10 @@ export default {
 		</div>
 	</div>
 </template>
+<style>
+.to-delete
+{
+	opacity: 0.2;
+	text-decoration: line-through;
+}
+</style>

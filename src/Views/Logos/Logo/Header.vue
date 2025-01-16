@@ -7,17 +7,40 @@ import utils from "@/js/utils.js";
 export default {
 	data(){
 		return {
-
+			loading: false,
 		}
 	},
-	inject: ['logo'],
+	inject: ['logo', 'symfony', 'alert', 'logo_variants'],
 	computed: {
-		save()
-		{
-
+		saveData() {
+			return {
+				entities: {
+					logo: this.logo,
+					logo_variants: this.logo_variants,
+				}
+			}
 		},
+		canSave(){
+			return this.logo.handle.trim() !== '';
+		}
 	},
 	methods: {
+		save(){
+			let self = this;
+			this.loading = true;
+
+			function onSuccess( r ){
+				if( r.error === false ) self.alert('Saved')
+				else self.alert('Error Saving', 'danger', r.message);
+				self.loading = false;
+			}
+
+			function onError( e ){
+				self.alert('Error Saving', 'danger', e);
+			}
+
+			utils.ajax( this.symfony.api.logos.logo.save, onSuccess, onError, this.saveData )
+		},
 		onCompanySelect(company){
 			console.log('selected', company);
 			this.logo.company.id = company.id;
@@ -42,7 +65,7 @@ export default {
 		</div>
 		<div>
 			<div class="text-end d-flex gap-2">
-				<button class="btn btn-primary" :disabled="true" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
+				<button class="btn btn-primary" :disabled="loading || !canSave" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
 			</div>
 		</div>
 	</div>

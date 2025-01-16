@@ -66,20 +66,41 @@ export default {
 
 			let self = this;
 			return this.selected.variation.images.filter( i => i.type === self.selected.image.type )[0].url;
+		},
+		hasTemplates(){
+			return Object.keys(this.remote.data).length > 0
+		},
+		selectedVariationColor(){
+			if( !this.selected.variation  ) return '';
+			return utils.entity.product.vendorColorToSlug( this.selected.variation.color );
 		}
 	},
-	inject: ['product', 'variants', 'symfony'],
+	inject: ['product', 'variants', 'symfony', 'alert'],
 	props: [],
 	methods: {
 		savePlacements(){
+			let self = this;
 			this.saving = true;
+
+			let url = this.symfony.api.products.product.placements.push.replace(':product', this.product.id);
+
+			function onSuccess( r ){
+				self.saving = false;
+				self.alert('Templates Pushed');
+			}
+			function onError( e ){
+				self.saving = false;
+				self.alert('Templates Push Error', 'danger', e);
+			}
+
+			utils.ajax( url, onSuccess, onError, self.remote.data )
 		},
 		getCurrentPlacements()
 		{
-			if( this.remote.data.children && this.remote.data.children[this.selected.variation.color])
+			if( this.remote.data.children && this.remote.data.children[this.selectedVariationColor])
 			{
 				this.selected.variation_specific = true;
-				return this.remote.data.children[this.selected.variation.color];
+				return this.remote.data.children[this.selectedVariationColor];
 			}
 
 			return this.remote.data;
@@ -113,10 +134,13 @@ export default {
 		deletePlacement( placement_id )
 		{
 			delete this.remote.data[placement_id][this.selected.image.type]
+
+			if( !Object.keys(this.remote.data[placement_id]).length )
+				delete this.remote.data[placement_id];
 		},
 		copyToVariationSpecific()
 		{
-			entity.product.placement.editor.variation.createPlacements( this.remote.data, this.selected.variation.color )
+			entity.product.placement.editor.variation.createPlacements( this.remote.data, this.selectedVariationColor )
 			this.selected.variation_specific = true;
 		},
 		getGroupLocationInfo()
@@ -124,7 +148,7 @@ export default {
 			let self = this;
 
 			self.loading.locations = true;
-			utils.ajax( this.symfony.api.editor.placements.get.replace(':group', this.product.data.info.decoration_group), r => {
+			utils.ajax( this.symfony.api.products.product.placements.get.replace(':group', this.product.data.info.decoration_group), r => {
 				self.loading.locations = false;
 				self.available.placements = r;
 			}, () => {
@@ -135,7 +159,7 @@ export default {
 
 	watch: {
 		'selected.variation'(){
-			this.selected.variation_specific = !!(this.remote.data.children && this.remote.data.children[this.selected.variation.color]);
+			this.selected.variation_specific = !!(this.remote.data.children && this.remote.data.children[this.selectedVariationColor]);
 
 			if( this.selected.variation && this.selected.variation.images.length ){
 				this.selected.image = this.selected.variation.images[0];
@@ -151,14 +175,12 @@ export default {
 
 		this.selected.variation = this.variants[0];
 
-		let self = this;
+		if( this.product.template ){
+			this.remote.exists = true;
+			this.remote.data = this.product.template;
+		}
 
-		self.loading.remote = true;
-		utils.ajax(`https://placement-exists.promoretailer.workers.dev/?key=${this.product.sku}`, (r)=>{
-			self.loading.remote = false;
-			if( !r.exists ) return;
-			self.remote = r;
-		})
+		let self = this;
 
 		self.loading.groups = true;
 		utils.config.get.option('decorationGroups', r => {
@@ -218,7 +240,7 @@ export default {
 				</div>
 			</div>
 			<div class="col">
-				<button class="btn btn-success" @click="savePlacements" :disabled="saving"><i class="bi bi-cloud"></i> Save Placements</button>
+				<button class="btn btn-success" @click="savePlacements" :disabled="saving || !hasTemplates"><i class="bi bi-cloud"></i> Save Template</button>
 			</div>
 		</div>
 	</div>

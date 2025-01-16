@@ -182,7 +182,7 @@ export default {
 				<Search :onSelect="selectParent" :buttonText="'Set Parent'" :buttonIcon="'bi-pencil'" />
 			</div>
 		</div>
-		<div class="d-flex gap-3 pt-2">
+		<div class="d-flex gap-3 pt-2" v-if="company.type === 'vendor'">
 			<div>
 				<label class="form-check-label">
 					<input class="form-check-input me-1" type="checkbox" v-model="company.data.type.supplier">
@@ -296,19 +296,19 @@ export default {
 
 				<div v-if="extra.children.length">
 
-					<table class="table">
+					<table class="table align-middle">
 						<thead>
 						<tr>
+							<th class="col-1"></th>
 							<th>ID</th>
 							<th>Name</th>
-							<th></th>
 						</tr>
 						</thead>
 						<tbody>
-						<tr v-for="child in extra.children" class="align-middle">
+						<tr v-for="child in extra.children">
+							<td><button class="btn btn-sm btn-primary" @click="viewCompany(child.id)">Edit</button></td>
 							<td>{{ child.id }}</td>
 							<td>{{ child.name }}</td>
-							<td><button class="btn btn-outline-primary" @click="viewCompany(child.id)">View</button></td>
 						</tr>
 						</tbody>
 					</table>

@@ -270,6 +270,19 @@ export default
     },
 
     entity: {
+        product: {
+            vendorColorToSlug(color) {
+                const search = [/ /g, /\//g, / {2}/g, / /g, /\*/g];
+                const replace = ['-', '-', '-', '-', ''];
 
-    }
+                color = color.trim();
+
+                search.forEach((pattern, index) => {
+                    color = color.replace(pattern, replace[index]);
+                });
+
+                return color.toLowerCase();
+            }
+        }
+    },
 }

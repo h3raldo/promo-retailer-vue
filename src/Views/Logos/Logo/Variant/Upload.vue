@@ -8,17 +8,14 @@ export default {
 			loading: false,
 		}
 	},
-	props: ['logo_id', 'type', 'forcedName', 'onUpload'],
+	props: ['variant_id', 'isWeb', 'onUpload'],
 	inject: ['alert', 'symfony', 'logo'],
 	computed: {
 		name(){
-			if( this.forcedName )
-				return utils.slugify(this.forcedName)
-
 			return utils.slugify(this.name_from_user);
 		},
 		validated(){
-			return ( this.name.trim() !== '' && this.file !== null );
+			return ( ( this.name.trim() !== '' || this.isWeb === true ) && this.file !== null );
 		}
 	},
 	methods: {
@@ -37,8 +34,7 @@ export default {
 			this.sendData(this.name, this.file);
 		},
 		sendData(name, file) {
-			let logo_id = this.logo_id, type = this.type, handle = this.logo.handle;
-			let data = {file, name, type, logo_id, handle };
+			let data = {file, name, isWeb: this.isWeb === true};
 			let cb = this.handleResponse;
 
 			const formData = new FormData();
@@ -47,7 +43,7 @@ export default {
 
 			console.log('Uploading asset', data);
 
-			fetch(this.symfony.api.logos.logo.variant.upload, {method: 'POST', body: formData})
+			fetch(this.symfony.api.logos.logo.variant.upload.replace(':id', this.variant_id), {method: 'POST', body: formData})
 			  .then(res => res.json())
 			  .then(res => cb(res))
 			  .catch(error => {
@@ -79,7 +75,7 @@ export default {
 <template>
 	<form @submit="submit">
 		<div class="row mb-3">
-			<div class="col" v-if="!forcedName">
+			<div class="col" v-if="isWeb !== true">
 				<label class="form-label fw-bold">Name:</label>
 				<input class="form-control" type="text" v-model="name_from_user">
 				<div class="form-text">
@@ -88,7 +84,8 @@ export default {
 			</div>
 			<div class="col">
 				<label class="form-label fw-bold">Select image to upload:</label>
-				<input class="form-control" type="file" accept="image/*" ref="fileInput" @change="fileChange">
+				<input v-if="isWeb" class="form-control" type="file" accept="image/png" ref="fileInput" @change="fileChange">
+				<input v-else class="form-control" type="file" accept="image/*" ref="fileInput" @change="fileChange">
 			</div>
 		</div>
 		<div class="row">

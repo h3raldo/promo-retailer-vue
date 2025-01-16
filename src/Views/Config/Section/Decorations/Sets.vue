@@ -39,11 +39,15 @@ export default {
 					self.alert('Set already includes decorator', 'warning');
 					return;
 				}
+
+				console.log('trying', decorator.handle, 'for', set.id, 'set')
+				console.log(set);
 				set.decorators.push( decorator.handle )
 			}
 		},
 		removeDecorator( i, set ){
 			set.decorators.splice( i, 1);
+			console.log('after delete', set);
 		},
 		addSet( sets )
 		{
@@ -134,7 +138,7 @@ export default {
 													</div>
 												</div>
 
-												<Search :on-select="onDecoratorSelect(set)" button-text="Add Decorator" :button-icon="'bi-plus-circle'" size="btn-sm" /><br>
+												<Search :onSelect="onDecoratorSelect(set)" button-text="Add Decorator" :button-icon="'bi-plus-circle'" size="btn-sm" :modalID="set.id" /><br>
 											</div>
 										</div>
 									</div>

@@ -23,7 +23,7 @@ export default {
 			entities: {},
 			available: {},
 			urls: this.symfony.api.products.product,
-			tabs: ['Info', 'Variants', 'Categories', 'Placements', 'Decorators']
+			tabs: ['Info', 'Template', 'Categories', 'Variants', 'Decorators']
 		}
 	},
 
@@ -100,7 +100,7 @@ export default {
 
 			<Header />
 
-			<Tabs :labels="tabs" first="Decorators">
+			<Tabs :labels="tabs">
 				<template #Info>
 
 					<div class="mb-2">
@@ -157,7 +157,7 @@ export default {
 					<Categories />
 				</template>
 
-				<template #Placements>
+				<template #Template>
 					<Editor />
 				</template>
 

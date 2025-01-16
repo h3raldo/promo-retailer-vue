@@ -71,30 +71,30 @@ export default {
 			</tr>
 			</thead>
 			<tbody>
-			<tr v-for="product in results">
+			<tr v-for="product in results" class="align-middle">
 				<td>
 					<button class="btn btn-sm btn-primary" @click="selected(product)">Select</button>
 				</td>
 				<td>
-					<!-- image -->
+					<a :href="product.thumbnail" target="_blank"><img width="50" :src="product.thumbnail" alt=""></a>
 				</td>
 				<td>
 					{{ product.sku }}
 				</td>
 				<td class="align-middle">
-					<span class="badge text-bg-success">Promo</span> {{ product.name }}
+					<span class="badge text-bg-success">PR</span> {{ product.name }}
 				</td>
 				<td>
 					{{ product.company.name }}
 				</td>
 			</tr>
 
-			<tr v-for="product in results_sage">
+			<tr v-for="product in results_sage" class="align-middle">
 				<td>
 					<button class="btn btn-sm btn-primary" @click="selected(product)">+ Import</button>
 				</td>
 				<td>
-					<img width="50" :src="product.thumbPic" alt="">
+					<a :href="product.thumbPic" target="_blank"><img width="50" :src="product.thumbPic" alt=""></a>
 				</td>
 				<td>
 					{{ product.itemNum }}

@@ -11,24 +11,15 @@ export default {
 			tabs: ['Info', 'Decorators', 'Assets'],
 		}
 	},
-	props: ['variant', 'decorators', 'edit', 'apply_type'],
-	inject: ['logo', 'assets'],
+	props: ['variant', 'decorators', 'edit'],
+	inject: ['logo'],
 	computed: {
 		apply_types(){
 			return entity.logo.variant.types;
 		},
 		typeAssets(){
-			if( !this.assets ) return [];
-			return this.assets[this.apply_type];
-		},
-		webVersion(){
-			if( this.variant.url ) return this.variant.url;
-
-			console.log('no url!');
-			if( !this.typeAssets ) return '';
-			let web_asset = this.typeAssets.filter( i => i.file === 'web.png' )[0];
-			if( web_asset.length < 1 ) return '';
-			return web_asset['url'];
+			if( !this.variant.assets ) this.variant.assets = [];
+			return this.variant.assets;
 		}
 	},
 	methods: {
@@ -40,9 +31,9 @@ export default {
 		onUploadWeb( response ){
 			response.images.forEach( image => {
 				this.typeAssets.push( image );
-				this.variant.url = image.url;
+				this.variant.image = image.url;
 			})
-			// @todo: on web upload, force a save
+			// @todo: on web upload, force a save because once web.png is uploaded, it needs to save that it belongs to that variant
 		}
 	}
 }
@@ -52,24 +43,26 @@ export default {
 	<Tabs :labels="tabs">
 
 		<template #Info>
+			<div class="mb-2 col-6">
+				<label class="form-label">ID:</label>
+				<input type="text" class="form-control" placeholder="ID" v-model="variant.id" disabled>
+			</div>
 
 			<div class="mb-2">
-				<label class="form-label">ID:</label>
-				<input type="text" class="form-control" placeholder="ID" v-model="variant.uid" disabled>
+				<label class="form-label d-block">Logo Type:</label>
+
+				<label v-for="type in apply_types" class="form-check-label bg-gray px-2 rounded small">
+					<input class="form-check-input me-1" type="checkbox" :value="type" v-model="variant.types">
+					<span>{{ type }}</span>
+				</label>
 			</div>
-			<div class="mb-2 d-none">
-				<label class="form-label">Applies To:</label>
-				<select class="form-select" v-model="variant.apply_to">
-					<option v-for="type in apply_types" :value="type">{{ type }}</option>
-				</select>
-			</div>
-			<div class="mb-2">
+			<div class="mb-2 col-6">
 				<label class="form-label">Color Count:</label>
-				<input type="number" class="form-control" placeholder="Color Count" v-model="variant.color_count">
+				<input type="number" class="form-control" placeholder="Color Count" v-model="variant.data.color_count">
 			</div>
-			<div class="mb-2">
+			<div class="mb-2 col-6">
 				<label class="form-label">thread_count:</label>
-				<input type="number" class="form-control" placeholder="thread_count" v-model="variant.thread_count">
+				<input type="number" class="form-control" placeholder="thread_count" v-model="variant.data.thread_count">
 			</div>
 
 		</template>
@@ -77,7 +70,7 @@ export default {
 		<template #Decorators>
 			<div v-for="decorator in decorators">
 				<label class="form-check-label bg-gray px-2 rounded small">
-					<input class="form-check-input me-1" type="checkbox" v-model="variant.decorators" :value="decorator.handle">
+					<input class="form-check-input me-1" type="checkbox" v-model="variant.allowed_decorators" :value="decorator.handle">
 					<span>{{ decorator.name }}</span>
 				</label>
 			</div>
@@ -88,33 +81,41 @@ export default {
 			<p class="fw-bold">Web Version:</p>
 			<div class="row align-items-center">
 				<div class="col">
-					<div v-if="!webVersion">No current web version</div>
+					<div v-if="!variant.image" class="text-center">No current web version</div>
 					<div v-else class="p-3 text-center">
-						<img :src="webVersion" loading="lazy" width="300">
+						<img :src="variant.image" loading="lazy" width="300">
 					</div>
 				</div>
 				<div class="col">
-					<details class="bg-light p-2">
-						<summary>Upload/Change Web Version</summary>
+					<div class="bg-light p-4">
+						<h6 class="border-bottom pb-3 mb-3 text-center">Upload New Primary Image</h6>
 						<div class="mt-2">
-							<Upload :onUpload="onUploadWeb" :logo_id="logo.id" :type="apply_type" :forcedName="'web'" />
+							<Upload :onUpload="onUploadWeb" :logo_id="logo.id" :variant_id="variant.id" :isWeb="true" />
 						</div>
-					</details>
+					</div>
 				</div>
 			</div>
 
+			<br>
 			<hr>
-			<p class="fw-bold">Assets: </p>
-			<ul>
-				<li v-for="asset in typeAssets"><a :href="asset.url" target="_blank">{{asset.file}}</a></li>
-			</ul>
+			<br>
 
-			<details class="bg-light p-2">
-				<summary>Upload New Asset</summary>
-				<div class="mt-2">
-					<Upload :onUpload="onUpload" :logo_id="logo.id" :type="apply_type" />
+			<div class="row">
+				<div class="col">
+					<p class="fw-bold">Assets: </p>
+					<ul>
+						<li v-for="asset in typeAssets"><a :href="asset.url" target="_blank">{{asset.file}}</a></li>
+					</ul>
 				</div>
-			</details>
+				<div class="col">
+					<div class="bg-light p-3">
+						<h6 class="border-bottom pb-3 mb-3 text-center">Upload New Asset</h6>
+						<div class="mt-2">
+							<Upload :onUpload="onUpload" :logo_id="logo.id" :variant_id="variant.id" />
+						</div>
+					</div>
+				</div>
+			</div>
 
 		</template>
 	</Tabs>

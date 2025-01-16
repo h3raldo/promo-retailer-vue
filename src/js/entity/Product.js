@@ -125,9 +125,6 @@ function createFromSage( sage_product )
     data.entities.product = product;
     data.available.cost = cost;
 
-    console.log('options', data);
-    console.log('cost', cost);
-
     return data;
 }
 

@@ -3,10 +3,14 @@ import Search from "@/EntityComponents/Product/Search.vue";
 import Modal from "@/components/globals/bootstrap/Modal.vue";
 import ProductView from "@/Views/Products/Product/View.vue";
 import Loader from "@/components/globals/Loader.vue";
+import Edit from "@/Views/Websites/Website/Products/Edit.vue";
+import Compiled from "@/Views/Websites/Website/Products/Compiled.vue";
 </script>
 <script>
 import entity from "@/js/entity.js";
 import utils from "@/js/utils.js";
+import {toRaw} from "vue";
+
 export default {
 	data(){
 		return {
@@ -15,13 +19,20 @@ export default {
 				loading: false,
 				data: {}
 			},
-			rules: [],
+			copy: {
+				active: false,
+				filters: [],
+				decoration_sets: [],
+				decoration_groups: [],
+				overwrites: [],
+			},
+			compile: false,
 		}
 	},
-	inject: ['symfony'],
+	inject: ['symfony', 'website'],
 	computed: {
-		decoration_sets(){
-			return entity.order.item.decoration.default.logo.locations;
+		rules(){
+			return this.website.product_rules.rules;
 		}
 	},
 	methods: {
@@ -35,14 +46,11 @@ export default {
 			this.rules.push(
 			  {
 				  info: {
-					imported: true,
-					source: 'local',
 					supplier: {
 						name: product.company.name,
-						imported: false
 					},
-					external: {}
 				  },
+				  id: product.id,
 				  sku: product.sku,
 				  name: product.name,
 				  filters: [],
@@ -50,26 +58,6 @@ export default {
 				  overwrites: [],
 			  }
 			)
-		},
-
-		addFilter(rule){
-			rule.filters.push({
-				attribute: 'color',
-				value: ''
-			})
-		},
-
-		addDecorationSet(rule){
-			rule.decoration_sets.push({
-				id: '',
-			})
-		},
-
-		addOverwrite(rule){
-			rule.overwrites.push({
-				attribute: 'margin',
-				value: '',
-			})
 		},
 
 		removeRule(index){
@@ -100,12 +88,56 @@ export default {
 			this.productSelected(product);
 			this.importing.status = false;
 			this.importing.data = {}
+		},
+		copyConfig( rule )
+		{
+			this.copy.active = true;
+			this.copy.filters = rule.filters;
+			this.copy.decoration_sets = rule.decoration_sets;
+			this.copy.decoration_groups = rule.decoration_groups;
+			this.copy.overwrites = rule.overwrites;
+		},
+		pasteConfig( rule )
+		{
+			rule.filters = JSON.parse(JSON.stringify(toRaw(this.copy.filters)));
+			rule.decoration_sets = JSON.parse(JSON.stringify(toRaw(this.copy.decoration_sets)));
+			rule.decoration_groups = JSON.parse(JSON.stringify(toRaw(this.copy.decoration_groups)));
+			rule.overwrites = JSON.parse(JSON.stringify(toRaw(this.copy.overwrites)));
 		}
+	},
+	created() {
+		if( this.website.product_rules === null ) this.website.product_rules = {
+			rules: [{
+				id: 133,
+				sku: 'SKU',
+				name: 'PRODUCT NAME',
+				filters: [],
+				decoration_sets: [],
+				decoration_groups: [],
+				overwrites: [],
+				info: {
+					supplier: {
+						name: 'TEST COMPANY',
+					},
+				},
+			}],
+			global_rules: {
+				filters: [],
+				decoration_sets: [],
+				decoration_groups: [],
+				overwrites: [],
+			}
+		};
 	}
 }
 </script>
 <template>
-	<h5>Product Rules</h5>
+	<div class="d-flex justify-content-between align-items-center bg-light p-2">
+		<h5 class="mb-0">Product Rules ({{ rules.length }})</h5>
+		<Modal title="Compile (Validate Product Decoration Settings)" id="compile-products" button-text="Validate & Preview Products..." buttonClasses="btn btn-outline-primary">
+			<Compiled />
+		</Modal>
+	</div>
 
 	<Loader v-if="importing.loading" />
 
@@ -114,76 +146,74 @@ export default {
 			<ProductView :init="importing.data" :returnToModal="returnToModal" :afterCreate="afterCreate" />
 		</Modal>
 	</template>
+
+	<div>
+
+	</div>
+
 	<table class="table">
 		<thead>
 		<tr>
-			<th>Product ID</th>
-			<th>Supplier</th>
-			<th>Name</th>
+			<th class="col-1"><button v-if="copy.active" class="btn btn-sm btn-outline-success ms-2" @click="copy.active = false">Done Pasting</button></th>
+			<th>Product</th>
 			<th>Filters</th>
-			<th>Decoration Sets</th>
 			<th>Overwrites</th>
-			<th>-</th>
+			<th></th>
 		</tr>
 		</thead>
 		<tbody>
 		<tr v-for="(rule, i) in rules" class="align-middle">
-			<td>{{ rule.sku }}</td>
-			<td>{{ rule.info.supplier.name }}</td>
 			<td>
-				{{ rule.name }}
+				<Edit :rule="rule" :index="i" />
 
-				<button class="btn btn-sm btn-warning" v-if="!rule.info.imported"><i class="bi bi-exclamation-circle"></i> Finish Import <i class="bi bi-arrow-up-right-square"></i></button>
+				<template v-if="copy.active">
+					<button class="btn btn-sm btn-outline-info ms-2" @click="pasteConfig(rule)">Paste</button>
+				</template>
+				<template v-else>
+					<button class="btn btn-sm btn-outline-primary ms-2" @click="copyConfig(rule)">Copy</button>
+				</template>
+			</td>
+			<td>
+				<span class="d-block">{{ rule.name }}</span>
+				<span><small><i class="bi bi-briefcase"></i> {{ rule.info.supplier.name }} | <a :href="symfony.views.products_product.replace(':id', rule.id)" target="_blank">#{{ rule.sku }}</a> </small></span>
 			</td>
 			<td>
 				<div v-for="filter in rule.filters" class="d-flex gap-1">
-					<div>
-						<select class="form-select form-select-sm mb-2" v-model="filter.attribute">
-							<option value="color">Color</option>
-							<option value="size">Size</option>
-						</select>
-					</div>
+					<div><span class="badge text-bg-secondary">{{ filter.attribute }}</span></div>
 					<div>:</div>
-					<div>
-						<input type="text" class="form-control form-control-sm" v-model="filter.value">
-					</div>
+					<div>{{ filter.value.join(', ')}}</div>
 				</div>
-				<button class="btn btn-outline-primary btn-sm" @click="addFilter(rule)">Add Filter</button>
-			</td>
-			<td>
-				<div v-for="set in rule.decoration_sets">
-					<select class="form-select form-select-sm mb-2" v-model="set.id">
-						<option value="">None</option>
-						<option v-for="d_set in decoration_sets" :value="d_set">{{d_set}}</option>
-					</select>
-				</div>
-				<button class="btn btn-outline-primary btn-sm" @click="addDecorationSet(rule)">Add Set</button>
 			</td>
 			<td>
 				<div v-for="overwrite in rule.overwrites" class="d-flex gap-1">
-					<div class="col">
-						<select class="form-select form-select-sm mb-2" v-model="overwrite.attribute">
-							<option value="margin">Margin</option>
-							<option value="price">Price</option>
-							<option value="cost">Cost</option>
-						</select>
-					</div>
+					<div><span class="badge text-bg-warning">{{ overwrite.attribute }}: {{ overwrite.value }}</span></div>
+				</div>
+
+				<div v-if="rule.decoration_sets.length" class="d-flex gap-1">
+					<div><span class="badge text-bg-warning">decoration sets</span></div>
 					<div>:</div>
-					<div class="col">
-						<input type="text" class="form-control form-control-sm" v-model="overwrite.value">
+					<div>
+						<span class="d-block" v-for="set in rule.decoration_sets"><span class="text-nowrap">{{ set.id }}</span></span>
 					</div>
 				</div>
-				<button class="btn btn-outline-primary btn-sm" @click="addOverwrite(rule)">Add Overwrite</button>
+
+				<div v-if="rule.decoration_groups && rule.decoration_groups.length" class="d-flex gap-1">
+					<div><span class="badge text-bg-warning">decoration groups</span></div>
+					<div>:</div>
+					<div>
+						<span class="d-block" v-for="group in rule.decoration_groups"><span class="text-nowrap">{{ group.id }}</span></span>
+					</div>
+				</div>
 			</td>
 			<td>
-				<button class="btn btn-sm btn-danger" @click="removeRule(i)">Remove</button>
+				<button class="btn btn-sm btn-danger" @click="removeRule(i)"><i class="bi bi-x"></i></button>
 			</td>
 		</tr>
 		</tbody>
 		<tfoot>
 		<tr>
 			<td colspan="10">
-				<Search :onSelect="productSelected" buttonText="Add Existing Product" buttonIcon="bi bi-plus-circle" :sage="true" />
+				<Search :onSelect="productSelected" buttonText="Add Product" buttonIcon="bi bi-plus-circle" :sage="true" />
 			</td>
 		</tr>
 		</tfoot>
