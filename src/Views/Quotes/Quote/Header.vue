@@ -1,7 +1,6 @@
 <script setup>
 import Search from "@/EntityComponents/Company/Search.vue";
-import LogoSearch from "@/EntityComponents/Order/Logos/Search.vue";
-import Modal from "@/components/globals/bootstrap/Modal.vue";
+import Breadcrumbs from "@/components/globals/Breadcrumbs.vue";
 </script>
 
 <script>
@@ -23,6 +22,20 @@ export default {
 		},
 		saveUrl(){
 			return this.urls.save;
+		},
+		breadcrumbs(){
+			return [
+				{
+					type: 'company',
+					id: this.order.info.company.id,
+					title: this.order.info.company.name,
+				},
+				{
+					type: 'quote',
+					id: this.order.id,
+					title: '#' + this.order.id,
+				}
+			];
 		}
 	},
 
@@ -140,10 +153,9 @@ export default {
 			<div>
 				<button @click="$router.go(-1)" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></button>
 			</div>
-			<div class="fw-bold fs-4">
-				QUOTE #{{ order.id }}
-			</div>
-			<span class="badge text-bg-secondary align-self-center text-capitalize">{{order.info.category}}</span>
+			<Breadcrumbs :items="breadcrumbs">
+				<span class="badge text-bg-secondary align-self-center">{{ order.info.category }}</span>
+			</Breadcrumbs>
 		</div>
 		<div>
 			<div class="text-end d-flex gap-2">

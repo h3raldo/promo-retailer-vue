@@ -18,7 +18,6 @@ export default {
 			notFound: false,
 			entities: {
 				logo: {},
-				logo_variants: [],
 				decorators: [],
 			},
 			urls: this.symfony.api.logos.logo,
@@ -29,7 +28,6 @@ export default {
 	provide() {
 		return {
 			logo: computed(() => this.entities.logo),
-			logo_variants: computed(() => this.entities.logo_variants),
 			decorators: computed(() => this.entities.decorators),
 		}
 	},
@@ -54,7 +52,6 @@ export default {
 			}
 
 			self.entities.logo = d.entities.logo;
-			self.entities.logo_variants = d.entities.logo_variants;
 			d.entities.decorators.forEach( d => self.entities.decorators.push( d ));
 		});
 	}
@@ -78,7 +75,7 @@ export default {
 				</template>
 				<template #Variants>
 					<div v-if="entities.logo.handle.trim().length > 3">
-						<Variants :logo="entities.logo" :editable="true" :decorators="entities.decorators" :logo_variants="entities.logo_variants" />
+						<Variants :logo="entities.logo" :editable="true" :decorators="entities.decorators"/>
 					</div>
 					<div v-else>
 						Logo handle (id) is required.

@@ -94,10 +94,11 @@ function setup()
 		if( init.new_order_id ) entity_data.id = init.new_order_id;
 
 		if( entity_data.source ) {
-			entity.order.convertFromSource(d, (order, logos) => {
+			entity.order.convertFromSource(d, (order, logos, website) => {
 				console.log('patching after conversion', order);
 				entity_data.order = order;
 				entity_data.logos = logos;
+				if( website ) data.init.website = website;
 				afterDataRetrieval(entity_data);
 			})
 			return;
@@ -106,7 +107,6 @@ function setup()
 		if( entity_data.order ){
 			entity_data.order = entity.order.patchData(entity_data, init);
 		}
-
 
 		afterDataRetrieval(entity_data, init);
 	}, e => {

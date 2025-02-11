@@ -220,8 +220,8 @@ export default {
 					<label class="form-label fw-bold">Color</label>
 				</div>
 
-				<button v-if="!selected.variation_specific" class="btn btn-outline-primary" @click="copyToVariationSpecific">Copy Group Placements to Variation</button>
-				<span v-else class="badge bg-primary">Editing Variation Specific Placements</span>
+				<button v-if="!selected.variation_specific" class="btn btn-outline-primary" @click="copyToVariationSpecific">Enable editing this color specifically</button>
+				<span v-else class="badge bg-primary">Editing Color Specific Placements</span>
 			</div>
 			<div class="col">
 				<div class="form-floating">

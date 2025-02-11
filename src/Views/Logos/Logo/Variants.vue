@@ -17,7 +17,7 @@ export default {
 		hasDuplicateTypes(){
 			let types = {};
 
-			this.logo_variants.forEach( v => {
+			this.logo.variants.forEach( v => {
 				v.types.forEach( t => {
 					if( !types[t] ) types[t] = 0;
 					types[t]++;
@@ -27,12 +27,11 @@ export default {
 			return Object.keys(types).filter( v => types[v] > 1 );
 		},
 	},
-	props: ['logo', 'editable', 'decorators', 'logo_variants'],
+	props: ['logo', 'editable', 'decorators'],
 	inject: ['symfony', 'alert'],
 	provide() {
 		return {
 			logo: computed(() => this.logo),
-			logo_variants: computed(() => this.logo_variants),
 		}
 	},
 	methods: {
@@ -43,16 +42,10 @@ export default {
 			self.loading = true;
 			utils.ajax(url, (r)=>{
 				if( r.error ) self.alert('Error creating new variant', 'danger');
-				self.logo_variants.push( r.entities.logo_variant );
+				self.logo.variants.push( r.entities.logo_variant );
 				self.loading = false;
 			})
-		},
-		removeVariant( index ){
-			// this.logo_variants.splice( index, 1 );
 		}
-	},
-	created(){
-		console.log('passed', this.logo);
 	}
 }
 </script>
@@ -63,16 +56,8 @@ export default {
 	</div>
 
 	<div class="row">
-		<div class="col col-4 mb-3" v-for="(variant, vi) in logo_variants">
-			<div class="bg-light border p-3 mb-2 d-flex flex-column" style="height: 100%">
-				<div class="flex-fill">
-					<h3 class="text-center"><span class="badge text-bg-primary">{{ variant.types.join(', ') }}</span></h3>
-					<VariantsVariant :variant="variant" :decorators="decorators" :editable="editable" :logo="logo" />
-				</div>
-				<div class="text-center" v-if="editable">
-					<button class="btn btn-outline-danger" @click="removeVariant(vi)" disabled><i class="bi bi-trash"></i> Remove</button>
-				</div>
-			</div>
+		<div class="col col-4 mb-3" v-for="(variant, vi) in logo.variants">
+			<VariantsVariant :variant="variant" :decorators="decorators" :editable="editable" :logo="logo" :index="vi" />
 		</div>
 	</div>
 

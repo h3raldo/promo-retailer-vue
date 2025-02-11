@@ -2,6 +2,7 @@
 import Modal from "@/components/globals/bootstrap/Modal.vue";
 import Search from "@/EntityComponents/Company/Search.vue";
 import entity from "@/js/entity.js";
+import Breadcrumbs from "@/components/globals/Breadcrumbs.vue";
 </script>
 
 <script>
@@ -24,18 +25,41 @@ export default {
 			return this.urls.save;
 		},
 		series(){
+			if( !this.entities.po ) return false;
 			let series = this.entities.po.series;
 
 			if( !series ) return false;
 
 			let current = series.filter( s => s.id === parseInt(this.po.id) )[0];
 
-			console.log(series);
-
 			return {
 				position: current.position,
 				total: series.length
 			}
+		},
+		breadcrumbs(){
+			let breadcrumbs = [
+				{
+					type: 'company',
+					id: this.po.info.vendor.id,
+					title: this.po.info.vendor.name,
+				}
+			];
+
+			if( this.po.info.references && this.po.info.references[0] )
+				breadcrumbs.push({
+					type: 'order',
+					id: this.po.info.references[0].reference_number,
+					title: `#${this.po.info.references[0].reference_number}`,
+				})
+
+			breadcrumbs.push({
+				type: 'po',
+				id: this.po.id,
+				title: `#${this.po.id}`,
+			})
+
+			return breadcrumbs;
 		}
 	},
 
@@ -106,37 +130,36 @@ export default {
 			<div>
 				<button @click="$router.go(-1)" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></button>
 			</div>
-			<div class="fw-bold fs-4">
-				PO #{{ po.id }} <span v-if="po.info.vendor.name">-- {{ po.info.vendor.name }}</span> <span class="text-capitalize"> -- {{ po.info.type }}</span>
-			</div>
-			<div v-if="series">
-				<Modal title="POs in Series" :button-text="`PO Series ${series.position} / ${series.total}`" id="po-series" button-classes="btn btn-sm btn-outline-secondary">
-					<p>List of POs created from the same order</p>
-					<table class="table">
-						<thead>
-						<tr>
-							<th>Position</th>
-							<th>ID</th>
-							<th>Status</th>
-							<th></th>
-						</tr>
-						</thead>
-						<tbody>
-						<tr v-for="series in entities.po.series">
-							<td>{{ series.position }}</td>
-							<td>PO# {{ series.id }} </td>
-							<td>{{ series.status }}</td>
-							<td>
-								<template v-if="series.id === parseInt(po.id)">
-									<button class="btn btn-sm btn-outline-primary" disabled>Current</button>
-								</template>
-								<a v-else class="btn btn-sm btn-outline-primary" :href="getPOLink(series.id)" target="_blank">View PO <i class="bi bi-arrow-right"></i></a>
-							</td>
-						</tr>
-						</tbody>
-					</table>
-				</Modal>
-			</div>
+			<Breadcrumbs :items="breadcrumbs">
+				<div class="me-2" v-if="series">
+					<Modal title="POs in Series" :button-text="`PO Series ${series.position} / ${series.total}`" id="po-series" button-classes="btn btn-sm btn-outline-secondary">
+						<p>List of POs created from the same order</p>
+						<table class="table">
+							<thead>
+							<tr>
+								<th>Position</th>
+								<th>ID</th>
+								<th>Status</th>
+								<th></th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr v-for="series in entities.po.series">
+								<td>{{ series.position }}</td>
+								<td>PO# {{ series.id }} </td>
+								<td>{{ series.status }}</td>
+								<td>
+									<template v-if="series.id === parseInt(po.id)">
+										<button class="btn btn-sm btn-outline-primary" disabled>Current</button>
+									</template>
+									<a v-else class="btn btn-sm btn-outline-primary" :href="getPOLink(series.id)" target="_blank">View PO <i class="bi bi-arrow-right"></i></a>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</Modal>
+				</div>
+			</Breadcrumbs>
 		</div>
 		<div>
 			<div class="text-end d-flex gap-2">
@@ -164,10 +187,10 @@ export default {
 			</div>
 		</div>
 
-		<div class="col-2" v-if="po.info.references && po.info.references[0]">
+		<div class="col-2">
 			<div class="form-floating">
-				<input type="text" class="form-control" placeholder="Sales Order Number" :value="po.info.references[0].reference_number" disabled>
-				<label>Sales Order Number</label>
+				<input type="text" class="form-control" placeholder="Sales Order Number" :value="po.info.type" disabled>
+				<label>PO Type</label>
 			</div>
 		</div>
 

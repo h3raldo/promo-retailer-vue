@@ -22,6 +22,7 @@ function create()
         cost: 0,
         cost_tiers: null,
         weight: 0,
+        allowed_logo_types: ['all']
     }
 }
 

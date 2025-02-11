@@ -9,7 +9,7 @@ export default {
 			image: ''
 		}
 	},
-	props: ['variant', 'logos', 'sets'],
+	props: ['variant', 'logos', 'sets', 'info'],
 	inject: [],
 	computed: {
 		currentPlacements(){
@@ -57,7 +57,7 @@ export default {
 			let allowed_variants = [];
 			allowed_logos.forEach( logo => {
 				logo.variants.forEach( variant => {
-					if( this.arrayIntersect( variant.types, variantLine.variant.allowed_logo_types ).length === 0 ) return;
+					if( this.arrayIntersect( variant.types, variantLine.variant.allowed_logo_types ).length === 0 && !variant.types.includes('all') ) return;
 					allowed_variants.push( variant );
 				})
 			})
@@ -82,7 +82,9 @@ export default {
 			<div class="col-4">
 				<select v-model="set" class="form-select form-select-sm">
 					<option value="">Preview Decoration Set</option>
-					<option v-for="set in variant.decoration_sets" :value="set">{{ s23et }}</option>
+					<option v-for="set in variant.decoration_sets" :value="set">
+						{{ info.sets[set].name }}
+					</option>
 				</select>
 
 				<div v-if="set" class="text-center">
@@ -93,7 +95,7 @@ export default {
 				Locations:
 				<div v-for="placement in currentPlacements">
 					<div class="input-group pb-2">
-						<span class="input-group-text">{{ placement.locations[0] }} :</span>
+						<span class="input-group-text">{{ info.locations[placement.locations[0]].name }} :</span>
 						<select class="form-select form-select-sm" v-model="placements[placement.locations[0]]">
 							<option v-for="variant in getAvailableVariantsForPlacement(placement)">{{ variant.uid }}</option>
 						</select>

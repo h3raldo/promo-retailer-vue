@@ -1,5 +1,6 @@
 <script setup>
 import Search from "@/EntityComponents/Company/Search.vue";
+import Breadcrumbs from "@/components/globals/Breadcrumbs.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -10,18 +11,31 @@ export default {
 			loading: false,
 		}
 	},
-	inject: ['logo', 'symfony', 'alert', 'logo_variants'],
+	inject: ['logo', 'symfony', 'alert'],
 	computed: {
 		saveData() {
 			return {
 				entities: {
 					logo: this.logo,
-					logo_variants: this.logo_variants,
 				}
 			}
 		},
 		canSave(){
 			return this.logo.handle.trim() !== '';
+		},
+		breadcrumbs(){
+			return [
+				{
+					type: 'company',
+					id: this.logo.company.id,
+					title: this.logo.company.name,
+				},
+				{
+					type: 'logo',
+					id: '',
+					title: this.logo.name,
+				}
+			];
 		}
 	},
 	methods: {
@@ -41,6 +55,9 @@ export default {
 
 			utils.ajax( this.symfony.api.logos.logo.save, onSuccess, onError, this.saveData )
 		},
+		goToCompany(){
+			this.$router.push( this.symfony.views.companies_company.replace(':id', this.logo.company.id)	 );
+		},
 		onCompanySelect(company){
 			console.log('selected', company);
 			this.logo.company.id = company.id;
@@ -55,13 +72,11 @@ export default {
 </script>
 <template>
 	<div class="d-flex justify-content-between align-items-center mb-2 bg-gray p-3">
-		<div class="d-flex gap-3 align-items-center">
+		<div class="d-flex gap-4 align-items-center">
 			<div>
 				<button @click="$router.go(-1)" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></button>
 			</div>
-			<div class="fw-bold fs-4">
-				<i class="bi bi-card-image"></i> {{ logo.name }}
-			</div>
+			<Breadcrumbs :items="breadcrumbs" />
 		</div>
 		<div>
 			<div class="text-end d-flex gap-2">

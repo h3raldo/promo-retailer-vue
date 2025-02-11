@@ -2,6 +2,7 @@
 import Search from "@/EntityComponents/Company/Search.vue";
 import Modal from "@/components/globals/bootstrap/Modal.vue";
 import HeaderEmail from "@/Views/Orders/Order/Header.Email.vue";
+import Breadcrumbs from "@/components/globals/Breadcrumbs.vue";
 </script>
 <script>
 import LogoSearch from "@/EntityComponents/Order/Logos/Search.vue";
@@ -53,6 +54,46 @@ export default {
 			if( this.order.info.company.parent_name )
 				name += ' (' + this.order.info.company.parent_name + ')';
 			return name;
+		},
+		breadcrumbs(){
+
+			let crumbs = [];
+
+			if( this.init.website.id ){
+				crumbs.push({
+					type: 'company',
+					id: this.init.website.company.id,
+					title: this.init.website.company.name,
+				})
+				crumbs.push({
+					type: 'website',
+					id: this.init.website.id,
+					title: this.init.website.name,
+				})
+			} else {
+				crumbs.push({
+					type: 'company',
+					id: this.order.info.company.id,
+					title: this.order.info.company.name,
+				})
+
+				if( this.order.info.source === 'quote' ){
+					crumbs.push({
+						type: 'quote',
+						id: this.order.info.reference_number,
+						title: this.order.info.reference_number
+					})
+				}
+			}
+
+			crumbs.push({
+				type: 'order',
+				id: this.order.id,
+				title: '#' + this.order.id,
+			})
+
+
+			return crumbs;
 		}
 	},
 
@@ -245,12 +286,10 @@ export default {
 				<RouterLink :to="symfony.views.orders" class="btn btn-secondary"><i
 				  class="bi bi-arrow-bar-left"></i></RouterLink>
 			</div>
-			<div class="fw-bold fs-4">
-				ORDER #{{ order.id }}
-			</div>
-			<span class="badge text-bg-secondary align-self-center">{{ order.info.source }}</span>
-
-			<span v-if="init.invoice_quickbooks_id || invoiced" class="badge text-bg-success align-self-center"><i class="bi bi-currency-dollar"></i> Invoiced</span>
+			<Breadcrumbs :items="breadcrumbs">
+				<span class="badge text-bg-secondary align-self-center">{{ order.info.source }}</span>
+				<span v-if="init.invoice_quickbooks_id || invoiced" class="badge text-bg-success align-self-center"><i class="bi bi-currency-dollar"></i> Invoiced</span>
+			</Breadcrumbs>
 		</div>
 		<div>
 			<div class="text-end d-flex gap-2">

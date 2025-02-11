@@ -68,6 +68,15 @@ export default {
 						</div>
 					</div>
 					<div class="col">
+						<!-- to -->
+						<div class="pb-2">
+							<div class="form-floating">
+								<input class="form-control" type="text" name="author" placeholder="Author" v-model="searchParams.author">
+								<label class="form-label">Author</label>
+							</div>
+						</div>
+					</div>
+					<div class="col">
 						<div class="align-self-center">
 							<button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i> Search</button>
 						</div>

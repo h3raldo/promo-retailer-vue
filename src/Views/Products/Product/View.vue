@@ -2,10 +2,11 @@
 import Loader from "@/components/globals/Loader.vue";
 import Tabs from "@/components/globals/Tabs.vue";
 import Header from "@/Views/Products/Product/Header.vue";
-import Variants from "@/Views/Products/Product/Variants.vue";
+import Variants from "@/Views/Products/Product/Variants/Variants.vue";
 import Categories from "@/Views/Products/Product/Categories.vue";
 import Editor from "@/Views/Products/Product/Placements/Editor.vue";
 import Pricing from "@/Views/Products/Product/Decorators.vue";
+import ProductView from "@/EntityComponents/Sage/Product.View.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -23,11 +24,15 @@ export default {
 			entities: {},
 			available: {},
 			urls: this.symfony.api.products.product,
-			tabs: ['Info', 'Template', 'Categories', 'Variants', 'Decorators']
 		}
 	},
 
 	computed: {
+		tabs(){
+			let tabs = ['Info', 'Variants', 'Categories', 'Template', 'Decorators'];
+			if( this.productData && this.productData.external && this.productData.external.sage ) tabs.push('Sage');
+			return tabs;
+		},
 		productData(){
 			if( !this.entities.product ) return null;
 
@@ -93,7 +98,7 @@ export default {
 	<template v-if="!loading">
 
 		<template v-if="notFound">
-			<h1>Website Not Found</h1>
+			<h1>Not Found</h1>
 		</template>
 
 		<template v-else>
@@ -103,15 +108,46 @@ export default {
 			<Tabs :labels="tabs">
 				<template #Info>
 
-					<div class="mb-2">
-						<label class="form-label">Description</label>
-						<textarea class="form-control" rows="4" v-model="productData.info.description"></textarea>
+					<div class="row">
+						<div class="col">
+
+							<h4 class="border-bottom pb-2 mb-4 d-flex align-items-center justify-content-between">
+								<span>Info</span>
+								<a v-if="entities.product.company.name === 'SanMar'" class="btn btn-outline-primary btn-sm" :href="`https://www.sanmar.com/search/empty?text=${entities.product.sku}`" target="_blank">Sanmar Website</a>
+							</h4>
+
+							<div class="mb-2">
+								<label class="form-label">Description</label>
+								<textarea class="form-control" rows="4" v-model="productData.info.description"></textarea>
+							</div>
+						</div>
+						<div class="col-4">
+
+							<div class="bg-light p-3">
+								<div class="border-bottom pb-2 mb-2 d-flex gap-3 align-items-center">
+									<h6 class="mb-0"><i class="bi bi-layout-text-window-reverse"></i> Magento Settings</h6>
+									<span v-if="entities.product.magento_id" class="badge text-bg-success">Product Created <i class="bi bi-check-circle-fill"></i></span>
+									<span v-else class="badge text-bg-secondary">Not Created</span>
+								</div>
+
+								<div class="row mb-3">
+									<div class="col">
+										<label class="form-label">Product ID:</label>
+										<input type="text" class="form-control" placeholder="Product ID" disabled="" v-model="entities.product.magento_id">
+									</div>
+								</div>
+							</div>
+
+						</div>
 					</div>
 
-					<div v-if="productData.legacy" class="bg-light p-3 mt-4">
+					<br><br><br>
 
-						<h4>LEGACY INFO FROM GOOGLE SHEETS</h4>
-						<table class="table">
+					<details v-if="productData.legacy" class="bg-light p-3 mt-4 mb-4">
+
+						<summary>LEGACY INFO FROM GOOGLE SHEETS</summary>
+
+						<table class="table table-sm">
 							<thead>
 							<tr>
 								<th>Property</th>
@@ -125,28 +161,13 @@ export default {
 							</tr>
 							</tbody>
 						</table>
-					</div>
 
-					<div v-if="productData.external && productData.external.sage" class="bg-light p-3 mt-4">
-						<h4>INFO FROM SAGE</h4>
-						<table>
-							<thead>
-							<tr>
-								<th>Attribute</th>
-								<th>Value</th>
-							</tr>
-							</thead>
-							<tbody>
-							<template v-for="(value, property) in productData.external.sage">
-							<tr v-if="property !== 'pics'">
-								<td>{{property}}</td>
-								<td>{{value}}</td>
-							</tr>
-							</template>
-							</tbody>
-						</table>
-					</div>
+					</details>
 
+				</template>
+
+				<template #Sage>
+					<ProductView :sageProduct="productData.external.sage" />
 				</template>
 
 				<template #Variants>

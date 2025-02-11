@@ -25,7 +25,8 @@ export default {
 				'-': {  },
 				'Total': { id: 'total' },
 				'Profit': { id: 'total_profit'  },
-				'Margin': { id: 'total_margin' }
+				'Margin': { id: 'total_margin' },
+				'Author': { id: 'author' },
 			},
 			bulkEdits: [
 				{
@@ -263,6 +264,7 @@ export default {
 			<td @click="viewQuote(item.id)">{{ formatPricing(item.total) }}</td>
 			<td @click="viewQuote(item.id)">{{ formatPricing(item.totalProfit) }}</td>
 			<td @click="viewQuote(item.id)">{{ item.totalMargin }}%</td>
+			<td @click="viewQuote(item.id)">{{ item.author }}</td>
 
 			<td class="delete text-end d-print-none">
 				<a class="btn btn-outline-primary me-1" :href="getDuplicateUrl(item.id)"><i class="bi bi-copy"></i></a>

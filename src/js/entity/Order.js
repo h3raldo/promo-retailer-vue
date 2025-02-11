@@ -38,6 +38,7 @@ function create(id){
                 flags: []
             },
             company: company.create(),
+            website: { id: null, name: '' },
             contact: { id: null },
         },
         config: {
@@ -118,6 +119,14 @@ function patchData( data, init )
     if( typeof order.info.statuses.shipped === 'undefined' ) order.info.statuses.shipped = blank.info.statuses.shipped;
     if( typeof order.info.shipped === 'undefined' ) order.info.shipped = blank.info.shipped;
     if( typeof order.info.tracking_number === 'undefined' ) order.info.tracking_number = blank.info.tracking_number;
+    if( typeof order.info.website === 'undefined' ) order.info.website = blank.info.website;
+
+    if( init.website && init.website.id ){
+        order.info.website.id = init.website.id;
+        order.info.website.name = init.website.name;
+        order.info.company.id = init.website.company.id;
+        order.info.company.name = init.website.company.name;
+    }
 
     // for duplicated orders where paid has been undone
     if( order.info.statuses.paid === true && init.statuses.paid === false ){
@@ -240,18 +249,19 @@ function convertFromSource( data, cb )
 
             addFees( magento_order, order );
 
-            if( magento_order.company_id && magento_order.company_id !== '' ){
-                utils.ajax(window.symfony.api.companies.company.get.replace(':id', magento_order.company_id), (res) => {
-                    if( res.entity ) {
-                        order.info.company.name = res.entity.name;
-                        order.info.company.parent_name = res.entity.parent_name;
-                        order.info.company.id = res.entity.id;
-                    }
-                    cb(order, logos);
-                })
-            } else{
-                cb(order, logos);
-            }
+            utils.ajax(window.symfony.api.websites.search + '?magento_store_id=' + magento_order.store_id, (res) => {
+                let website = null;
+
+                if( res.length ){
+                    website = res[0];
+                    order.info.company.name = website.company.name;
+                    order.info.company.id = website.company.id;
+                    order.info.website.id = website.id;
+                    order.info.website.name = website.name;
+                }
+
+                cb(order, logos, website);
+            })
         }, (error) => {
             console.log('oh no', error);
         });

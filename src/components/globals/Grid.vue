@@ -15,7 +15,7 @@ export default {
 		}
 	},
 	inject: ['symfony', 'alert'],
-	props: ['columns', 'searchState', 'api', 'bulkEdits', 'entity'],
+	props: ['columns', 'searchState', 'api', 'bulkEdits', 'entity', 'defaultParams'],
 	computed: {
 		caretClasses() {
 			if( this.searchState.order_by_direction === 'desc' ) return 'bi bi-caret-down';
@@ -34,6 +34,11 @@ export default {
 				params = this.searchState.urlParams;
 			else
 				params = ''
+
+			if( this.defaultParams && this.defaultParams.length ){
+				if( params.length ) params += ('&' + this.defaultParams);
+				else params = this.defaultParams;
+			}
 
 			let order_by = '?'
 			if( this.searchState.order_by ){

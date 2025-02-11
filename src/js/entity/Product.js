@@ -81,11 +81,16 @@ function createFromSage( sage_product )
 
     let options = sage.getOptions( sage_product );
     let cost = sage.getCostTiers( sage_product );
+    if( cost.length ){
+        cost = [cost[cost.length-1]];
+        cost[0].qty = 1;
+    }
 
     options.colors.forEach( c => {
         data.available.colors.push({
             name: c.name.trim(),
-            image: ''
+            image: '',
+            allowed_logo_types: ['all']
         })
     })
 
@@ -111,19 +116,16 @@ function createFromSage( sage_product )
         })
     }
 
-    if( cost && cost.length )
-        data.available.sizes.forEach( s => {
-            if( !s.cost || !s.cost.length ) return;
-
-            s.cost.forEach( (t, i) => {
-                t.price += cost[i].price;
-                t.cost += cost[i].cost;
-            })
-        })
+    data.available.images.push({
+        title: '--- Placeholder Image ---',
+        url: 'https://img.promoretailer.com/logos/promo-retailer-purple.png',
+    })
 
     product.data.external.sage = sage_product;
     data.entities.product = product;
     data.available.cost = cost;
+
+    console.log('data after migration', data);
 
     return data;
 }

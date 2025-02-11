@@ -60,7 +60,7 @@ export default {
 
 		<Loader v-if="loading" />
 
-		<table v-if="!loading && results.length" class="table">
+		<table v-if="!loading && (results.length || results_sage.length)" class="table">
 			<thead>
 			<tr>
 				<th class="col-1"></th>

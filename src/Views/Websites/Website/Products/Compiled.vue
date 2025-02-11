@@ -13,7 +13,8 @@ export default {
 			},
 			products: [],
 			logos: [],
-			sets: []
+			sets: [],
+			info: {}
 		}
 	},
 	props: [],
@@ -26,6 +27,7 @@ export default {
 				self.products = d.products;
 				self.logos = d.logos;
 				self.sets = d.sets;
+				self.info = d.info;
 				self.status.loading = false;
 			})
 		}
@@ -62,7 +64,7 @@ export default {
 					</tr>
 					</thead>
 					<tbody>
-					<CompiledProduct  v-for="variant in result.variants" :variant="variant" :logos="logos" :sets="sets" />
+					<CompiledProduct  v-for="variant in result.variants" :variant="variant" :logos="logos" :sets="sets" :info="info" />
 					</tbody>
 				</table>
 			</details>

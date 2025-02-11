@@ -54,13 +54,14 @@ export default {
 				{{ item.status }}
 			</td>
 			<td @click="viewSingle(item.id)">
+				<span v-if="item.parent.id" class="text-secondary">{{ item.parent.name }} <i class="bi bi-chevron-double-right"></i> </span>
 				{{ item.name }}
 			</td>
 			<td @click="viewSingle(item.id)">
 				{{ item.handle }}
 			</td>
 			<td>
-				<a :href="`https://${item.handle}.promoretailer.com`" target="_blank">View Website</a>
+				<a v-if="item.config && item.config.magento && item.config.magento.store_id" :href="`https://${item.handle}.promoretailer.com`" target="_blank">View Website</a>
 			</td>
 			<td @click="viewSingle(item.id)">
 

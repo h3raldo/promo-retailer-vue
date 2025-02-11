@@ -13,7 +13,7 @@ export default {
 		}
 	},
 	inject: ['symfony'],
-	props: ['onSelect', 'buttonText', 'buttonIcon', 'type', 'companyId'],
+	props: ['onSelect', 'buttonText', 'buttonIcon', 'type', 'companyId', 'selectVariant'],
 	computed: {
 		getType() {
 			if (typeof this.type === 'undefined') return 'modal';
@@ -21,8 +21,8 @@ export default {
 		}
 	},
 	methods: {
-		selected(company) {
-			this.onSelect(company)
+		selected(company, variant) {
+			this.onSelect(company, variant)
 
 			if (this.getType === 'modal')
 				this.$refs.modal.$refs.closeModalButton.click();
@@ -34,7 +34,7 @@ export default {
 
 	<template v-if="getType === 'modal'">
 		<Modal :id="'logo-search'" :title="'Search Logos'" :buttonText="buttonText" :icon="buttonIcon" :buttonClasses="'btn btn-primary'" ref="modal">
-			<SearchForm :selected="selected" :companyId="companyId" />
+			<SearchForm :selected="selected" :companyId="companyId" :selectVariant="selectVariant" />
 		</Modal>
 	</template>
 	<template v-else-if="getType === 'details'">

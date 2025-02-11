@@ -1,5 +1,6 @@
 <script setup>
 import Loader from "@/components/globals/Loader.vue";
+import BackgroundToggle from "@/EntityComponents/Logo/BackgroundToggle.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -12,7 +13,7 @@ export default {
 		}
 	},
 	inject: ['symfony'],
-	props: ['selected', 'companyId'],
+	props: ['selected', 'companyId', 'selectVariant'],
 	methods: {
 		getFirstImage(logo){
 			let found_version = '';
@@ -61,24 +62,42 @@ export default {
 
 		<Loader v-if="loading" />
 
-		<table v-if="!loading && results.length" class="table">
+		<table v-if="!loading && results.length" class="table align-middle">
 			<thead>
 			<tr>
-				<th class="col-1"></th>
 				<th></th>
 				<th>Name</th>
+				<th v-if="selectVariant !== true" class="col-2"></th>
 			</tr>
 			</thead>
 			<tbody>
 			<tr v-for="logo in results">
 				<td>
-					<button class="btn btn-sm btn-primary" @click="selected(logo)">Select</button>
-				</td>
-				<td>
-					<img class="bg-secondary p-2" :src="getFirstImage(logo)" width="100">
+					<BackgroundToggle :image="getFirstImage(logo)" width="200" />
 				</td>
 				<td class="align-middle">
-					{{ logo.name }} ({{ Object.keys(logo.variants).length }} logos)
+					{{ logo.name }}
+					<table class="table align-middle" v-if="selectVariant === true">
+						<thead>
+						<tr>
+							<th>Image</th>
+							<th>Types</th>
+							<th class="col-1"></th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr v-for="variant in logo.variants">
+							<td>
+								<BackgroundToggle :image="variant.image" width="50" />
+							</td>
+							<td>{{ variant.types.join(', ') }}</td>
+							<td><button class="btn btn-primary btn-sm" @click="selected(logo, variant)">Select</button></td>
+						</tr>
+						</tbody>
+					</table>
+				</td>
+				<td v-if="selectVariant !== true">
+					<button class="btn btn-sm btn-primary" @click="selected(logo)">Select</button>
 				</td>
 			</tr>
 			</tbody>

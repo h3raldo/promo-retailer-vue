@@ -5,7 +5,9 @@ import utils from "@/js/utils.js";
 export default {
 	data(){
 		return {
+			confirmDelete: {
 
+			}
 		}
 	},
 	inject: ['company', 'symfony', 'alert', 'entities'],
@@ -24,6 +26,16 @@ export default {
 
 			}, (error) => {
 				this.alert('Error Creating Logo', 'danger');
+			})
+		},
+		deleteLogo(logo, index){
+			let self = this;
+			utils.ajax( self.symfony.api.logos.logo.delete.replace(':id', logo.id), (r)=>{
+				if( r.error && r.error === true ){
+					self.alert('Error deleting logo', 'danger');
+					return;
+				}
+				self.entities.logo.splice( index, 1 );
 			})
 		},
 		goToLogo(id){
@@ -47,10 +59,11 @@ export default {
 				<th>Status</th>
 				<th>Name</th>
 				<th>Handle</th>
+				<th class="col-2"></th>
 			</tr>
 			</thead>
 			<tbody>
-				<tr v-for="logo in entities.logo">
+				<tr v-for="(logo, li) in entities.logo">
 					<td>
 						<button class="btn btn-primary btn-sm" @click="goToLogo(logo.id)"><i class="bi bi-pencil"></i> Edit</button>
 					</td>
@@ -65,6 +78,10 @@ export default {
 					</td>
 					<td>
 						{{ logo.handle }}
+					</td>
+					<td>
+						<button v-if="!confirmDelete[li]" class="btn btn-outline-danger btn-sm" @click="confirmDelete[li] = true">Delete</button>
+						<button v-else class="btn btn-danger btn-sm" @click="deleteLogo(logo, li)">Confirm Delete?</button>
 					</td>
 				</tr>
 			</tbody>

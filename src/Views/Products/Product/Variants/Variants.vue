@@ -2,38 +2,23 @@
 import Tiers from "@/EntityComponents/Product/Variants/Tiers.vue";
 import Modal from "@/components/globals/bootstrap/Modal.vue";
 import Tabs from "@/components/globals/Tabs.vue";
+import Generator from "@/Views/Products/Product/Variants/Generator.vue";
+import BulkEdit from "@/Views/Products/Product/Variants/BulkEdit.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
 import entity from "@/js/entity.js";
-import {toRaw} from "vue";
 
 export default {
 	data(){
 		return {
 			tabs: ['Info', 'Cost', 'Images'],
-			generate: {
-				colors: [],
-				sizes: [],
-				images: [],
-				cost: []
-			}
 		}
 	},
 	props: [],
-	inject: ['variants', 'product', 'returnToModal', 'available'],
+	inject: ['variants', 'product', 'returnToModal'],
 	computed: {
-		generateErrorMessage(){
-			let noImages = this.generate.colors.filter( c => (!c.image || !c.image.length || c.image === '' ) );
-			if( noImages.length !== 0) return `Please select an image for ${noImages.length} colors`;
 
-			if( !this.generate.sizes.length ) return 'Please add at least one size';
-
-			let noColors = this.generate.sizes.filter( c => (!c.name || !c.name.length || c.name.trim() === '' ) );
-			if( noColors.length !== 0) return `Please enter a name for ${noColors.length} colors`;
-
-			return false;
-		}
 	},
 	methods: {
 		create(){
@@ -70,42 +55,6 @@ export default {
 		customizeName( variant ){
 			variant.name = this.defaultName(variant);
 		},
-		generateVariants()
-		{
-			let self = this;
-
-			self.generate.colors.forEach( c => {
-
-				self.generate.sizes.forEach( s => {
-
-					let variant = entity.product.variant.create();
-					variant.color = c.name;
-					variant.size = s.name
-
-					let img = entity.product.variant.image.create();
-					img.url = c.image;
-					variant.images.push(img);
-
-					if( s.cost && s.cost.length ){
-						if( s.cost.length === 1 ) variant.cost = s.cost[0].cost;
-						else variant.cost_tiers = s.cost;
-					}
-
-					if( !s.cost && self.generate.cost.length ){
-						if( self.generate.cost.length === 1 ) variant.cost =self.generate.cost[0].cost;
-						else variant.cost_tiers = structuredClone( toRaw(self.generate.cost) );
-					}
-
-					self.variants.push(variant);
-				})
-
-			})
-
-			this.$refs.generate.open = false;
-			this.available.colors.length = 0;
-			this.generate.colors.length = 0;
-
-		},
 
 		removeVariant( index )
 		{
@@ -118,89 +67,16 @@ export default {
 		}
 	},
 
-	created() {
-		if( this.available.colors ) this.generate.colors = this.available.colors;
-		if( this.available.sizes ) this.generate.sizes = this.available.sizes;
-		if( this.available.images ) this.generate.images = this.available.images;
-		if( this.available.cost ) this.generate.cost = this.available.cost;
-	},
-
 	mounted(){
-		if( this.generate.colors.length ) this.$refs.generate.open = true;
 	},
 }
 </script>
 <template>
 	<div>
 
-		<details class="bg-light p-3 mb-4" ref="generate">
-			<summary>Generate Variants</summary>
+		<Generator />
+		<BulkEdit />
 
-			<div class="row mt-3">
-				<div class="col-9">
-					<h5>Colors</h5>
-
-					<div v-for="(color, ci) in generate.colors" class="d-flex gap-2 mb-2">
-						<div class="flex-fill">
-							<div class="form-floating">
-								<input type="text" class="form-control" v-model="color.name">
-								<label>Name</label>
-							</div>
-						</div>
-						<div class="col-1 text-center align-self-center" v-if="color.image">
-							<a :href="color.image" target="_blank"><img :src="color.image" width="50"></a>
-						</div>
-						<div class="flex-fill">
-							<div v-if="generate.images.length" class="form-floating">
-								<select class="form-select" v-model="color.image">
-									<option value="">-- Select --</option>
-									<option v-for="image in generate.images" :value="image.url">{{ image.title ? image.title : 'No Name' }}</option>
-								</select>
-								<label>Image</label>
-							</div>
-							<div v-else class="form-floating">
-								<input type="text" class="form-control" v-model="color.image">
-								<label>Image</label>
-							</div>
-						</div>
-						<div>
-							<button class="btn btn-outline-danger" @click="generate.colors.splice(ci, 1)"><i class="bi bi-x"></i></button>
-						</div>
-					</div>
-
-					<button class="btn btn-outline-primary btn-sm" @click="generate.colors.push({name: '', image: ''})">Add Color</button>
-				</div>
-				<div class="col">
-					<h5>Sizes</h5>
-
-					<div v-for="(size, si) in generate.sizes" class="d-flex gap-2 mb-2">
-						<div class="flex-fill">
-							<div class="form-floating">
-								<input type="text" class="form-control" v-model="size.name">
-								<label>Name</label>
-							</div>
-						</div>
-						<div>
-							<button class="btn btn-outline-danger"@click="generate.sizes.splice(si, 1)"><i class="bi bi-x"></i></button>
-						</div>
-					</div>
-
-					<button class="btn btn-outline-primary btn-sm" @click="generate.sizes.push({name: ''})">Add Size</button>
-				</div>
-			</div>
-
-			<div class="row mt-4">
-				<div class="col-6">
-					<h5>Base Cost</h5>
-					<Tiers :tiers="generate.cost" />
-				</div>
-			</div>
-
-			<div class="text-center pt-4">
-				<button class="btn btn-primary" @click="generateVariants" :disabled="generateErrorMessage">Generate Variants</button>
-				<p class="text-danger" v-if="generateErrorMessage">{{ generateErrorMessage }}</p>
-			</div>
-		</details>
 
 		<table class="table">
 
@@ -319,6 +195,11 @@ export default {
 											<label>SKU (Optional)</label>
 										</div>
 									</div>
+								</div>
+
+								<label class="fw-bold mt-3 mb-2">Allowed Logo Types</label>
+								<div class="d-flex gap-2">
+									<label v-for="type in entity.logo.variant.types" class="form-check-label bg-gray px-2 rounded small"><input class="form-check-input me-1" type="checkbox" name="allowed_logo_types[]" :value="type" v-model="variant.allowed_logo_types"><span>{{ type }}</span></label>
 								</div>
 
 							</template>

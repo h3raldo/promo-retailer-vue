@@ -65,25 +65,25 @@ export default {
 			</td>
 
 			<td @click="goToCompany(item.id)" class="text-center">
-				<span v-if="item.data && item.data.external && item.data.external.quickbooks.id">
+				<span v-if="item.data && item.data.external && item.data.external.quickbooks && item.data.external.quickbooks.id">
 					<i class="text-success bi bi-check-square-fill"></i>
 				</span>
 			</td>
 
 			<td @click="goToCompany(item.id)" class="text-center">
-				<span v-if="item.data && item.data.external && item.data.external.quickbooks.id && !item.external.quickbooks.email" class="text-danger badge">
+				<span v-if="item.data && item.data.external && item.data.external.quickbooks && item.data.external.quickbooks.id && !item.external.quickbooks.email" class="text-danger badge">
 					<i class="bi bi-info-circle pe-1"></i> Email
 				</span>
 			</td>
 
 			<td @click="goToCompany(item.id)" class="text-center">
-				<span v-if="item.data && item.data.external && item.data.external.quickbooks.id && !item.external.quickbooks.first_name" class="text-danger badge">
+				<span v-if="item.data && item.data.external && item.data.external.quickbooks && item.data.external.quickbooks.id && !item.external.quickbooks.first_name" class="text-danger badge">
 					<i class="bi bi-info-circle pe-1"></i> Name
 				</span>
 			</td>
 
 			<td @click="goToCompany(item.id)" class="text-center">
-				<span v-if="item.data && item.data.external && item.data.external.quickbooks.id && !item.external.quickbooks.billing_address.address_line_1" class="text-danger badge">
+				<span v-if="item.data && item.data.external && item.data.external.quickbooks && item.data.external.quickbooks.id && !item.external.quickbooks.billing_address.address_line_1" class="text-danger badge">
 					<i class="bi bi-info-circle pe-1"></i> Address
 				</span>
 			</td>

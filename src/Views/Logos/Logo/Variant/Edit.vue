@@ -9,6 +9,7 @@ export default {
 	data(){
 		return {
 			tabs: ['Info', 'Decorators', 'Assets'],
+			bg_class: ''
 		}
 	},
 	props: ['variant', 'decorators', 'edit'],
@@ -23,6 +24,11 @@ export default {
 		}
 	},
 	methods: {
+		selectAllDecorators(){
+			this.decorators.forEach( d => {
+				this.variant.allowed_decorators.push( d.handle );
+			})
+		},
 		onUpload( response ){
 			response.images.forEach( image => {
 				this.typeAssets.push( image )
@@ -68,19 +74,28 @@ export default {
 		</template>
 
 		<template #Decorators>
+			<div class="mb-2">
+				<button class="btn btn-outline-primary" @click="selectAllDecorators">Select All</button>
+			</div>
 			<div v-for="decorator in decorators">
 				<label class="form-check-label bg-gray px-2 rounded small">
 					<input class="form-check-input me-1" type="checkbox" v-model="variant.allowed_decorators" :value="decorator.handle">
-					<span>{{ decorator.name }}</span>
+					<span>{{ decorator.name }} :{{ decorator.handle }}</span>
 				</label>
 			</div>
 		</template>
 
 		<template #Assets>
 
-			<p class="fw-bold">Web Version:</p>
+			<div class="d-flex align-items-center gap-4">
+				<p class="fw-bold mb-0">Web Version:</p>
+				<div>
+					<button class="btn btn-outline-secondary btn-sm" @click="bg_class = (!bg_class ? 'bg-secondary' : '')">Toggle BG</button>
+				</div>
+			</div>
+
 			<div class="row align-items-center">
-				<div class="col">
+				<div class="col" :class="bg_class">
 					<div v-if="!variant.image" class="text-center">No current web version</div>
 					<div v-else class="p-3 text-center">
 						<img :src="variant.image" loading="lazy" width="300">

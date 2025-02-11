@@ -2,14 +2,15 @@
 import Header from "@/Views/Websites/Website/Header.vue";
 import Loader from "@/components/globals/Loader.vue";
 import Tabs from "@/components/globals/Tabs.vue";
-import Products from "@/Views/Websites/Website/Products.vue";
-import Variants from "@/Views/Logos/Logo/Variants.vue";
+import Products from "@/Views/Websites/Website/View.Products.vue";
+import ViewLogos from "@/Views/Websites/Website/View.Logos.vue";
+import Search from "@/EntityComponents/Website/Search.vue";
 import LogoSearch from "@/EntityComponents/Logo/Search.vue";
+import BackgroundToggle from "@/EntityComponents/Logo/BackgroundToggle.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
 import {computed} from "vue";
-import entity from "@/js/entity.js";
 
 export default {
 	inject: ['symfony'],
@@ -17,7 +18,7 @@ export default {
 	data() {
 		return {
 			id: this.$route.params.id,
-			loading: true,
+			loading: false,
 			notFound: false,
 			entities: {
 				website: {},
@@ -27,87 +28,80 @@ export default {
 				logos: false,
 			},
 			urls: this.symfony.api.websites.website,
-			tabs: ['Configuration', 'Logos', 'Products', 'Categories'],
+			tabs: ['Settings', 'Logos', 'Products', 'Categories'],
 		}
 	},
 
 	computed: {
-		logo_types(){
-			return entity.website.default.logo_types
+		publicUrl(){
+			return `https://${this.entities.website.handle}.promoretailer.com`;
 		},
-		websiteLogos(){
-			if( !this.entities.website.config ) return [];
-			return this.entities.website.config.logos;
-		},
-		organizedLogos(){
-			let organized = {}
-			this.logo_types.forEach(type => organized[type] = []);
-
-			this.websiteLogos.forEach(logo => {
-				if( logo.types.length )
-					logo.types.forEach(type => organized[type].push(logo));
-				else
-					organized['none'].push(logo);
-			})
-
-			return organized;
-		}
 	},
+
 
 	provide() {
 		return {
 			website: computed(() => this.entities.website),
+			logos: computed(() => this.entities.logos),
+		}
+	},
+
+	methods: {
+		setParent(website){
+			this.entities.website.parent.id = website.id;
+			this.entities.website.parent.name = website.name;
+		},
+		setLogo(logo, variant){
+			console.log(logo, variant);
+			this.entities.website.config.design.logo.id = variant.id;
+			this.entities.website.config.design.logo.image = variant.image;
+		},
+		initiate(){
+			let self = this;
+			let url = self.urls.get.replace(':id', self.id);
+			self.loading = true;
+
+			utils.ajax(url, (d) => {
+
+				self.loading = false;
+
+				if (!d.entities.website) {
+					self.notFound = true;
+					return;
+				}
+
+				self.entities.website = d.entities.website;
+				self.entities.logos = d.entities.logos;
+
+				if( typeof self.entities.website.config.orders === 'undefined' ){
+					self.entities.website.config.orders = {
+						processing_type: 'default',
+						processing_date: null,
+						approval: false,
+						approval_contact: null,
+						payment_required: true,
+						shipping_required: true
+					}
+				}
+
+				if( typeof self.entities.website.config.design.logo == 'undefined' )
+					self.entities.website.config.design.logo = {
+						id: null,
+						image: null,
+					}
+			});
 		}
 	},
 
 	watch: {
-
-	},
-
-	methods: {
-		getLogo( handle ){
-			let logo = this.entities.logos.filter( l => l.logo.handle === handle )[0];
-			if( !logo ) return {
-				name: 'LOGO HANDLE NOT FOUND',
-				id: null,
-				variants: []
-			}
-
-			return logo.logo;
-		},
-		getLogoVariants( handle ){
-			console.log('getLogo',handle);
-			let logo = this.entities.logos.filter( l => l.logo.handle === handle )[0];
-			console.log('variant!',logo);
-			if( !logo ) return []
-			return logo.logo_variants;
-		},
-		viewLogo( id ){
-			this.$router.push( this.symfony.views.logos_logo.replace(':id', id) )
-		},
-		addLogo( logo ){
-			this.entities.logo.push(logo)
-			this.websiteLogos.push({id: logo.handle, types: []})
-			this.editing.logos = true;
+		'$route.params.id'(){
+			this.id = this.$route.params.id;
+			this.initiate();
 		}
 	},
 
 	created() {
-		let self = this;
-		let url = self.urls.get.replace(':id', self.id);
-
-		utils.ajax(url, (d) => {
-
-			self.loading = false;
-
-			if (!d.entities.website) {
-				self.notFound = true;
-				return;
-			}
-
-			self.entities.website = d.entities.website;
-			self.entities.logos = d.entities.logos;
-		});
+		this.initiate();
 	}
 }
 </script>
@@ -125,44 +119,205 @@ export default {
 			<Header />
 
 			<Tabs :labels="tabs">
-				<template #Configuration>
+				<template #Settings>
 
 					<div class="row">
-						<div class="col col-6">
-							<h5>Colors:</h5>
-							<div class="row mb-3">
-								<div class="col">
-									<label class="form-label">Primary Color:</label>
-									<input type="color" class="form-control" placeholder="Primary Color" v-model="entities.website.config.design.color_primary">
-								</div>
-								<div class="col">
-									<label class="form-label">Secondary Color:</label>
-									<input type="color" class="form-control" placeholder="Secondary Color" v-model="entities.website.config.design.color_secondary">
-								</div>
-								<div class="col">
-									<label class="form-label">Tertiary Color:</label>
-									<input type="color" class="form-control" placeholder="Tertiary Color" v-model="entities.website.config.design.color_tertiary">
-								</div>
-							</div>
-							<hr>
-						</div>
 						<div class="col">
-							<h5>Magento</h5>
+
+							<h4 class="border-bottom pb-2 mb-4">Design</h4>
+
+							<div class="col-6">
+
+								<div class="border-bottom pb-2 mb-2 d-flex gap-3 align-items-center justify-content-between">
+									<h6 class="mb-0">Website Header Logo</h6>
+									<LogoSearch :selectVariant="true" buttonClasses="btn btn-primary btn-sm" :buttonText="'Set Logo'" :buttonIcon="'bi bi-floppy'" :onSelect="setLogo" :company-id="entities.website.company.id" />
+								</div>
+								<div class="mb-4">
+									<div v-if="entities.website.config.design.logo.id">
+										<BackgroundToggle :image="entities.website.config.design.logo.image" height="100" />
+									</div>
+									<div v-else>
+										-- No Logo Set --
+									</div>
+								</div>
+
+
+								<table class="table table-sm align-middle">
+									<thead>
+									<tr>
+										<th class="col-3">Colors</th>
+										<th class="col-3"></th>
+										<th></th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr>
+										<td>Primary</td>
+										<td><span class="badge text-bg-secondary">{{ entities.website.config.design.color_primary || 'NOT SET' }}</span></td>
+										<td>
+											<input type="color" class="form-control form-control-color" placeholder="Primary Color" v-model="entities.website.config.design.color_primary">
+										</td>
+									</tr>
+									<tr>
+										<td>Secondary</td>
+										<td><span class="badge text-bg-secondary">{{ entities.website.config.design.color_secondary || 'NOT SET' }}</span></td>
+										<td>
+											<input type="color" class="form-control form-control-color" placeholder="Secondary Color" v-model="entities.website.config.design.color_secondary">
+										</td>
+									</tr>
+									<tr>
+										<td>Tertiary</td>
+										<td><span class="badge text-bg-secondary">{{ entities.website.config.design.color_tertiary || 'NOT SET' }}</span></td>
+										<td>
+											<input type="color" class="form-control form-control-color" placeholder="Tertiary Color" v-model="entities.website.config.design.color_tertiary">
+										</td>
+									</tr>
+									</tbody>
+								</table>
+
+							</div>
+
+							<br>
+
+							<h4 class="border-bottom pb-2 mb-4">Orders & Checkout</h4>
+							<div class="col-6">
+
+								<table class="table table-sm align-middle">
+									<thead>
+									<tr>
+										<th class="col-6">Setting</th>
+										<th></th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr>
+										<td>Process Orders</td>
+										<td>
+											<select class="form-select form-select-sm" v-model="entities.website.config.orders.processing_type">
+												<option value="default">Default (Immediately)</option>
+												<option value="bulk">All at Once (Bulk Order)</option>
+											</select>
+										</td>
+									</tr>
+									<tr v-if="entities.website.config.orders.processing_type === 'bulk'">
+										<td>Order Process Date</td>
+										<td>
+											<input type="date" class="form-control form-control-sm" v-model="entities.website.config.orders.processing_date">
+										</td>
+									</tr>
+									<tr>
+										<td>Approval</td>
+										<td>
+											<select class="form-select form-select-sm" v-model="entities.website.config.orders.approval">
+												<option :value="false">Default (Does Not Need Approval)</option>
+												<option :value="true">Needs Approval</option>
+											</select>
+										</td>
+									</tr>
+									<tr v-if="entities.website.config.orders.approval">
+										<td>Approval Contact</td>
+										<td>
+											<select class="form-select form-select-sm" v-model="entities.website.config.orders.approval_contact">
+												<option :value="false">Client</option>
+												<option :value="true">John Appleseed (email@domain.com)</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<td>Payment Required</td>
+										<td>
+											<select class="form-select form-select-sm" v-model="entities.website.config.orders.payment_required">
+												<option :value="true">Default (Yes)</option>
+												<option :value="false">No</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<td>Shipping Required</td>
+										<td>
+											<select class="form-select form-select-sm" v-model="entities.website.config.orders.shipping_required">
+												<option :value="true">Default (Yes)</option>
+												<option :value="false">No</option>
+											</select>
+										</td>
+									</tr>
+									</tbody>
+								</table>
+
+							</div>
+
+						</div>
+						<div class="col-4">
+
+							<div class="bg-light p-3 mb-4">
+								<div class="border-bottom pb-2 mb-2 d-flex gap-3 align-items-center">
+									<h6 class="mb-0"><i class="bi bi-bar-chart-line-fill"></i> Reporting</h6>
+								</div>
+
+								<table class="table table-light table-sm">
+									<tbody>
+									<tr class="">
+										<td>Total Orders</td>
+										<td>{{ entities.website._reports.orders.count }}</td>
+									</tr>
+									<tr>
+										<td>Total Revenue</td>
+										<td>{{ utils.pricing.format(entities.website._reports.orders.total) }}</td>
+									</tr>
+									<tr>
+										<td>Total Cost</td>
+										<td>{{ utils.pricing.format(entities.website._reports.orders.total_cost) }}</td>
+									</tr>
+									<tr>
+										<td>Total Profit</td>
+										<td>{{ utils.pricing.format(entities.website._reports.orders.total_profit) }}</td>
+									</tr>
+									<tr>
+										<td>Total Margin</td>
+										<td>{{ utils.pricing.calculateMargin( entities.website._reports.orders.total_cost, entities.website._reports.orders.total ) }}%</td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+
 							<div class="bg-light p-3">
+								<div class="border-bottom pb-2 mb-2 d-flex gap-3 align-items-center">
+									<h6 class="mb-0"><i class="bi bi-layout-text-window-reverse"></i> Magento Settings</h6>
+									<span v-if="entities.website.config.magento.store_id" class="badge text-bg-success">Store Connected <i class="bi bi-check-circle-fill"></i> </span>
+									<span v-else class="badge text-bg-secondary">Store Not Created</span>
+								</div>
 								<div class="row mb-3">
 									<div class="col">
 										<label class="form-label">Website ID:</label>
-										<input type="text" class="form-control" placeholder="Website ID" v-model="entities.website.config.magento.website_id">
+										<input type="text" class="form-control" placeholder="Website ID" v-model="entities.website.config.magento.website_id" disabled>
 									</div>
 									<div class="col">
 										<label class="form-label">Store ID:</label>
-										<input type="text" class="form-control" placeholder="Store ID" v-model="entities.website.config.magento.group_id">
+										<input type="text" class="form-control" placeholder="Store ID" v-model="entities.website.config.magento.group_id" disabled>
 									</div>
 									<div class="col">
 										<label class="form-label">Store View ID:</label>
-										<input type="text" class="form-control" placeholder="Store View ID" v-model="entities.website.config.magento.store_id">
+										<input type="text" class="form-control" placeholder="Store View ID" v-model="entities.website.config.magento.store_id" disabled
+										>
 									</div>
 								</div>
+
+								<a v-if="entities.website.config.magento.store_id" class="btn btn-success" :href="publicUrl" target="_blank"><small>Open Website &raquo;</small></a>
+							</div>
+
+							<br>
+
+							<div class="bg-light p-3 mb-4">
+
+								<div class="border-bottom pb-2 mb-2 d-flex gap-3 align-items-center">
+									<h6 class="mb-0">Parent</h6>
+									<Search :onSelect="setParent" :hideChildren="true" buttonClasses="btn btn-primary btn-sm" buttonText="Set Parent" icon="bi bi-plus-circle" />
+									<span v-if="entities.website.parent.id" class="badge text-bg-warning">Parent: {{ entities.website.parent.name }}</span>
+									<span v-else class="badge text-bg-secondary">No Parent</span>
+								</div>
+
+								<small>Note: Does not affect reporting. Only groups the website into the parent so that users may access the child sites via the top right dropdown.</small>
+
 							</div>
 						</div>
 					</div>
@@ -170,69 +325,7 @@ export default {
 				</template>
 
 				<template #Logos>
-
-					<div class="pb-3 d-flex align-items-center justify-content-center gap-3">
-						<template v-if="editing.logos">
-							<button class="btn btn-outline-success" @click="editing.logos = !editing.logos"><i class="bi bi-check2"></i> Done</button>
-						</template>
-						<template v-else>
-							<button class="btn btn-primary" @click="editing.logos = !editing.logos"><i class="bi bi-pencil"></i> Edit Websites Logos</button>
-						</template>
-						<LogoSearch :buttonText="'Add Logo'" :buttonIcon="'bi bi-plus-circle'" :on-select="addLogo" :company-id="entities.website.company.id" />
-					</div>
-
-					<template v-if="editing.logos">
-						<div v-for="(logo, li) in entities.website.config.logos" class="bg-light p-3 mb-2">
-
-							<h5 class="mb-0 d-flex justify-content-between align-items-center">
-								<span>{{ getLogo(logo.id).name }}</span>
-								<button class="btn btn-danger" @click="entities.website.config.logos.splice( li, 1 )"><i class="bi bi-x"></i> Remove</button>
-							</h5>
-
-							<div class="d-flex gap-3 align-items-center pt-2 pb-2 border my-2">
-								<div v-for="type in logo_types">
-									<label class="form-check-label bg-gray px-2 rounded small">
-										<input class="form-check-input me-1" type="checkbox" v-model="logo.types" :value="type">
-										<span>{{ type }}</span>
-									</label>
-								</div>
-							</div>
-
-							<Variants :logo="getLogo(logo.id)" :logo_variants="getLogoVariants(logo.id)" />
-						</div>
-					</template>
-
-					<template v-else>
-
-						<div v-for="(logo_ids, type) in organizedLogos">
-
-							<template v-if="logo_ids.length > 0">
-
-								<h2 :class="type === 'none' ? 'text-uppercase text-danger' : 'text-uppercase' ">{{ type }}</h2>
-
-								<div v-for="logo in logo_ids" class="bg-light p-3 mb-2">
-
-									<div class="d-flex gap-2 align-items-center pb-2">
-										<div class="d-flex align-items-center gap-2">
-											<h5 class="mb-0">{{ getLogo(logo.id).name }} </h5>
-										</div>
-									</div>
-
-									<Variants :logo="getLogo(logo.id)" :logo_variants="getLogoVariants(logo.id)" />
-
-									<div>
-										<button class="btn btn-sm btn-outline-primary" @click="viewLogo(getLogo(logo.id).id)">Edit Logo Details</button>
-									</div>
-
-								</div>
-
-								<hr>
-
-							</template>
-						</div>
-
-					</template>
-
+					<ViewLogos :editing="editing"  />
 				</template>
 
 				<template #Products>

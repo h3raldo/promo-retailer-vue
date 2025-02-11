@@ -112,8 +112,17 @@
 						},
 						variant: {
 							available: 'https://tools.promoretailer.dev/api/products/product/:id/variants/available',
+						},
+						magento: {
+							sync: 'https://tools.promoretailer.dev/admin/products/product/:id/magento/sync/',
 						}
-					}
+					},
+					categories: {
+						counts: 'https://tools.promoretailer.dev/api/products/categories/counts/',
+						category: {
+							count: 'https://tools.promoretailer.dev/api/products/categories/category/:id/count/',
+						}
+					},
 				},
 				websites: {
 					search: 'https://tools.promoretailer.dev/api/websites/',
@@ -123,6 +132,9 @@
 						save: 'https://tools.promoretailer.dev/admin/websites/website/',
 						products: {
 							compiled: 'https://tools.promoretailer.dev/api/websites/website/:id/products/compiled/',
+						},
+						magento: {
+							create: 'https://tools.promoretailer.dev/admin/websites/website/:id/products/compiled/',
 						}
 					}
 				},
@@ -132,8 +144,10 @@
 						get: 'https://tools.promoretailer.dev/api/logos/logo/:id/',
 						new: 'https://tools.promoretailer.dev/admin/logos/logo/create/',
 						save: 'https://tools.promoretailer.dev/admin/logos/logo/save/',
+						delete: 'https://tools.promoretailer.dev/admin/logos/logo/:id/delete/',
 						variant: {
 							new: 'https://tools.promoretailer.dev/admin/logos/logo/:id/variants/create/',
+							delete: 'https://tools.promoretailer.dev/admin/logos/logo/variants/:id/delete/',
 							upload: 'https://tools.promoretailer.dev/api/logos/logo/:id/',
 						}
 					}
@@ -183,8 +197,8 @@
                 search: 'https://preview.promoretailer.dev/prismic/lookup/logo/:name/'
             },
             sage: {
-                search: 'https://preview.promoretailer.dev/quote/lookup/',
-                item: 'https://preview.promoretailer.dev/quote/lookup/:id/'
+                search: 'https://tools.promoretailer.dev/api/sage/search/',
+                item: 'https://tools.promoretailer.dev/api/sage/search/item/:id/'
             },
             website: {
                 get: 'https://preview.promoretailer.dev/api/prismic'

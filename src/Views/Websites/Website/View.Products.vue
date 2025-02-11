@@ -5,6 +5,8 @@ import ProductView from "@/Views/Products/Product/View.vue";
 import Loader from "@/components/globals/Loader.vue";
 import Edit from "@/Views/Websites/Website/Products/Edit.vue";
 import Compiled from "@/Views/Websites/Website/Products/Compiled.vue";
+import WebsiteSearch from "@/EntityComponents/Website/Search.vue"
+import AddCategory from "@/Views/Websites/Website/Products/Add.Category.vue";
 </script>
 <script>
 import entity from "@/js/entity.js";
@@ -43,21 +45,8 @@ export default {
 				return;
 			}
 
-			this.rules.push(
-			  {
-				  info: {
-					supplier: {
-						name: product.company.name,
-					},
-				  },
-				  id: product.id,
-				  sku: product.sku,
-				  name: product.name,
-				  filters: [],
-				  decoration_sets: [],
-				  overwrites: [],
-			  }
-			)
+			let rule = entity.website.product_rules.create('product', product);
+			this.rules.push(rule)
 		},
 
 		removeRule(index){
@@ -103,24 +92,15 @@ export default {
 			rule.decoration_sets = JSON.parse(JSON.stringify(toRaw(this.copy.decoration_sets)));
 			rule.decoration_groups = JSON.parse(JSON.stringify(toRaw(this.copy.decoration_groups)));
 			rule.overwrites = JSON.parse(JSON.stringify(toRaw(this.copy.overwrites)));
+		},
+		copyFromWebsite( website )
+		{
+			website.product_rules.rules.forEach( rule => this.website.product_rules.rules.push( rule ) );
 		}
 	},
 	created() {
 		if( this.website.product_rules === null ) this.website.product_rules = {
-			rules: [{
-				id: 133,
-				sku: 'SKU',
-				name: 'PRODUCT NAME',
-				filters: [],
-				decoration_sets: [],
-				decoration_groups: [],
-				overwrites: [],
-				info: {
-					supplier: {
-						name: 'TEST COMPANY',
-					},
-				},
-			}],
+			rules: [],
 			global_rules: {
 				filters: [],
 				decoration_sets: [],
@@ -174,8 +154,30 @@ export default {
 				</template>
 			</td>
 			<td>
-				<span class="d-block">{{ rule.name }}</span>
-				<span><small><i class="bi bi-briefcase"></i> {{ rule.info.supplier.name }} | <a :href="symfony.views.products_product.replace(':id', rule.id)" target="_blank">#{{ rule.sku }}</a> </small></span>
+				<template v-if="rule.type === 'product'">
+					<span>
+						<small>
+							<i class="bi bi-building"></i> {{ rule.entity.product.company.name }}
+							|
+							<i class="bi bi-box-seam me-1"></i>
+							<a :href="symfony.views.products_product.replace(':id', rule.entity.product.id)" target="_blank">
+								{{ rule.entity.product.sku }}
+							</a>
+						</small>
+					</span>
+					<span class="d-block">{{ rule.name }}</span>
+				</template>
+				<template v-else-if="rule.type === 'category'">
+					<span>
+						<small>
+							<i class="bi bi-tags"></i> Category
+						</small>
+					</span>
+					<span class="d-block">
+						<span class="text-secondary">{{ rule.entity.category.path }}</span>
+						{{ rule.name }}
+					</span>
+				</template>
 			</td>
 			<td>
 				<div v-for="filter in rule.filters" class="d-flex gap-1">
@@ -213,7 +215,13 @@ export default {
 		<tfoot>
 		<tr>
 			<td colspan="10">
-				<Search :onSelect="productSelected" buttonText="Add Product" buttonIcon="bi bi-plus-circle" :sage="true" />
+				<div class="d-flex gap-2">
+					<Search :onSelect="productSelected" buttonText="Add Product" buttonIcon="bi bi-plus-circle" :sage="true" />
+
+					<AddCategory />
+
+					<WebsiteSearch :onSelect="copyFromWebsite" buttonClasses="btn btn-outline-primary" buttonText="Copy from Website" icon="bi-copy" />
+				</div>
 			</td>
 		</tr>
 		</tfoot>

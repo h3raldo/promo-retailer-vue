@@ -1,5 +1,6 @@
 <script setup>
 import Search from "@/EntityComponents/Company/Search.vue";
+import Breadcrumbs from "@/components/globals/Breadcrumbs.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -33,6 +34,19 @@ export default {
 		},
 		hasSageSupplier(){
 			return ( this.product.data && this.product.data.external && this.product.data.external.sage && this.product.data.external.sage.supplier && this.product.data.external.sage.supplier.suppId )
+		},
+		breadcrumbs(){
+			return [
+				{
+					type: 'company',
+					id: this.product.company.id,
+					title: this.product.company.name,
+				},
+				{
+					type: 'product',
+					title: this.product.name,
+				}
+			];
 		}
 	},
 	methods: {
@@ -48,9 +62,29 @@ export default {
 
 			function onError( e ){
 				self.alert('Error Saving Product', 'danger', e);
+				self.loading = false;
 			}
 
 			utils.ajax( this.symfony.api.products.product.save, onSuccess, onError, this.saveData )
+		},
+
+		syncWithMagento(){
+			let self = this;
+			this.loading = true;
+
+			function onSuccess( r ){
+				if( r.error === false ) self.alert('Product Synced To Magento')
+				else self.alert('Error Syncing', 'danger', r.message);
+				self.product.magento_id = r.magento_id;
+				self.loading = false;
+			}
+
+			function onError( e ){
+				self.alert('Error Syncing', 'danger', e);
+				self.loading = false;
+			}
+
+			utils.ajax( this.symfony.api.products.product.magento.sync.replace(':id', this.product.id), onSuccess, onError )
 		},
 
 		create(){
@@ -63,6 +97,7 @@ export default {
 					return;
 				}
 
+				self.product.id = r.id;
 				if ( self.afterCreate ) self.afterCreate( self.product );
 				self.loading = false;
 			}
@@ -93,9 +128,7 @@ export default {
 			<div>
 				<button @click="$router.go(-1)" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></button>
 			</div>
-			<div class="fw-bold fs-4">
-				<i class="bi bi-box-seam"></i> {{ product.name }}
-			</div>
+			<Breadcrumbs :items="breadcrumbs" />
 		</div>
 		<div>
 			<div class="text-end d-flex gap-2">
@@ -104,6 +137,7 @@ export default {
 					<button class="btn btn-primary" :disabled="loading || createError" @click="create"><i class="bi bi-floppy-fill"></i> Create</button>
 				</template>
 				<button v-else class="btn btn-primary" :disabled="loading" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
+				<button class="btn btn-warning" :disabled="loading" @click="syncWithMagento"><i class="bi bi-arrow-repeat"></i> Sync to Magento</button>
 			</div>
 		</div>
 	</div>

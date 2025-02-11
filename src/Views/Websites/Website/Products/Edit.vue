@@ -64,7 +64,7 @@ export default {
 
 		openModal()
 		{
-			utils.ajax(this.symfony.api.products.product.variant.available.replace(':id', this.rule.id), (d) => {
+			utils.ajax(this.symfony.api.products.product.variant.available.replace(':id', this.rule.entity.product.id), (d) => {
 				Object.keys(d.response).forEach(key => {
 					this.available[key] = d.response[key];
 				})
@@ -77,7 +77,7 @@ export default {
 }
 </script>
 <template>
-	<Modal v-if="openModal" :title="`Edit Rules For ${rule.sku}`" :id="'rule-edit-'+index" button-text="" buttonClasses="btn btn-sm btn-primary" icon="bi-pencil" :onOpen="openModal">
+	<Modal v-if="openModal" :title="'Edit Rules'" :id="'rule-edit-'+index" button-text="" buttonClasses="btn btn-sm btn-primary" icon="bi-pencil" :onOpen="openModal">
 		<Tabs :labels="tabs">
 			<template #Filters>
 				<div v-for="filter in rule.filters" class="d-flex gap-1 border-bottom py-2 my-2">

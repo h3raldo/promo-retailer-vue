@@ -6,6 +6,7 @@ import Search from "@/EntityComponents/Company/Search.vue";
 import SearchCustomers from "@/components/api/Quickbooks/Search.Customers.vue";
 import Logos from "@/Views/Companies/Company/Logos.vue";
 import Websites from "@/Views/Companies/Company/Websites.vue";
+import Breadcrumbs from "@/components/globals/Breadcrumbs.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -19,7 +20,6 @@ export default {
 			saving: false,
 			id: this.$route.params.id,
 			selectedParent: {},
-			company: {},
 			extra: {},
 			entities: {},
 		}
@@ -27,15 +27,45 @@ export default {
 	inject: ['symfony', 'alert'],
 	computed: {
 		tabs(){
-			return [
-			  'Main',
-			  'Children',
-			  'Websites',
-			  'Logos',
-			  'Contacts',
-			  'Decorators',
-			  'Quickbooks',
-			]
+
+			let tabs = [
+				'Main',
+				'Logos',
+				'Websites',
+				'Child_Companies',
+				'Contacts',
+				'Decorators',
+				'Quickbooks',
+			];
+
+			if( !this.extra || !this.extra.children || !this.extra.children.length ){
+				tabs.splice(tabs.indexOf('Child_Companies'), 1);
+			}
+
+			return tabs;
+		},
+		company(){
+			return this.entities.company;
+		},
+		breadcrumbs(){
+
+			let crumbs = [];
+
+			if( this.company.parent_name )
+				crumbs.push(
+					{
+						type: 'company',
+						id: this.company.parent,
+						title: this.company.parent_name,
+					}
+				);
+
+			crumbs.push({
+				type: 'company',
+				title: this.company.name
+			})
+
+			return crumbs;
 		}
 	},
 	methods: {
@@ -45,7 +75,6 @@ export default {
 
 			self.loading = true;
 			utils.ajax(url, (data) => {
-				self.company = data.entity;
 				self.extra = data.extra;
 				self.entities = data.entities;
 				entity.company.patch(self.company);
@@ -75,7 +104,7 @@ export default {
 			}
 
 			self.saving = true;
-			utils.ajax(url, callback.success, callback.error, this.company);
+			utils.ajax(url, callback.success, callback.error, { entities: { company: this.company }});
 		},
 		addProperty(){
 			this.company.data.properties.push({ name: 'Property', value: 'Value' })
@@ -155,31 +184,37 @@ export default {
 
 	<template v-if="!loading">
 
-		<div class="text-end pb-3 bg-gray p-3 mb-2 d-flex justify-content-between align-items-center">
-			<button @click="$router.go(-1)" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></button>
-			<h3 class="m-0 text-center">
-				<span class="text-secondary" v-if="company.parent_name">{{ company.parent_name }} <i class="bi bi-chevron-double-right"></i></span>
-				{{ company.name }}
-			</h3>
-			<button class="btn btn-primary p-3" @click="save" :disabled="saving"><i class="bi bi-floppy-fill"></i> Save Changes</button>
+		<div class="d-flex justify-content-between align-items-center mb-2 bg-gray p-3">
+			<div class="d-flex gap-3">
+				<div>
+					<button @click="$router.go(-1)" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></button>
+				</div>
+				<Breadcrumbs :items="breadcrumbs">
+					<Search :onSelect="selectParent" buttonText="Set Parent Company" buttonIcon="bi-pencil" buttonClasses="btn btn-sm btn-outline-primary" />
+				</Breadcrumbs>
+			</div>
+			<div class="">
+				<button class="btn btn-primary p-3" @click="save" :disabled="saving"><i class="bi bi-floppy-fill"></i> Save Changes</button>
+			</div>
 		</div>
+
 
 		<br>
 		<div class="row">
 			<div class="col-9">
-				<label class="form-label">Name</label>
-				<input class="form-control" type="text" v-model="company.name" @focus="deletePrefilledData" />
+				<div class="form-floating">
+					<input class="form-control" type="text" v-model="company.name" @focus="deletePrefilledData" />
+					<label class="form-label">Name</label>
+				</div>
 			</div>
 			<div class="col">
-				<label class="form-label">Type</label>
-				<select class="form-select" v-model="company.type">
-					<option value="client">Client</option>
-					<option value="vendor">Vendor</option>
-				</select>
-			</div>
-			<div class="col">
-				<label class="form-label">&nbsp;</label><br>
-				<Search :onSelect="selectParent" :buttonText="'Set Parent'" :buttonIcon="'bi-pencil'" />
+				<div class="form-floating">
+					<select class="form-select" v-model="company.type">
+						<option value="client">Client</option>
+						<option value="vendor">Vendor</option>
+					</select>
+					<label class="form-label">Type</label>
+				</div>
 			</div>
 		</div>
 		<div class="d-flex gap-3 pt-2" v-if="company.type === 'vendor'">
@@ -290,7 +325,7 @@ export default {
 
 			</template>
 
-			<template #Children>
+			<template #Child_Companies>
 
 				<h3>Sub-Companies</h3>
 
