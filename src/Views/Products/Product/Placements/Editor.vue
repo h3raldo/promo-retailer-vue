@@ -236,7 +236,7 @@ export default {
 					<select class="form-select" v-model="product.data.info.decoration_group" :disabled="loading.locations || loading.groups">
 						<option v-for="group in available.groups" :value="group.id">{{ group.name }}</option>
 					</select>
-					<label>Decoration Group</label>
+					<label>Location Group</label>
 				</div>
 			</div>
 			<div class="col">

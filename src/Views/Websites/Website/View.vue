@@ -7,6 +7,7 @@ import ViewLogos from "@/Views/Websites/Website/View.Logos.vue";
 import Search from "@/EntityComponents/Website/Search.vue";
 import LogoSearch from "@/EntityComponents/Logo/Search.vue";
 import BackgroundToggle from "@/EntityComponents/Logo/BackgroundToggle.vue";
+import RichTextEditor from "@/components/globals/RichTextEditor.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -28,7 +29,7 @@ export default {
 				logos: false,
 			},
 			urls: this.symfony.api.websites.website,
-			tabs: ['Settings', 'Logos', 'Products', 'Categories'],
+			tabs: ['Settings', 'Logos', 'Products', 'Categories', 'Content'],
 		}
 	},
 
@@ -88,6 +89,14 @@ export default {
 					self.entities.website.config.design.logo = {
 						id: null,
 						image: null,
+					}
+
+				if( typeof self.entities.website.config.content === 'undefined')
+					self.entities.website.config.content = {
+						homepage: {
+							before: '',
+							after: ''
+						}
 					}
 			});
 		}
@@ -334,6 +343,23 @@ export default {
 
 				<template #Categories>
 					<p>Coming soon.</p>
+				</template>
+
+				<template #Content>
+
+					<h3>Home Page</h3>
+
+					<hr>
+
+					<div class="mb-3">
+						<label class="form-label">Content Before Categories</label>
+						<RichTextEditor v-model="entities.website.config.content.homepage.before" />
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Content After Categories</label>
+						<RichTextEditor v-model="entities.website.config.content.homepage.after" />
+					</div>
 				</template>
 			</Tabs>
 		</template>

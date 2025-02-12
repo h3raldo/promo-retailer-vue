@@ -90,7 +90,8 @@ function createFromSage( sage_product )
         data.available.colors.push({
             name: c.name.trim(),
             image: '',
-            allowed_logo_types: ['all']
+            allowed_logo_types: [],
+            color_parent: c.name.trim()
         })
     })
 

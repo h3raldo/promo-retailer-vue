@@ -89,8 +89,8 @@ export default{
 						})
 
 						utils.ajax(self.symfony.api.companies.company.get.replace(':id', entity_data.company), c => {
-							purchaseOrderStore.po.info.vendor.info = c;
-							purchaseOrderStore.po.info.vendor.name = c.entity.name;
+							purchaseOrderStore.po.info.vendor.info = c.entities.company;
+							purchaseOrderStore.po.info.vendor.name = c.entities.company.name;
 							purchaseOrderStore.po.info.vendor.id = entity_data.company;
 							self.loading = false;
 						})

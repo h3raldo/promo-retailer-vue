@@ -3,10 +3,15 @@ import Items from "@/EntityComponents/Order/Items.vue";
 import Logos from "@/EntityComponents/Order/Logos.vue";
 import Vendors from "@/EntityComponents/Order/Vendors.vue";
 import References from "@/components/globals/References.vue";
+import Tabs from "@/components/globals/Tabs.vue";
 </script>
-
 <script>
 export default {
+	data(){
+		return {
+			tabs: ['Info', 'Items', 'Logos', 'Vendors', 'References']
+		}
+	},
 	inject: ['init'],
 	computed: {
 		POsCostAccurate(){
@@ -24,42 +29,32 @@ export default {
 
 <template>
 
-	<nav class="pt-4">
-		<div class="nav nav-tabs" id="nav-tab" role="tablist">
-			<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-info" type="button">Info <i class="bi bi-pencil-square"></i></button>
-			<button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-items" type="button">Items</button>
-			<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-logos" type="button">Logos</button>
-			<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-vendors" type="button">Vendors</button>
-			<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-references" type="button">
-				References
-				<span v-if="!POsCostAccurate" class="badge text-bg-danger">
-					<i class="bi bi-exclamation-circle"></i>
-					{{ Math.round(POsCostDifferential) }}% PO Diff
-				</span>
-			</button>
-		</div>
-	</nav>
+	<span v-if="!POsCostAccurate" class="badge text-bg-danger">
+		<i class="bi bi-exclamation-circle"></i>
+		{{ Math.round(POsCostDifferential) }}% PO Diff
+	</span>
+	<Tabs :labels="tabs" first="Items">
 
-	<div class="tab-content pt-3">
-		<div class="tab-pane fade" id="tab-info">
+		<template #Info>
 			<slot name="info"></slot>
-		</div>
+		</template>
 
-		<div class="tab-pane fade show active" id="tab-items">
+		<template #Items>
 			<Items />
-		</div>
+		</template>
 
-		<div class="tab-pane fade" id="tab-logos">
+		<template #Logos>
 			<Logos />
-		</div>
+		</template>
 
-		<div class="tab-pane fade" id="tab-vendors">
+		<template #Vendors>
 			<Vendors />
-		</div>
+		</template>
 
-		<div class="tab-pane fade" id="tab-references">
+		<template #References>
 			<References />
-		</div>
-	</div>
+		</template>
+
+	</Tabs>
 
 </template>
