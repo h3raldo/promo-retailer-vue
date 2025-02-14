@@ -22,7 +22,7 @@ export default {
 
 			self.loading = true;
 			utils.ajax(url, (data) => {
-				self.contact = data;
+				self.contact = data.entities.contact;
 				if( !self.contact.data ) self.contact.data = {};
 				if( !self.contact.data.properties ) self.contact.data.properties = [];
 				self.loading = false;
@@ -47,7 +47,7 @@ export default {
 			}
 
 			self.saving = true;
-			utils.ajax(url, callback.success, callback.error, this.contact);
+			utils.ajax(url, callback.success, callback.error, { entities: { contact: this.contact } } );
 		},
 		addProperty(){
 			this.contact.data.properties.push({ name: '', value: '' })

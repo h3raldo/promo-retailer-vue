@@ -21,7 +21,7 @@ export default {
 
 			self.loading = true;
 			utils.ajax(url, (data) => {
-				self.results = data;
+				self.results = data.results;
 				self.loading = false;
 			})
 		},
