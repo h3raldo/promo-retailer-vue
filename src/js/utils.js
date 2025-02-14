@@ -241,7 +241,7 @@ export default
                 if( !input.name ) continue;
                 if( input.type === 'checkbox' && input.checked !== true ) continue;
 
-                params.push( input.name + '=' + input.value );
+                params.push( input.name + '=' + encodeURIComponent(input.value) );
             }
 
             return params.join('&')

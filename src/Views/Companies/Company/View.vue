@@ -290,8 +290,8 @@ export default {
 							</label>
 						</div>
 
-					</div>
-					<div class="col">
+						<br>
+
 						<div v-for="(property, i) in company.data.properties" class="d-flex gap-3 pb-3">
 
 							<div class="col-5">
@@ -311,6 +311,40 @@ export default {
 						</div>
 
 						<button @click="addProperty" class="btn btn-primary">Add Property</button>
+
+					</div>
+					<div class="col-4">
+
+						<div class="bg-light p-3 mb-4">
+							<div class="border-bottom pb-2 mb-2 d-flex gap-3 align-items-center">
+								<h6 class="mb-0"><i class="bi bi-bar-chart-line-fill"></i> Reporting</h6>
+							</div>
+
+							<table class="table table-light table-sm">
+								<tbody>
+								<tr class="">
+									<td>Total Orders</td>
+									<td>{{ company._reports.orders.count }}</td>
+								</tr>
+								<tr>
+									<td>Total Revenue</td>
+									<td>{{ utils.pricing.format(company._reports.orders.total) }}</td>
+								</tr>
+								<tr>
+									<td>Total Cost</td>
+									<td>{{ utils.pricing.format(company._reports.orders.total_cost) }}</td>
+								</tr>
+								<tr>
+									<td>Total Profit</td>
+									<td>{{ utils.pricing.format(company._reports.orders.total_profit) }}</td>
+								</tr>
+								<tr>
+									<td>Total Margin</td>
+									<td>{{ utils.pricing.calculateMargin( company._reports.orders.total_cost, company._reports.orders.total ) }}%</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 
