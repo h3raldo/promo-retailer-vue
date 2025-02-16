@@ -1,6 +1,7 @@
 <script setup>
 import Loader from "@/components/globals/Loader.vue";
 import Search from "@/EntityComponents/Company/Search.vue";
+import BackButton from "@/components/template/BackButton.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -74,7 +75,7 @@ export default {
 	<template v-if="!loading && contact.first_name">
 
 		<div class="text-end pb-3 bg-gray p-3 mb-2 d-flex justify-content-between align-items-center">
-			<button @click="$router.go(-1)" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></button>
+			<BackButton />
 			<h2 class="m-0 text-center">
 				{{ contact.first_name }} {{ contact.last_name }}<br>
 				<span class="h4" v-if="contact.company_name">Under: {{ contact.company_name }}</span>

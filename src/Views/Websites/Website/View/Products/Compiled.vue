@@ -1,6 +1,6 @@
 <script setup>
 import Loader from "@/components/globals/Loader.vue";
-import CompiledProduct from "@/Views/Websites/Website/Products/Compiled.Product.vue";
+import CompiledProduct from "@/Views/Websites/Website/View/Products/Compiled.Product.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";

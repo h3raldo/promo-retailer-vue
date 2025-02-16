@@ -83,9 +83,6 @@ export default {
 					openOnClick: false,
 					defaultProtocol: 'https',
 				}),
-			  TextAlign.configure({
-				  types: ['heading', 'paragraph']
-			  })
 			],
 			content: this.modelValue,
 			onUpdate: () => {

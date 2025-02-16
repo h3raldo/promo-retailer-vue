@@ -1,6 +1,7 @@
 <script setup>
 import Search from "@/EntityComponents/Company/Search.vue";
 import Breadcrumbs from "@/components/globals/Breadcrumbs.vue";
+import BackButton from "@/components/template/BackButton.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -126,7 +127,7 @@ export default {
 	<div class="d-flex justify-content-between align-items-center mb-2 bg-gray p-3">
 		<div class="d-flex gap-3 align-items-center">
 			<div>
-				<button @click="$router.go(-1)" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></button>
+				<BackButton />
 			</div>
 			<Breadcrumbs :items="breadcrumbs" />
 		</div>

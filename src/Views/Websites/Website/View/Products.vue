@@ -3,10 +3,11 @@ import Search from "@/EntityComponents/Product/Search.vue";
 import Modal from "@/components/globals/bootstrap/Modal.vue";
 import ProductView from "@/Views/Products/Product/View.vue";
 import Loader from "@/components/globals/Loader.vue";
-import Edit from "@/Views/Websites/Website/Products/Edit.vue";
-import Compiled from "@/Views/Websites/Website/Products/Compiled.vue";
+import RuleEdit from "@/Views/Websites/Website/View/Rules/Rule.Edit.vue";
+import Compiled from "@/Views/Websites/Website/View/Products/Compiled.vue";
 import WebsiteSearch from "@/EntityComponents/Website/Search.vue"
-import AddCategory from "@/Views/Websites/Website/Products/Add.Category.vue";
+import AddCategory from "@/Views/Websites/Website/View/Products/Add.Category.vue";
+import Rule from "@/Views/Websites/Website/View/Rules/Rule.vue";
 </script>
 <script>
 import entity from "@/js/entity.js";
@@ -29,22 +30,28 @@ export default {
 				overwrites: [],
 			},
 			compile: false,
+			edit: {
+				rule: {},
+				index: null,
+				open: true
+			}
 		}
 	},
-	inject: ['symfony', 'website'],
+	inject: ['symfony', 'website', 'products'],
 	computed: {
 		rules(){
 			return this.website.product_rules.rules;
 		}
 	},
 	methods: {
-		productSelected(product){
-
+		productSelected(product)
+		{
 			if( typeof product.itemNum !== 'undefined' ){
 				this.createProductFromSage( product );
 				return;
 			}
 
+			this.products[product.id] = product;
 			let rule = entity.website.product_rules.create('product', product);
 			this.rules.push(rule)
 		},
@@ -96,6 +103,13 @@ export default {
 		copyFromWebsite( website )
 		{
 			website.product_rules.rules.forEach( rule => this.website.product_rules.rules.push( rule ) );
+		},
+		editRule( rule, index )
+		{
+			this.edit.rule = rule;
+			this.edit.index = index;
+			this.edit.open = true;
+			this.$refs.editModal.$refs.openModalButton.click();
 		}
 	},
 	created() {
@@ -127,9 +141,9 @@ export default {
 		</Modal>
 	</template>
 
-	<div>
-
-	</div>
+	<Modal title="Edit Rule" buttonClasses="btn btn-sm btn-primary d-none" icon="bi-pencil" ref="editModal">
+		<RuleEdit v-if="edit.index !== null && edit.open" :rule="edit.rule" :index="edit.index" />
+	</Modal>
 
 	<table class="table">
 		<thead>
@@ -142,84 +156,14 @@ export default {
 		</tr>
 		</thead>
 		<tbody>
-		<tr v-for="(rule, i) in rules" class="align-middle">
-			<td>
-				<Edit :rule="rule" :index="i" />
-
-				<template v-if="copy.active">
-					<button class="btn btn-sm btn-outline-info ms-2" @click="pasteConfig(rule)">Paste</button>
-				</template>
-				<template v-else>
-					<button class="btn btn-sm btn-outline-primary ms-2" @click="copyConfig(rule)">Copy</button>
-				</template>
-			</td>
-			<td>
-				<template v-if="rule.type === 'product'">
-					<span>
-						<small>
-							<i class="bi bi-building"></i> {{ rule.entity.product.company.name }}
-							|
-							<i class="bi bi-box-seam me-1"></i>
-							<a :href="symfony.views.products_product.replace(':id', rule.entity.product.id)" target="_blank">
-								{{ rule.entity.product.sku }}
-							</a>
-						</small>
-					</span>
-					<span class="d-block">{{ rule.name }}</span>
-				</template>
-				<template v-else-if="rule.type === 'category'">
-					<span>
-						<small>
-							<i class="bi bi-tags"></i> Category
-						</small>
-					</span>
-					<span class="d-block">
-						<span class="text-secondary">{{ rule.entity.category.path }}</span>
-						{{ rule.name }}
-					</span>
-				</template>
-			</td>
-			<td>
-				<div v-for="filter in rule.filters" class="d-flex gap-1">
-					<div><span class="badge text-bg-secondary">{{ filter.attribute }}</span></div>
-					<div>:</div>
-					<div>{{ filter.value.join(', ')}}</div>
-				</div>
-			</td>
-			<td>
-				<div v-for="overwrite in rule.overwrites" class="d-flex gap-1">
-					<div><span class="badge text-bg-warning">{{ overwrite.attribute }}: {{ overwrite.value }}</span></div>
-				</div>
-
-				<div v-if="rule.decoration_sets.length" class="d-flex gap-1">
-					<div><span class="badge text-bg-warning">decoration sets</span></div>
-					<div>:</div>
-					<div>
-						<span class="d-block" v-for="set in rule.decoration_sets"><span class="text-nowrap">{{ set.id }}</span></span>
-					</div>
-				</div>
-
-				<div v-if="rule.decoration_groups && rule.decoration_groups.length" class="d-flex gap-1">
-					<div><span class="badge text-bg-warning">decoration groups</span></div>
-					<div>:</div>
-					<div>
-						<span class="d-block" v-for="group in rule.decoration_groups"><span class="text-nowrap">{{ group.id }}</span></span>
-					</div>
-				</div>
-			</td>
-			<td>
-				<button class="btn btn-sm btn-danger" @click="removeRule(i)"><i class="bi bi-x"></i></button>
-			</td>
-		</tr>
+			<Rule v-for="(rule, i) in rules" :rule="rule" :index="i" :edit="editRule" :paste="pasteConfig" :copy="copyConfig" :remove="removeRule" />
 		</tbody>
 		<tfoot>
 		<tr>
 			<td colspan="10">
 				<div class="d-flex gap-2">
 					<Search :onSelect="productSelected" buttonText="Add Product" buttonIcon="bi bi-plus-circle" :sage="true" />
-
 					<AddCategory />
-
 					<WebsiteSearch :onSelect="copyFromWebsite" buttonClasses="btn btn-outline-primary" buttonText="Copy from Website" icon="bi-copy" />
 				</div>
 			</td>

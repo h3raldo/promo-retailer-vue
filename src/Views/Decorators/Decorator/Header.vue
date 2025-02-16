@@ -1,7 +1,9 @@
 <script>
 import utils from "@/js/utils.js";
+import BackButton from "@/components/template/BackButton.vue";
 
 export default {
+	components: {BackButton},
 	data(){
 		return {
 			loading: false,
@@ -58,7 +60,7 @@ export default {
 	<div class="d-flex justify-content-between align-items-center mb-2 bg-gray p-3">
 		<div class="d-flex gap-3 align-items-center">
 			<div>
-				<button @click="$router.go(-1)" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></button>
+				<BackButton />
 			</div>
 			<div class="fw-bold fs-4">
 				<i class="bi bi-brush"></i> {{ decorator.name }}

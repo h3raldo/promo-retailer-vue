@@ -7,6 +7,7 @@ import SearchCustomers from "@/components/api/Quickbooks/Search.Customers.vue";
 import Logos from "@/Views/Companies/Company/Logos.vue";
 import Websites from "@/Views/Companies/Company/Websites.vue";
 import Breadcrumbs from "@/components/globals/Breadcrumbs.vue";
+import BackButton from "@/components/template/BackButton.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -187,7 +188,7 @@ export default {
 		<div class="d-flex justify-content-between align-items-center mb-2 bg-gray p-3">
 			<div class="d-flex gap-3">
 				<div>
-					<button @click="$router.go(-1)" class="btn btn-secondary"><i class="bi bi-arrow-bar-left"></i></button>
+					<BackButton />
 				</div>
 				<Breadcrumbs :items="breadcrumbs">
 					<Search :onSelect="selectParent" buttonText="Set Parent Company" buttonIcon="bi-pencil" buttonClasses="btn btn-sm btn-outline-primary" />

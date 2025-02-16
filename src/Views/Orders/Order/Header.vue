@@ -3,6 +3,7 @@ import Search from "@/EntityComponents/Company/Search.vue";
 import Modal from "@/components/globals/bootstrap/Modal.vue";
 import HeaderEmail from "@/Views/Orders/Order/Header.Email.vue";
 import Breadcrumbs from "@/components/globals/Breadcrumbs.vue";
+import BackButton from "@/components/template/BackButton.vue";
 </script>
 <script>
 import LogoSearch from "@/EntityComponents/Order/Logos/Search.vue";
@@ -283,8 +284,7 @@ export default {
 	<div class="d-flex justify-content-between align-items-center mb-2 bg-gray p-3">
 		<div class="d-flex gap-3">
 			<div>
-				<RouterLink :to="symfony.views.orders" class="btn btn-secondary"><i
-				  class="bi bi-arrow-bar-left"></i></RouterLink>
+				<BackButton />
 			</div>
 			<Breadcrumbs :items="breadcrumbs">
 				<span class="badge text-bg-secondary align-self-center">{{ order.info.source }}</span>

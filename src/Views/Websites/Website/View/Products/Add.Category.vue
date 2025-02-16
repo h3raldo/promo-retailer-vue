@@ -13,7 +13,7 @@ export default {
 		}
 	},
 	props: [],
-	inject: ['website', 'symfony'],
+	inject: ['website', 'symfony', 'config'],
 	methods: {
 		categorySelected(selected){
 
@@ -29,6 +29,6 @@ export default {
 </script>
 <template>
 	<Modal title="Add Category" buttonText="Add Category" :icon="'bi-plus-circle'" ref="modal">
-		<CategorySelector :onSelect="categorySelected" />
+		<CategorySelector :onSelect="categorySelected" :preloaded="config.categories" />
 	</Modal>
 </template>

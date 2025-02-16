@@ -14,7 +14,7 @@ export default {
 			categories: [],
 		}
 	},
-	props: ['onSelect'],
+	props: ['onSelect', 'preloaded'],
 	inject: ['symfony'],
 	methods: {
 		done(){
@@ -36,10 +36,13 @@ export default {
 		}
 	},
 	created(){
-		utils.ajax(this.symfony.api.products.categories.counts, (d) => {
-			this.categories = d;
-			this.addPathToCategories();
-		})
+		if( this.preloaded && this.preloaded.length )
+			this.categories = this.preloaded
+		else
+			utils.ajax(this.symfony.api.products.categories.counts, (d) => {
+				this.categories = d;
+				this.addPathToCategories();
+			})
 	}
 }
 </script>
