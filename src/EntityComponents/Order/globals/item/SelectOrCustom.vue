@@ -14,13 +14,19 @@ export default {
 	props: ['array', 'modelValue', 'type'],
 
 	computed: {
+		isString(){
+			return typeof this.array[0] === 'string';
+		},
 		customType(){
 			if( !this.type ) return 'text';
 
 			return this.type;
 		},
 		isCustomValue(){
-			return ( !this.array.includes(this.modelValue) && this.modelValue !== '' )
+			if( this.isString )
+				return ( !this.array.includes(this.modelValue) && this.modelValue !== '' )
+			else
+				return this.array.find( item => item.value === this.modelValue ) === undefined;
 		},
 		isCustom(){
 			return this.selectValue === 'custom' || this.isCustomValue;
@@ -47,7 +53,10 @@ export default {
 
 		<select class="form-select" @change="change" ref="select" v-model="selectValue">
 			<option value="">--</option>
-			<option v-for="option in array" :value="option">{{ option }}</option>
+			<template v-for="option in array">
+				<option v-if="isString" :value="option">{{ option }}</option>
+				<option v-else :value="option.value">{{ option.title || '[No Title]' }}</option>
+			</template>
 			<option value="custom">[Custom]</option>
 		</select>
 

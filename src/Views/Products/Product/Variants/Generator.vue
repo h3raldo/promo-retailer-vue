@@ -1,5 +1,6 @@
 <script setup>
 import Tiers from "@/EntityComponents/Product/Variants/Tiers.vue";
+import SelectOrCustom from "@/EntityComponents/Order/globals/item/SelectOrCustom.vue";
 </script>
 <script>
 import entity from "@/js/entity.js";
@@ -91,6 +92,18 @@ export default {
 			let product = entity.product.createFromSage( this.product.data.external.sage );
 			this.available = product.available;
 			this.generate = product.available;
+		},
+
+		imagesToArray( images )
+		{
+			let array = [];
+			images.forEach( image => {
+				array.push({
+					title: image.title,
+					value: image.url
+				})
+			})
+			return array;
 		}
 
 	},
@@ -126,10 +139,7 @@ export default {
 						</div>
 						<div class="flex-fill">
 							<div v-if="generate.images.length" class="form-floating">
-								<select class="form-select" v-model="color.image">
-									<option value="">-- Select --</option>
-									<option v-for="image in generate.images" :value="image.url">{{ image.title ? image.title : 'No Name' }}</option>
-								</select>
+								<SelectOrCustom v-model="color.image" :array="imagesToArray(generate.images)" />
 								<label>Image</label>
 							</div>
 							<div v-else class="form-floating">

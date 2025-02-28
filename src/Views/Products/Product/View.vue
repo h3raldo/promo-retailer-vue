@@ -7,6 +7,7 @@ import Categories from "@/Views/Products/Product/Categories.vue";
 import Editor from "@/Views/Products/Product/Placements/Editor.vue";
 import Pricing from "@/Views/Products/Product/Decorators.vue";
 import ProductView from "@/EntityComponents/Sage/Product.View.vue";
+import ViewPersonalization from "@/Views/Products/Product/View.Personalization.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -29,7 +30,7 @@ export default {
 
 	computed: {
 		tabs(){
-			let tabs = ['Info', 'Variants', 'Categories', 'Template', 'Decorators'];
+			let tabs = ['Info', 'Variants', 'Categories', 'Template', 'Decorators', 'Personalization'];
 			if( this.productData && this.productData.external && this.productData.external.sage ) tabs.push('Sage');
 			return tabs;
 		},
@@ -86,6 +87,7 @@ export default {
 				return;
 			}
 
+
 			self.entities = d.entities
 		});
 	}
@@ -114,6 +116,7 @@ export default {
 							<h4 class="border-bottom pb-2 mb-4 d-flex align-items-center justify-content-between">
 								<span>Info</span>
 								<a v-if="entities.product.company.name === 'SanMar'" class="btn btn-outline-primary btn-sm" :href="`https://www.sanmar.com/search/empty?text=${entities.product.sku}`" target="_blank">Sanmar Website</a>
+								<a v-if="entities.product.company.name === 'S&S Activewear'" class="btn btn-outline-primary btn-sm" :href="`https://www.ssactivewear.com/ps/?q=${entities.product.sku}`" target="_blank">S&S Website</a>
 							</h4>
 
 							<div class="mb-2">
@@ -184,6 +187,10 @@ export default {
 
 				<template #Decorators>
 					<Pricing />
+				</template>
+
+				<template #Personalization>
+					<ViewPersonalization />
 				</template>
 			</Tabs>
 		</template>

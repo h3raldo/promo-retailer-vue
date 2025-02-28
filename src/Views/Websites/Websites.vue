@@ -1,10 +1,11 @@
 <script>
 import Grid from "@/components/globals/Grid.vue";
 import Search from "@/Views/Websites/Search.vue";
+import Status from "@/components/globals/Grid/Status.vue";
 
 export default {
 	name: 'Websites',
-	components: {Search, Grid},
+	components: {Search, Grid, Status},
 	data(){
 		return {
 			loading: false,
@@ -13,7 +14,6 @@ export default {
 				'Status': { id: 'status' },
 				'Name': { id: 'name' },
 				'Subdomain': { id: 'handle' },
-				'Website': { },
 			},
 		}
 	},
@@ -51,7 +51,7 @@ export default {
 		<template #item="{item}">
 			<td @click="viewSingle(item.id)">{{ item.id }}</td>
 			<td @click="viewSingle(item.id)">
-				{{ item.status }}
+				<Status :status="item.status" />
 			</td>
 			<td @click="viewSingle(item.id)">
 				<span v-if="item.parent.id" class="text-secondary">{{ item.parent.name }} <i class="bi bi-chevron-double-right"></i> </span>
@@ -59,9 +59,6 @@ export default {
 			</td>
 			<td @click="viewSingle(item.id)">
 				{{ item.handle }}
-			</td>
-			<td>
-				<a v-if="item.config && item.config.magento && item.config.magento.store_id" :href="`https://${item.handle}.promoretailer.com`" target="_blank">View Website</a>
 			</td>
 			<td @click="viewSingle(item.id)">
 

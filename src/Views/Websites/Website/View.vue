@@ -8,7 +8,6 @@ import Search from "@/EntityComponents/Website/Search.vue";
 import LogoSearch from "@/EntityComponents/Logo/Search.vue";
 import BackgroundToggle from "@/EntityComponents/Logo/BackgroundToggle.vue";
 import RichTextEditor from "@/components/globals/RichTextEditor.vue";
-import Category from "@/Views/Websites/Website/View/Rules/Category.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -43,27 +42,6 @@ export default {
 		publicUrl(){
 			return `https://${this.entities.website.handle}.promoretailer.com`;
 		},
-		categoryTree()
-		{
-			this.setupCategories();
-
-			this.entities.website.product_rules.rules.forEach( rule => {
-				if( rule.type !== 'product' ) return;
-
-				let id = rule.entity.product.id;
-				let product = this.entities.products[id];
-				if( !product?.categories ) return
-
-				this.entities.products[id].categories.forEach( c => {
-					let cat = this.config.flatCategories[c];
-					if( !cat ) return;
-
-					cat.products.push(product)
-				})
-			});
-
-			return this.config.categories;
-		}
 	},
 	provide() {
 		return {
@@ -83,16 +61,6 @@ export default {
 			console.log(logo, variant);
 			this.entities.website.config.design.logo.id = variant.id;
 			this.entities.website.config.design.logo.image = variant.image;
-		},
-		setupCategories()
-		{
-			let traverse = (category) => {
-				this.config.flatCategories[category.handle] = category;
-				category.products = [];
-
-				if( category.children ) category.children.forEach( c => traverse(c) );
-			}
-			this.config.categories.forEach( c => traverse(c));
 		},
 		initiate(){
 			let self = this;
@@ -383,11 +351,7 @@ export default {
 				</template>
 
 				<template #Categories>
-
-					<template v-for="category in categoryTree">
-						<Category :category="category" />
-					</template>
-
+					<p>Coming soon...</p>
 				</template>
 
 				<template #Content>

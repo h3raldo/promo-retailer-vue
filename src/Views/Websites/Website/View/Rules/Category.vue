@@ -4,55 +4,45 @@ import "@/Views/Websites/Website/View/Rules/Category.vue";
 <script>
 export default {
 	data() {
-		return {}
+		return {
+			breadcrumbs: []
+		}
 	},
-	props: ['category'],
-	inject: [],
-	methods: {}
+	props: ['category', 'parents', 'editCategory'],
+	inject: ['products'],
+	methods: {
+		getBackground(){
+			return this.category.isActive ? 'btn-secondary' : 'btn-light'
+		}
+	},
+	created(){
+		let parents = this.parents ?? [];
+		parents.forEach( p => this.breadcrumbs.push(p));
+		this.breadcrumbs.push(this.category.name);
+	}
 }
 </script>
 <template>
-	<template v-if="category.products.length">
+	<template v-if="category.rules.length">
 
 		<template v-if="category.children && category.children.length">
-			<details class="border-bottom pb-1 mb-1">
-				<summary>
-					{{ category.name }} <span class="badge text-bg-light">{{ category.products.length }} Product(s)</span>
-				</summary>
 
-				<div class="ps-3 pt-1 mb-1">
-					<details>
-						<summary class="badge text-bg-secondary">View Products</summary>
+			<button class="btn d-flex align-items-end gap-2 mb-2 mt-2" :class="getBackground()" @click="editCategory(category)">
+				<span class="h4 mb-0 text-nowrap">{{ category.name }}</span>
+				<span class="text-nowrap">({{ category.rules.length }} Items)</span>
+			</button>
 
-						<div>
-							<div v-for="product in category.products">
-								- {{ product.name }}
-							</div>
-						</div>
-					</details>
-				</div>
-
-				<div class="ps-4 pt-1">
-					<Category v-for="child in category.children" :category="child" />
-				</div>
-			</details>
+			<div class="ps-3 pt-1">
+				<Category v-for="child in category.children" :category="child" :parents="breadcrumbs" :editCategory="editCategory" />
+			</div>
 		</template>
 
 		<template v-else>
-			<div class="border-bottom pb-1 mb-1">
-				{{ category.name }} <span class="badge text-bg-light">{{ category.products.length }} Product(s)</span>
-
-				<div class="pt-1 mb-1">
-					<details>
-						<summary class="badge text-bg-secondary">View Products</summary>
-
-						<div>
-							<div v-for="product in category.products">
-								- {{ product.name }}
-							</div>
-						</div>
-					</details>
-				</div>
+			<div class="pb-1 mb-1">
+				<button class="btn d-flex gap-2 align-items-end" :class="getBackground()" @click="editCategory(category)">
+					<span class="text-nowrap">{{ category.name }}</span>
+					<small class="text-nowrap">({{ category.rules.length }} Items)</small>
+				</button>
 			</div>
 		</template>
 
