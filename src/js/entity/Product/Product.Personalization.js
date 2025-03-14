@@ -51,11 +51,13 @@ let set = {
             return {
                 top: 0,
                 left: 0,
+                right: 0,
                 color: '#000000',
                 default_text: 'Default Text',
                 font: 'arial',
                 font_size: 14,
                 font_weight: 'normal',
+                text_align: 'left',
                 label: 'Label',
             }
         }

@@ -57,6 +57,7 @@ export default {
 			set.image.rendered.width = image.width;
 			set.image.rendered.height = image.height;
 			set.image.ratio = image.naturalWidth / image.width;
+
 		},
 		deleteLocation( i, set )
 		{
@@ -71,12 +72,21 @@ export default {
 		this.selected.variant = this.variants[0];
 		if( !this.selected.variant.images.length ) return;
 		this.selected.image = this.variants[0].images[0];
+
+		if( this.sets ){
+			this.sets.forEach( set => {
+				set.locations.forEach( location => {
+					if( !location.text_align ) location.text_align = 'left';
+				})
+			})
+		}
 	}
 }
 </script>
 <style>
 	.customizer-image{
 		position: relative;
+		max-width: 600px;
 	}
 	.customizer-image img{
 		display: block;
@@ -86,6 +96,10 @@ export default {
 		z-index: 2;
 		top: 0;
 		left: 0;
+	}
+	.personalization-container{
+		position: sticky;
+		top: 0;
 	}
 </style>
 <template>
@@ -97,11 +111,15 @@ export default {
 	<template v-if="sets">
 		<template v-for="(set, oi) in sets">
 
-		<div class="row">
-			<div class="col">
-				<div class="customizer-image">
+		<div class="row align-items-start">
+			<div class="col personalization-container">
+				<div class="customizer-image" :style="`width: ${set.image.rendered.width}px; height: ${set.image.rendered.height}px;`">
 					<img :src="set.image.src" alt="" @load="imageLoaded($event, set)">
-					<div v-for="location in set.locations" class="customizer-location" :style="`top: ${location.top}%; left: ${location.left}%; font-size: ${location.font_size}px; color:${location.color}; font-weight: ${location.font_weight}; font-family: '${location.font}'`">{{ location.default_text }}</div>
+					<template  v-for="location in set.locations">
+
+						<div v-if="location.text_align !== 'right'" class="customizer-location" :style="`top: ${location.top}%; left: ${location.left}%; font-size: ${location.font_size}px; color:${location.color}; font-weight: ${location.font_weight}; font-family: '${location.font}'`">{{ location.default_text }}</div>
+						<div v-else class="customizer-location" :style="`top: ${location.top}%; right: ${location.right}%; font-size: ${location.font_size}px; color:${location.color}; font-weight: ${location.font_weight}; font-family: '${location.font}'; text-align: right`">{{ location.default_text }}</div>
+					</template>
 				</div>
 			</div>
 			<div class="col">
@@ -141,7 +159,7 @@ export default {
 								<option value="bold">Bold</option>
 							</select>
 						</div>
-						<div class="col-6">
+						<div class="col-3">
 							<label class="form-label">Font</label>
 							<select class="form-control form-select" v-model="location.font">
 								<option value="arial">Arial</option>
@@ -149,13 +167,24 @@ export default {
 								<option value="open sans">Open Sans</option>
 							</select>
 						</div>
+						<div class="col-3">
+							<label class="form-label">Text Align</label>
+							<select class="form-control form-select" v-model="location.text_align">
+								<option value="left">Left</option>
+								<option value="right">Right</option>
+							</select>
+						</div>
 						<div class="col-4">
 							<label class="form-label">Top ({{location.top}}%)</label>
 							<input type="range" class="form-range" name="rotation" min="0" max="100" value="0" step=".5" v-model="location.top">
 						</div>
-						<div class="col-4">
+						<div class="col-4" v-if="location.text_align !== 'right'">
 							<label class="form-label">Left ({{location.left}}%)</label>
 							<input type="range" class="form-range" name="rotation" min="0" max="100" value="0" step=".5" v-model="location.left">
+						</div>
+						<div class="col-4" v-else>
+							<label class="form-label">Right ({{location.right}}%)</label>
+							<input type="range" class="form-range" name="rotation" min="0" max="100" value="0" step=".5" v-model="location.right">
 						</div>
 						<div class="col-4">
 							<label class="form-label">Font Size ({{location.font_size}}px)</label>

@@ -77,9 +77,9 @@ export default
 
         sageItem.options.forEach( option => {
 
-            if( option.Name.toLowerCase() === 'sizes' || option.Name.toLowerCase() === 'size' ){
+            if( option.name.toLowerCase() === 'sizes' || option.name.toLowerCase() === 'size' ){
 
-                option.Values.forEach( value => {
+                option.values.forEach( value => {
                     let size = entity.order.item.size.create();
                     size.name = value.Value;
                     size.cost = this.matchPriceToQty( sageItem.qty, value.Net );
@@ -96,7 +96,7 @@ export default
             let group = entity.order.item.option.group.create();
             group.name = option.Name;
 
-            option.Values.forEach( value => {
+            option.values.forEach( value => {
 
                 let v = entity.order.item.option.group.value.create();
                 v.name = value.Value;
