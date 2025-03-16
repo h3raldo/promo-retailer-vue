@@ -4,10 +4,14 @@
 </script>
 <script>
 
+import utils from "@/js/utils.js";
+
 export default {
 	data(){
 		return {
-			loading: false,
+			loading: {
+				create: false,
+			},
 			columns: {
 				'ID': { id: 'id' },
 				'Status': { id: 'status' },
@@ -17,7 +21,7 @@ export default {
 			},
 		}
 	},
-	inject: ['symfony', 'search'],
+	inject: ['symfony', 'search', 'alert'],
 	computed: {
 		searchState(){
 			return this.search.products;
@@ -26,6 +30,26 @@ export default {
 	methods: {
 		viewSingle( id ){
 			this.$router.push( this.symfony.views.products_product.replace(':id', id) )
+		},
+		createNew()
+		{
+			let self = this;
+
+			self.loading.create = true;
+			utils.ajax( this.symfony.api.products.product.create, (data) => {
+
+				self.loading.create = false;
+
+				if( data.error === true || !data.id ){
+					self.alert(data.message, 'danger');
+					return;
+				}
+
+				self.$router.push( self.symfony.views.products_product.replace(':id', data.id) )
+
+			}, (error) => {
+				self.alert('Error creating', 'danger');
+			})
 		},
 	},
 	created() {
@@ -40,7 +64,7 @@ export default {
 		<div>
 			<h3 class="mb-0"><i class="bi bi-box-seam"></i> Products</h3>
 		</div>
-		<button class="btn btn-primary p-3" disabled><i class="bi bi-plus-square-fill"></i> Create New</button>
+		<button class="btn btn-primary p-3" @click="createNew" :disabled="loading.create"><i class="bi bi-plus-square-fill"></i> Create New</button>
 	</div>
 
 	<Grid :api="symfony.api.products.search" :columns="columns" :searchState="searchState" :entity="'website'">

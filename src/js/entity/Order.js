@@ -231,6 +231,17 @@ function convertFromSource( data, cb )
                 item.notes.public = magento_item.options_text;
                 item.info.image.primary = magento_item.configuration.image;
 
+                if( magento_item.configuration.personalization ){
+                    Object.keys( magento_item.configuration.personalization ).forEach( key => {
+                        let config = magento_item.configuration.personalization[key];
+                        item.personalization.push({
+                            name: key,
+                            values: config
+                        });
+                    })
+                    console.log('personalization', item.personalization);
+                }
+
                 let supplier = false;
                 if( magento_item.zoho_supplier_id ){
                     supplier = entity.order.vendor.findByZohoID( magento_item.zoho_supplier_id );

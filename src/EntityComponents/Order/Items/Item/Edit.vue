@@ -88,6 +88,7 @@ export default {
 				<button class="nav-link" @click="changeTab('placements', $event)">Placements</button>
 				<button class="nav-link" @click="changeTab('options', $event)">Options</button>
 				<button class="nav-link" @click="changeTab('notes', $event)">Notes</button>
+				<button class="nav-link" @click="changeTab('personalization', $event)">Personalization</button>
 			</div>
 		</nav>
 
@@ -114,6 +115,25 @@ export default {
 
 			<div v-if="activeTab==='placements'">
 				<Placements />
+			</div>
+
+			<div v-if="activeTab==='personalization'">
+				<div v-if="item.personalization && item.personalization.length > 0">
+					<div v-for="personalization in item.personalization">
+						<p class="fw-bold">{{ personalization.name }}</p>
+						<table class="table table-striped table-sm">
+							<tbody>
+							<tr v-for="(value, key) in personalization.values">
+								<td>{{key}}</td>
+								<td>{{value}}</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div v-else>
+					<h5>No Personalization</h5>
+				</div>
 			</div>
 
 			<div v-if="activeTab==='colors'">

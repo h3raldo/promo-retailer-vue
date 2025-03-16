@@ -95,6 +95,7 @@ export default {
 	<div class="row p-2 border-bottom pb-3">
 		<div class="col col-4">
 			<h5><i v-if="item.info.hidden" class="bi bi-eye-slash me-1"></i>{{ item.info.name }}</h5>
+			<span v-if="item.personalization && item.personalization.length > 0" class="badge text-bg-warning">Has Personalization</span>
 
 			<div class="mb-2">
 				<span class="badge text-bg-secondary me-1" v-if="item.info.sku">{{ item.info.sku }}</span>
@@ -106,6 +107,7 @@ export default {
 				<span v-if="!item.info.supplier || !item.info.supplier.company_id" class="text-danger">
 					<small><i class="bi bi-info-circle"></i> Supplier Unverified</small>
 				</span>
+
 			</div>
 
 			<div class="mb-2">

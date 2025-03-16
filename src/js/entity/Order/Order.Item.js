@@ -36,6 +36,7 @@ function create(){
             available: [],
             placements: [],
         },
+        personalization: [],
         subitems: [],
         pricing: {
             totals: {
