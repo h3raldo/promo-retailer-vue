@@ -168,13 +168,16 @@ export default {
 					<div class="mt-1 ps-2">
 						<div class="d-flex gap-2 flex-wrap align-items-center">
 							<label><small>Allowed Logo Types</small></label>
-							<label v-for="type in entity.logo.variant.types" class="form-check-label bg-gray px-2 rounded small"><input class="form-check-input me-1" type="checkbox" name="allowed_logo_types[]" :value="type" v-model="color.allowed_logo_types"><span>{{ type }}</span></label>
+							<label v-for="type in entity.logo.variant.types" class="form-check-label bg-gray px-2 rounded small">
+								<input class="form-check-input me-1" type="checkbox" :value="type" v-model="color.allowed_logo_types">
+								<span>{{ type }}</span>
+							</label>
 						</div>
 					</div>
 				</div>
 
 
-				<button class="btn btn-outline-primary btn-sm" @click="generate.colors.push({name: '', image: '', color_parent: '', color_secondary: ''})">Add Color</button>
+				<button class="btn btn-outline-primary btn-sm" @click="generate.colors.push({name: '', image: '', color_parent: '', color_secondary: '', allowed_logo_types: []})">Add Color</button>
 
 			</div>
 

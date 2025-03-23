@@ -1,11 +1,14 @@
-<script>
+<script setup>
 import Grid from "@/components/globals/Grid.vue";
 import Search from "@/Views/Websites/Search.vue";
 import Status from "@/components/globals/Grid/Status.vue";
+import EntityDelete from "@/EntityComponents/Entity/EntityDelete.vue";
+</script>
+
+<script>
 
 export default {
 	name: 'Websites',
-	components: {Search, Grid, Status},
 	data(){
 		return {
 			loading: false,
@@ -27,10 +30,14 @@ export default {
 		viewSingle( id ){
 			this.$router.push( this.symfony.views.websites_website.replace(':id', id) )
 		},
+		afterDelete( response ){
+			this.$refs.grid.getEntities()
+		}
 	},
 	created() {
 		if( typeof this.search.websites === 'undefined' ) this.search.websites = {}
 	},
+	emits: ['entityDeleted'],
 }
 </script>
 
@@ -43,7 +50,7 @@ export default {
 		<button class="btn btn-primary p-3" disabled><i class="bi bi-plus-square-fill"></i> Create New</button>
 	</div>
 
-	<Grid :api="symfony.api.websites.search" :columns="columns" :searchState="searchState" :entity="'website'">
+	<Grid :api="symfony.api.websites.search" :columns="columns" :searchState="searchState" :entity="'website'" ref="grid">
 		<template #header="{search}">
 			<Search :getEntities="search" :searchParams="searchState" />
 		</template>
@@ -60,8 +67,8 @@ export default {
 			<td @click="viewSingle(item.id)">
 				{{ item.handle }}
 			</td>
-			<td @click="viewSingle(item.id)">
-
+			<td>
+				<EntityDelete :id="item.id" entity="website" :callback="afterDelete" />
 			</td>
 		</template>
 	</Grid>

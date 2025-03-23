@@ -1,4 +1,5 @@
 <script setup>
+import EntityDelete from "@/EntityComponents/Entity/EntityDelete.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -35,6 +36,11 @@ export default {
 		},
 		goToWebsite(id){
 			this.$router.push(this.symfony.views.websites_website.replace(':id', id))
+		},
+		afterDelete( response )
+		{
+			if( !response.id ) return;
+			this.entities.website = this.entities.website.filter( w => w.id !== response.id );
 		}
 	}
 }
@@ -56,16 +62,18 @@ export default {
 			<th>ID</th>
 			<th>Name</th>
 			<th>Handle</th>
-			<th>Link</th>
+			<th></th>
 		</tr>
 		</thead>
-		<tbody>
+		<tbody class="align-middle">
 		<tr v-for="website in availableWebsites">
 			<td><button @click="goToWebsite(website.id)" class="btn btn-sm btn-primary">Edit</button></td>
 			<td>{{ website.id }}</td>
 			<td>{{ website.name }}</td>
 			<td>{{ website.handle }}</td>
-			<td><a :href="`https://${website.handle}.promoretailer.com`" target="_blank">View Website</a> </td>
+			<td>
+				<EntityDelete entity="website" :id="website.id" :callback="afterDelete" />
+			</td>
 		</tr>
 		</tbody>
 	</table>

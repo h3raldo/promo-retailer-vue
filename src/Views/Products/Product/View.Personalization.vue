@@ -38,7 +38,6 @@ export default {
 		},
 		getFilters( set )
 		{
-			console.log(set);
 			return entity.product.personalization.set.buildFilters( set );
 		},
 		addSet(){
@@ -52,6 +51,7 @@ export default {
 		},
 		imageLoaded(event, set) {
 			let image = event.target;
+			console.log('loaded', image);
 			set.image.actual.width = image.naturalWidth;
 			set.image.actual.height = image.naturalHeight;
 			set.image.rendered.width = image.width;
@@ -117,8 +117,11 @@ export default {
 					<img :src="set.image.src" alt="" @load="imageLoaded($event, set)">
 					<template  v-for="location in set.locations">
 
-						<div v-if="location.text_align !== 'right'" class="customizer-location" :style="`top: ${location.top}%; left: ${location.left}%; font-size: ${location.font_size}px; color:${location.color}; font-weight: ${location.font_weight}; font-family: '${location.font}'`">{{ location.default_text }}</div>
-						<div v-else class="customizer-location" :style="`top: ${location.top}%; right: ${location.right}%; font-size: ${location.font_size}px; color:${location.color}; font-weight: ${location.font_weight}; font-family: '${location.font}'; text-align: right`">{{ location.default_text }}</div>
+						<div v-if="location.text_align === 'left'" class="customizer-location" :style="`top: ${location.top}%; left: ${location.left}%; font-size: ${location.font_size}px; color:${location.color}; font-weight: ${location.font_weight}; font-family: '${location.font}'`">{{ location.default_text }}</div>
+
+						<div v-else-if="location.text_align === 'right'" class="customizer-location" :style="`top: ${location.top}%; right: ${location.right}%; font-size: ${location.font_size}px; color:${location.color}; font-weight: ${location.font_weight}; font-family: '${location.font}'; text-align: right`">{{ location.default_text }}</div>
+
+						<div v-else-if="location.text_align === 'center'" class="customizer-location" :style="`top: ${location.top}%; left: 0; right: 0; font-size: ${location.font_size}px; color:${location.color}; font-weight: ${location.font_weight}; font-family: '${location.font}'; text-align: center`">{{ location.default_text }}</div>
 					</template>
 				</div>
 			</div>
@@ -172,12 +175,15 @@ export default {
 							<select class="form-control form-select" v-model="location.text_align">
 								<option value="left">Left</option>
 								<option value="right">Right</option>
+								<option value="center">Center</option>
 							</select>
 						</div>
 						<div class="col-4">
 							<label class="form-label">Top ({{location.top}}%)</label>
 							<input type="range" class="form-range" name="rotation" min="0" max="100" value="0" step=".5" v-model="location.top">
 						</div>
+						<template v-if="location.text_align !== 'center'">
+
 						<div class="col-4" v-if="location.text_align !== 'right'">
 							<label class="form-label">Left ({{location.left}}%)</label>
 							<input type="range" class="form-range" name="rotation" min="0" max="100" value="0" step=".5" v-model="location.left">
@@ -186,6 +192,8 @@ export default {
 							<label class="form-label">Right ({{location.right}}%)</label>
 							<input type="range" class="form-range" name="rotation" min="0" max="100" value="0" step=".5" v-model="location.right">
 						</div>
+
+						</template>
 						<div class="col-4">
 							<label class="form-label">Font Size ({{location.font_size}}px)</label>
 							<input type="range" class="form-range" name="rotation" min="12" max="50" value="0" v-model="location.font_size">
@@ -197,7 +205,6 @@ export default {
 
 				<div class="d-flex gap-3">
 					<button class="btn btn-primary" @click="addLocation(set)">Add Location</button>
-						<a class="btn btn-outline-primary" :href="previewImage(set)" target="_blank">Preview Image</a>
 				</div>
 			</div>
 		</div>

@@ -1,6 +1,7 @@
 <script setup>
 	import Grid from "@/components/globals/Grid.vue";
 	import Search from "@/Views/Products/Search.vue";
+	import Modal from "@/components/globals/bootstrap/Modal.vue";
 </script>
 <script>
 
@@ -86,8 +87,7 @@ export default {
 			<td @click="viewSingle(item.id)">
 				{{ item.company.name }}
 			</td>
-			<td @click="viewSingle(item.id)">
-
+			<td>
 			</td>
 		</template>
 	</Grid>

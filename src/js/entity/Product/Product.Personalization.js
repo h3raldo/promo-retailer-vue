@@ -16,8 +16,8 @@ let set = {
                 src: image.url,
                 ratio: 0,
                 rendered: {
-                    width: 0,
-                    height: 0
+                    width: 'auto',
+                    height: 'auto'
                 },
                 actual: {
                     width: 0,

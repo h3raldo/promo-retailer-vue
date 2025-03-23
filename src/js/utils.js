@@ -1,35 +1,50 @@
 import pricing from "@/js/pricing.js";
 import config from "@/js/utils/config.js"
 
-export default
-{
-    config,
-    ajax: ( url, callback, errorCallback, data ) => {
-
+let ajax = {
+    fetch(url, method, data, callback, errorCallback)
+    {
         let init = {
-            method: 'GET'
+            method: method
         }
 
-        if( typeof data === 'object' ){
-            init.method = 'POST';
+        if( typeof data === 'object' ) {
             init.headers = {
                 'Accept': 'application/json',
                 'Content-type': 'application/json',
-            };
+            }
             init.body = JSON.stringify(data);
         }
 
-        fetch(url, init).then(function (response) {
-            return response.json();
-        }).then(function (data) {
-            if( typeof data === 'string' )
-                data = JSON.parse(data);
-            console.log(url, data);
-            callback(data);
-        }).catch(function (err) {
-            console.log('ajax error', url, err);
-            if (errorCallback) errorCallback(err);
-        });
+        fetch(url, init)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                if( typeof data === 'string' )
+                    data = JSON.parse(data);
+                console.log(url, data);
+                callback(data);
+            })
+            .catch(function (err) {
+                console.log('ajax error', url, err);
+                if (errorCallback) errorCallback(err);
+            });
+    },
+}
+
+export default
+{
+    config,
+    ajax: ( url, callback, errorCallback, data ) =>
+    {
+        let method = ( typeof data === 'object' ) ? 'POST' : 'GET';
+        ajax.fetch( url, method, data, callback, errorCallback );
+    },
+
+    ajaxDelete( url, callback, errorCallback, data=null )
+    {
+        ajax.fetch( url, 'DELETE', data, callback, errorCallback );
     },
 
     async ajaxAsync( url, data ){
@@ -54,7 +69,6 @@ export default
     },
 
     ajaxButtons: {
-
         multi: {
             click: button => {
                 let call = ( url, cb ) => {

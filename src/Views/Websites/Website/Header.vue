@@ -185,22 +185,30 @@ export default {
 
 		<div class="flex-grow-1">
 			<div class="form-floating">
-				<input type="text" class="form-control" id="client" placeholder="Quote Name" v-model="website.name">
-				<label for="client">Title</label>
+				<input type="text" class="form-control" placeholder="Quote Name" v-model="website.name">
+				<label>Title</label>
 			</div>
 		</div>
 
 		<div class="flex-grow-1">
 			<div class="input-group mb-3 has-validation">
-				<span class="input-group-text">https://</span>
-				<div :class="!handleValidates ? 'form-floating is-invalid': 'form-floating'">
-					<input type="text" class="form-control" id="client" placeholder="Subdomain" v-model="website.handle" @change="lowerCaseHandle" :class="!handleValidates ? 'is-invalid': ''">
-					<label for="client">Subdomain</label>
-				</div>
-				<span class="input-group-text">.promoretailer.com</span>
-				<div class="invalid-feedback">
-					Needs to start with a letter and contain only letters, numbers.
-				</div>
+				<template v-if="website.config.custom_domain">
+					<div class="form-floating">
+						<input type="text" class="form-control" placeholder="Subdomain" v-model="website.config.custom_domain" disabled>
+						<label>Custom Domain</label>
+					</div>
+				</template>
+				<template v-else>
+					<span class="input-group-text">https://</span>
+					<div :class="!handleValidates ? 'form-floating is-invalid': 'form-floating'">
+						<input type="text" class="form-control" placeholder="Subdomain" v-model="website.handle" @change="lowerCaseHandle" :class="!handleValidates ? 'is-invalid': ''">
+						<label>Subdomain</label>
+					</div>
+					<span class="input-group-text">.promoretailer.com</span>
+					<div class="invalid-feedback">
+						Needs to start with a letter and contain only letters, numbers.
+					</div>
+				</template>
 				<a v-if="website.config.magento.store_id" class="btn btn-success btn-sm d-flex align-items-center" :href="`https://${website.handle}.promoretailer.com`" target="_blank">View &nbsp;<i class="bi bi-box-arrow-up-right"></i></a>
 			</div>
 		</div>
