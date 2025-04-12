@@ -164,7 +164,7 @@ export default {
 		<div>
 			<div class="text-end d-flex gap-2">
 				<button class="btn btn-primary" :disabled="loading || !canSave" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
-				<button class="btn btn-warning" :disabled="loading || !canSave" @click="sync"><i class="bi bi-arrow-repeat"></i> Sync To Magento</button>
+				<button v-if="website.config.magento.store_id" class="btn btn-warning" :disabled="loading || !canSave" @click="sync"><i class="bi bi-arrow-repeat"></i> Sync To Magento</button>
 				<button v-if="canSave && !website.config.magento.store_id" class="btn btn-warning btn-sm" @click="createWebsite"><i class="bi bi-cloud-plus"></i> Create Website</button>
 			</div>
 		</div>

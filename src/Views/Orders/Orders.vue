@@ -125,6 +125,11 @@ export default {
 		hasPRPurchaseOrder( purchaseOrders )
 		{
 			return purchaseOrders.filter( p => p.company_id === 17 || p.company_id === 6 ).length > 0;
+		},
+		isInvoiced( item ){
+			if( !item.invoice_quickbooks_id ) return false;
+			item.bg_success = true;
+			return true;
 		}
 	},
 
@@ -156,7 +161,7 @@ export default {
 
 		<template #item="{item}">
 
-			<td @click="viewQuote(item.id)">{{ item.id }}</td>
+			<td>{{ item.id }}</td>
 
 			<td>
 				<EditableColumn :type="'select'" :item="item" :column="'status'" :options="entity.order.default.statuses" :entity="'order'">
@@ -242,9 +247,9 @@ export default {
 				</EditableColumn>
 			</td>
 			<td>
-				<span v-if="item.invoice_quickbooks_id" class="badge text-bg-success">
+				<span v-if="isInvoiced(item)" class="badge text-bg-success">
 					<i class="bi bi-currency-dollar"></i> Invoiced
-				</span><br v-if="item.invoice_quickbooks_id">
+				</span><br v-if="isInvoiced(item)">
 
 				<span v-if="item.statuses.paid" class="badge text-bg-success">
 					Paid

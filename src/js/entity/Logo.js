@@ -10,7 +10,7 @@ let variant = {
         'light',
         'dark',
         'laser-engrave',
-        'deboss'
+        'deboss',
     ]
 }
 

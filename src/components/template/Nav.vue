@@ -61,12 +61,6 @@ export default {
 					type: 'vue'
 				},
 				{
-					title: 'Global Sheets',
-					icon: 'bi bi-database',
-					url: self.symfony.views.global_sheets,
-					type: 'vue'
-				},
-				{
 					title: 'Decorators',
 					icon: 'bi bi-brush',
 					url: self.symfony.views.decorators,
@@ -124,8 +118,8 @@ export default {
 
 	<div>
 		<RouterLink class="d-flex align-items-center mb-3 gap-1 mb-md-0 me-md-auto text-white text-decoration-none" :to="symfony.views.dashboard">
-			<img class="pe-2 d-block" src="https://cdn.globalhealing.com/web/img/vendor/pr/pr-logo.png?w=80" width="40" alt="">
-			<span>Promo Retailer</span>
+			<img class="pe-2 d-block" :src="symfony.brand.logo_small" width="40" alt="">
+			<span>{{ symfony.brand.name }}</span>
 		</RouterLink>
 
 		<hr>

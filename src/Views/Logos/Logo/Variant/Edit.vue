@@ -9,7 +9,9 @@ export default {
 	data(){
 		return {
 			tabs: ['Info', 'Decorators', 'Assets'],
-			bg_class: ''
+			bg_class: '',
+			adding_custom: false,
+			custom_type: '',
 		}
 	},
 	props: ['variant', 'decorators', 'edit'],
@@ -21,6 +23,9 @@ export default {
 		typeAssets(){
 			if( !this.variant.assets ) this.variant.assets = [];
 			return this.variant.assets;
+		},
+		custom_types(){
+			return this.variant.types.filter( t => this.apply_types.indexOf( t ) === -1 );
 		}
 	},
 	methods: {
@@ -40,6 +45,12 @@ export default {
 				this.variant.image = image.url;
 			})
 			// @todo: on web upload, force a save because once web.png is uploaded, it needs to save that it belongs to that variant
+		},
+		addCustomLabel()
+		{
+			this.variant.types.push( this.custom_type );
+			this.adding_custom = false;
+			this.custom_type = '';
 		}
 	}
 }
@@ -61,6 +72,17 @@ export default {
 					<input class="form-check-input me-1" type="checkbox" :value="type" v-model="variant.types">
 					<span>{{ type }}</span>
 				</label>
+
+				<label v-for="type in custom_types" class="form-check-label bg-gray px-2 rounded small">
+					<input class="form-check-input me-1" type="checkbox" :value="type" v-model="variant.types">
+					<span>{{ type }}</span>
+				</label>
+
+				<button v-if="!adding_custom" class="btn btn-sm btn-outline-primary" @click="adding_custom = true">Add Custom</button>
+				<div v-if="adding_custom" class="d-flex gap-2">
+					<input type="text" class="form-control form-control-sm" placeholder="Custom Type" v-model="custom_type">
+					<button class="btn btn-sm btn-outline-primary" @click="addCustomLabel">Add</button>
+				</div>
 			</div>
 			<div class="mb-2 col-6">
 				<label class="form-label">Color Count:</label>

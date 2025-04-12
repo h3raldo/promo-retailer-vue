@@ -45,11 +45,17 @@ export default {
 				self.alert.enabled = false;
 			}, 4000)
 		},
+
+		updateLocalStorage(key)
+		{
+			localStorage.setItem(key, JSON.stringify(this[key]));
+		}
 	},
 
 	provide() {
 		return {
 			alert: this.showAlert,
+			updateLocalStorage: this.updateLocalStorage,
 			symfony: computed(() => this.symfony),
 			search: computed(() => this.search),
 			cache: computed(() => this.cache),
@@ -61,7 +67,7 @@ export default {
 	},
 
 	mounted() {
-
+		if( localStorage.getItem('search') ) this.search = JSON.parse( localStorage.getItem('search'));
 	}
 }
 </script>

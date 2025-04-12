@@ -6,9 +6,8 @@ import Loader from "@/components/globals/Loader.vue";
 import RuleEdit from "@/Views/Websites/Website/View/Rules/Rule.Edit.vue";
 import Compiled from "@/Views/Websites/Website/View/Products/Compiled.vue";
 import WebsiteSearch from "@/EntityComponents/Website/Search.vue"
-import AddCategory from "@/Views/Websites/Website/View/Products/Add.Category.vue";
 import Rules from "@/Views/Websites/Website/View/Rules/Rules.vue";
-import Category from "@/Views/Websites/Website/View/Rules/Category.vue";
+import Categories from "@/Views/Websites/Website/View/Rules/Categories.vue";
 </script>
 <script>
 import entity from "@/js/entity.js";
@@ -43,6 +42,17 @@ export default {
 	computed: {
 		rules(){
 			return this.website.product_rules.rules;
+		},
+		getDuplicates(){
+			let log = {};
+			let duplicates = [];
+
+			this.website.product_rules.rules.forEach( (rule, i) => {
+				if( rule.type !== 'product' ) return;
+				duplicates[rule.entity.product.id] = 1;
+			})
+
+			return duplicates.filter( d => d > 1 ).length;
 		},
 		categoryTree() {
 			this.setupCategories();
@@ -154,6 +164,10 @@ export default {
 
 			this.edit.category = category
 			this.edit.category.isActive = true;
+		},
+		stop(e){
+			e.stopPropagation();
+			e.preventDefault();
 		}
 	},
 	created() {
@@ -167,8 +181,10 @@ export default {
 			}
 		}
 
-		else
-			this.editCategory( this.categoryTree[0] )
+		else{
+			let firstActive = this.categoryTree.filter( c => c.products.length > 0);
+			if( firstActive.length > 0 ) this.editCategory( firstActive[0] );
+		}
 
 	}
 }
@@ -176,10 +192,17 @@ export default {
 <template>
 	<div class="d-flex justify-content-between align-items-center border-bottom pb-3">
 		<h5 class="mb-0">Total Rules: ({{ rules.length }})</h5>
-		<Modal title="Compile (Validate Product Decoration Settings)" id="compile-products" button-text="Validate & Preview Products..." buttonClasses="btn btn-outline-primary">
-			<Compiled />
-		</Modal>
+		<div class="d-flex gap-2">
+			<Search :onSelect="productSelected" buttonText="Add Product" buttonIcon="bi bi-plus-circle" :sage="true" />
+			<!--			<AddCategory />-->
+			<WebsiteSearch :onSelect="copyFromWebsite" buttonClasses="btn btn-outline-primary" buttonText="Copy from Website" icon="bi-copy" />
+			<Modal title="Compile (Validate Product Decoration Settings)" id="compile-products" button-text="Validate & Preview Products" buttonClasses="btn btn-outline-primary">
+				<Compiled />
+			</Modal>
+		</div>
 	</div>
+
+	<div v-if="getDuplicates" class="alert alert-danger">There are {{ getDuplicates }} duplicates.</div>
 
 	<Loader v-if="importing.loading" />
 
@@ -199,13 +222,11 @@ export default {
 		<button v-if="copy.active" class="btn btn-sm btn-outline-success ms-2" @click="copy.active = false">Done Pasting</button>
 	</div>
 
-	<div class="d-flex gap-3">
-		<div class="col">
-			<div class="bg-light py-2 ps-2" style="max-height: 80vh; overflow: scroll">
-				<Category v-for="category in categoryTree" :category="category" :editCategory="editCategory" />
-			</div>
+	<div>
+		<div class="pb-2">
+			<Categories :categories="categoryTree" :editCategory="editCategory" />
 		</div>
-		<div class="flex-fill">
+		<div>
 			<Rules v-if="edit.category" :category="edit.category" :edit="editRule" :paste="pasteConfig" :copy="copyConfig" :copyActive="copy.active" :remove="removeRule" />
 		</div>
 	</div>
@@ -220,3 +241,15 @@ export default {
 		</div>
 	</div>
 </template>
+
+<style>
+.dropdown-submenu {
+	position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+	top: 0;
+	left: 100%;
+	margin-top: -1px;
+}
+</style>

@@ -14,7 +14,7 @@ export default {
 			selected: [],
 		}
 	},
-	inject: ['symfony', 'alert'],
+	inject: ['symfony', 'alert', 'updateLocalStorage'],
 	props: ['columns', 'searchState', 'api', 'bulkEdits', 'entity', 'defaultParams'],
 	computed: {
 		caretClasses() {
@@ -63,6 +63,8 @@ export default {
 				self.searchState.urlParams = params;
 				self.loading = false;
 			})
+
+			this.updateLocalStorage('search');
 		},
 		orderBy( type )
 		{
@@ -209,7 +211,7 @@ export default {
 				</thead>
 				<tbody>
 					<template v-for="item in entities">
-						<tr class="quote-row">
+						<tr class="quote-row" :class="item.bg_success ? 'table-success' : ''">
 							<td v-if="bulkEdits" class="d-print-none"><input class="form-check-input p-2" type="checkbox" v-model="selected" :value="item.id"></td>
 							<slot name="item" :item="item"></slot>
 						</tr>

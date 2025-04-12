@@ -5,10 +5,11 @@ import "@/Views/Websites/Website/View/Rules/Category.vue";
 export default {
 	data() {
 		return {
-			breadcrumbs: []
+			breadcrumbs: [],
+			active: false,
 		}
 	},
-	props: ['category', 'parents', 'editCategory'],
+	props: ['category', 'parents', 'editCategory', 'top'],
 	inject: ['products'],
 	methods: {
 		getBackground(){
@@ -25,16 +26,21 @@ export default {
 <template>
 	<template v-if="category.rules.length">
 
-		<template v-if="category.children && category.children.length">
+		<template v-if="(category.children && category.children.length) || top">
 
-			<button class="btn d-flex align-items-end gap-2 mb-2 mt-2" :class="getBackground()" @click="editCategory(category)">
-				<span class="h4 mb-0 text-nowrap">{{ category.name }}</span>
-				<span class="text-nowrap">({{ category.rules.length }} Items)</span>
+			<button class="btn btn-sm d-flex align-items-end gap-2 mb-2 mt-2" :class="getBackground()" @click="editCategory(category)">
+				<span class="mb-0 text-nowrap">{{ category.name }}</span>
 			</button>
 
-			<div class="ps-3 pt-1">
-				<Category v-for="child in category.children" :category="child" :parents="breadcrumbs" :editCategory="editCategory" />
-			</div>
+			<template v-if="category.isActive">
+				<Teleport to="#category-children">
+					<Category v-for="child in category.children" :category="child" :parents="breadcrumbs" :editCategory="editCategory" />
+				</Teleport>
+			</template>
+
+<!--			<div class="ps-3 pt-1">-->
+<!-- <Category v-for="child in category.children" :category="child" :parents="breadcrumbs" :editCategory="editCategory" /> -->
+<!--			</div>-->
 		</template>
 
 		<template v-else>
