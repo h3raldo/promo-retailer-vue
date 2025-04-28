@@ -53,9 +53,10 @@ function setup()
 			})
 		}
 
-		if( !entity_data.quote )
+		if( !entity_data.quote ){
 			quoteStore.order.id = entity_data.new_quote_id;
-		else{
+			init.public_id = entity_data.public_id;
+		} else{
 			quoteStore.$patch({order: entity.quote.patchData(entity_data, init)});
 		}
 

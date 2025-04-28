@@ -15,11 +15,11 @@ export default {
 		}
 	},
 
-	inject: ['order', 'logos', 'vendors', 'updatePricing', 'hasEdited', 'alert', 'symfony', 'urls'],
+	inject: ['order', 'logos', 'vendors', 'updatePricing', 'hasEdited', 'alert', 'symfony', 'urls', 'init'],
 
 	computed: {
 		publicUrl(){
-			return this.urls.public.replace(':id', this.order.id);
+			return this.urls.public.replace(':pid', this.init.public_id);
 		},
 		saveUrl(){
 			return this.urls.save;
@@ -123,6 +123,8 @@ export default {
 			delete data.quote;
 
 			let self = this;
+			self.loading = true;
+			this.order.info.status = 'pushed';
 
 			utils.ajax( this.symfony.orders.order.new, (data) => {
 
@@ -131,11 +133,13 @@ export default {
 					return;
 				}
 
-				self.alert('Created New Order + Pushed to Zoho. Order ID: ' + data.id);
+				self.alert('Created New Order. Order ID: ' + data.id);
+				self.loading = false;
 
 			}, (error)=> {
 				self.alert('Error converting to order!', 'danger');
 				console.log(error)
+				self.loading = false;
 			}, data )
 		},
 		onVendorSelect( company )
@@ -162,7 +166,7 @@ export default {
 			<div class="text-end d-flex gap-2">
 				<a :href="publicUrl" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Public Version</a>
 				<button class="btn btn-primary" :disabled="loading" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
-				<button class="btn btn-danger btn-push-to-zoho" :disabled="loading" @click="push"><i class="bi bi-cloud-arrow-up-fill"></i> Push</button>
+				<button class="btn btn-danger btn-push-to-zoho" :disabled="loading" @click="toOrder"><i class="bi bi-cloud-arrow-up-fill"></i> Push</button>
 			</div>
 		</div>
 	</div>

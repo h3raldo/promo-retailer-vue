@@ -8,11 +8,12 @@ import Compiled from "@/Views/Websites/Website/View/Products/Compiled.vue";
 import WebsiteSearch from "@/EntityComponents/Website/Search.vue"
 import Rules from "@/Views/Websites/Website/View/Rules/Rules.vue";
 import Categories from "@/Views/Websites/Website/View/Rules/Categories.vue";
+import RulesGlobal from "@/Views/Websites/Website/View/Rules/Rules.Global.vue";
 </script>
 <script>
 import entity from "@/js/entity.js";
 import utils from "@/js/utils.js";
-import {toRaw} from "vue";
+import {computed, toRaw} from "vue";
 
 export default {
 	data(){
@@ -38,21 +39,10 @@ export default {
 			},
 		}
 	},
-	inject: ['symfony', 'website', 'products', 'config'],
+	inject: ['symfony', 'website', 'products', 'config', 'alert'],
 	computed: {
 		rules(){
 			return this.website.product_rules.rules;
-		},
-		getDuplicates(){
-			let log = {};
-			let duplicates = [];
-
-			this.website.product_rules.rules.forEach( (rule, i) => {
-				if( rule.type !== 'product' ) return;
-				duplicates[rule.entity.product.id] = 1;
-			})
-
-			return duplicates.filter( d => d > 1 ).length;
 		},
 		categoryTree() {
 			this.setupCategories();
@@ -75,6 +65,21 @@ export default {
 					})
 				})
 			});
+
+			this.config.categories.forEach( c => {
+				c.rules.sort( (a,b) => {
+					let a_name = a.rule.entity.product.sku;
+					let b_name = b.rule.entity.product.sku;
+
+					if (a_name < b_name) {
+						return -1;
+					}
+					if (a_name > b_name) {
+						return 1;
+					}
+					return 0;
+				})
+			})
 
 			return this.config.categories;
 		}
@@ -104,7 +109,30 @@ export default {
 		},
 
 		removeRule(index){
-			this.rules.splice(index,1);
+			let rule = this.rules[index];
+
+			if( rule.id === null ){
+				this.rules.splice(index,1);
+				return;
+			}
+
+			let result = (r) => {
+				if( r.error !== false )
+					error();
+				else{
+					this.alert('Rule deleted', 'success');
+					this.rules.splice(index,1);
+				}
+			}
+
+			let error = () => {
+				this.alert('Error deleting rule', 'danger');
+			}
+
+			utils.ajaxDelete(this.symfony.api.entity.delete, result, error, {
+				id: rule.id,
+				entity: 'websiteRule'
+			})
 		},
 
 		createProductFromSage( sage_product )
@@ -147,9 +175,18 @@ export default {
 			rule.decoration_groups = JSON.parse(JSON.stringify(toRaw(this.copy.decoration_groups)));
 			rule.overwrites = JSON.parse(JSON.stringify(toRaw(this.copy.overwrites)));
 		},
+		duplicateRule( rule )
+		{
+			let new_rule = JSON.parse(JSON.stringify(toRaw(rule)))
+			new_rule.id = null;
+			this.rules.push(new_rule)
+		},
 		copyFromWebsite( website )
 		{
-			website.product_rules.rules.forEach( rule => this.website.product_rules.rules.push( rule ) );
+			website.product_rules.rules.forEach( rule => {
+				rule.id = null;
+				this.website.product_rules.rules.push( rule )
+			});
 		},
 		editRule( rule, index )
 		{
@@ -202,8 +239,6 @@ export default {
 		</div>
 	</div>
 
-	<div v-if="getDuplicates" class="alert alert-danger">There are {{ getDuplicates }} duplicates.</div>
-
 	<Loader v-if="importing.loading" />
 
 	<br>
@@ -219,15 +254,17 @@ export default {
 	</Modal>
 
 	<div>
-		<button v-if="copy.active" class="btn btn-sm btn-outline-success ms-2" @click="copy.active = false">Done Pasting</button>
-	</div>
-
-	<div>
-		<div class="pb-2">
+		<div class="mb-3">
 			<Categories :categories="categoryTree" :editCategory="editCategory" />
 		</div>
+		<div class="border p-2 px-3 mb-3">
+			<RulesGlobal :globals="website.product_rules.global_rules" />
+		</div>
 		<div>
-			<Rules v-if="edit.category" :category="edit.category" :edit="editRule" :paste="pasteConfig" :copy="copyConfig" :copyActive="copy.active" :remove="removeRule" />
+			<button v-if="copy.active" class="btn btn-sm btn-outline-success ms-2" @click="copy.active = false">Done Pasting</button>
+		</div>
+		<div>
+			<Rules v-if="edit.category" :category="edit.category" :edit="editRule" :paste="pasteConfig" :copy="copyConfig" :duplicate="duplicateRule" :copyActive="copy.active" :remove="removeRule" />
 		</div>
 	</div>
 

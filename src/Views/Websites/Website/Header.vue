@@ -204,12 +204,12 @@ export default {
 						<input type="text" class="form-control" placeholder="Subdomain" v-model="website.handle" @change="lowerCaseHandle" :class="!handleValidates ? 'is-invalid': ''">
 						<label>Subdomain</label>
 					</div>
-					<span class="input-group-text">.promoretailer.com</span>
+					<span class="input-group-text">.{{ symfony.brand.magento.domain }}</span>
 					<div class="invalid-feedback">
 						Needs to start with a letter and contain only letters, numbers.
 					</div>
 				</template>
-				<a v-if="website.config.magento.store_id" class="btn btn-success btn-sm d-flex align-items-center" :href="`https://${website.handle}.promoretailer.com`" target="_blank">View &nbsp;<i class="bi bi-box-arrow-up-right"></i></a>
+				<a v-if="website.config.magento.store_id" class="btn btn-success btn-sm d-flex align-items-center" :href="`https://${website.handle}.${symfony.brand.magento.domain}`" target="_blank">View &nbsp;<i class="bi bi-box-arrow-up-right"></i></a>
 			</div>
 		</div>
 

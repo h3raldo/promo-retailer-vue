@@ -13,7 +13,7 @@ export default {
 			loading: {
 				data: false,
 			},
-			tabs: ['Filters', 'Decoration_Sets', 'Overwrites'],
+			tabs: ['Filters', 'Decoration_Sets', 'Overwrites', 'Inputs'],
 			filters: [
 				{ code: 'color', title: 'Color' },
 				{ code: 'color_secondary', title: 'Color (Secondary)'},
@@ -36,7 +36,7 @@ export default {
 		}
 	},
 	props: ['rule', 'index'],
-	inject: ['symfony'],
+	inject: ['symfony', 'config'],
 	methods: {
 		addFilter(){
 			this.rule.filters.push({
@@ -62,6 +62,15 @@ export default {
 			this.rule.overwrites.push({
 				attribute: 'margin',
 				value: '',
+			})
+		},
+
+		addInput( input ){
+			if( !this.rule.options ) this.rule.options = {};
+			if( !this.rule.inputs ) this.rule.inputs = [];
+
+			this.rule.inputs.push({
+				id: input.id,
 			})
 		},
 
@@ -154,6 +163,35 @@ export default {
 				</div>
 			</div>
 			<button class="btn btn-outline-primary btn-sm" @click="addOverwrite">Add Overwrite</button>
+		</template>
+		<template #Inputs>
+			<p>Note: Applies to all Variants</p>
+
+			<p class="fw-bold mb-1">Added Inputs:</p>
+			<div class="d-flex gap-2 mb-3" v-if="rule?.inputs?.length">
+				<span class="badge text-bg-secondary" v-for="(field, fi) in rule.inputs">
+					{{ field.id }} <a @click.prevent="rule.inputs.splice(fi,1)" class="text-white" href="#">x</a>
+				</span>
+			</div>
+
+			<table class="table">
+				<thead>
+				<tr>
+					<th></th>
+					<th>ID</th>
+					<th>Frontend Name</th>
+					<th>Type</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr v-for="input in config.inputs">
+					<td><button class="btn btn-sm btn-primary" @click="addInput(input)">Add</button></td>
+					<td>{{ input.id }}</td>
+					<td>{{ input['frontend-name'] }}</td>
+					<td>{{ input.type }}</td>
+				</tr>
+				</tbody>
+			</table>
 		</template>
 	</Tabs>
 </template>

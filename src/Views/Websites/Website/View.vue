@@ -27,6 +27,7 @@ export default {
 				logos: []
 			},
 			config: {
+				inputs: {},
 				categories: [],
 				flatCategories: {}
 			},
@@ -40,7 +41,7 @@ export default {
 
 	computed: {
 		publicUrl(){
-			return `https://${this.entities.website.handle}.promoretailer.com`;
+			return `https://${this.entities.website.handle}.${symfony.brand.magento.domain}`;
 		},
 	},
 	provide() {
@@ -82,6 +83,7 @@ export default {
 
 				// categories
 				self.config.categories = d.config.categories;
+				self.config.inputs = d.config.inputs;
 
 				if( typeof self.entities.website.config.orders === 'undefined' ){
 					self.entities.website.config.orders = {

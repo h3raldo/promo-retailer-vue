@@ -9,7 +9,7 @@ import {computed} from "vue";
 export default {
 	data() {
 		return {
-			version: '2.0.2',
+			version: '3.0.0',
 			symfony: window.symfony,
 			alert: {
 				enabled: false,
@@ -102,8 +102,8 @@ export default {
 				<RouterView />
 
 				<div class="d-flex justify-content-center align-items-center gap-2 pt-5">
-					<div><img class="d-block" src="https://cdn.promoretailer.com/logos/promo-retailer-purple.png" alt="" height="30"></div>
-					<div class="fst-italic">PromoVue v{{ version }}</div>
+					<div><img class="d-block" src="https://r2.promoconnections.com/web/logos/promo-connections-logo-icon-white.png" alt="" height="30"></div>
+					<div class="fst-italic">ProConnect v{{ version }}</div>
 				</div>
 			</main>
 		</div>

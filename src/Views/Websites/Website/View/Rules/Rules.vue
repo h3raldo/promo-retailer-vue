@@ -6,7 +6,7 @@ export default {
 	data() {
 		return {}
 	},
-	props: ['category', 'edit', 'paste', 'copy', 'copyActive', 'remove'],
+	props: ['category', 'edit', 'paste', 'copy', 'copyActive', 'remove', 'duplicate'],
 	inject: [],
 	methods: {}
 }
@@ -20,7 +20,7 @@ export default {
 			</tr>
 			</thead>
 			<tbody>
-				<Rule v-for="rule in category.rules" :rule="rule.rule" :index="rule.index" :edit="edit" :paste="paste" :copy="copy" :copyActive="copyActive" :remove="remove" />
+				<Rule v-for="rule in category.rules" :rule="rule.rule" :index="rule.index" :edit="edit" :paste="paste" :copy="copy" :copyActive="copyActive" :duplicate="duplicate" :remove="remove" />
 			</tbody>
 		</table>
 	</div>

@@ -286,22 +286,24 @@ export default {
 				<th colspan="999" class="text-end">
 
 					<table class="float-end">
-						<tr>
-							<td class="pe-3">Total:</td>
-							<td class="text-start">{{ formatPricing(response.totals.total) }}</td>
-						</tr>
-						<tr class="text-warning">
-							<td class="pe-3">Cost:</td>
-							<td class="text-start">{{ formatPricing(response.totals.cost) }}</td>
-						</tr>
-						<tr class="text-success">
-							<td class="pe-3">Profit:</td>
-							<td class="text-start">{{ formatPricing(response.totals.profit) }}</td>
-						</tr>
-						<tr>
-							<td class="pe-3">Margin:</td>
-							<td class="text-start">{{ response.totals.margin }}%</td>
-						</tr>
+						<tbody>
+							<tr>
+								<td class="pe-3">Total:</td>
+								<td class="text-start">{{ formatPricing(response.totals.total) }}</td>
+							</tr>
+							<tr class="text-warning">
+								<td class="pe-3">Cost:</td>
+								<td class="text-start">{{ formatPricing(response.totals.cost) }}</td>
+							</tr>
+							<tr class="text-success">
+								<td class="pe-3">Profit:</td>
+								<td class="text-start">{{ formatPricing(response.totals.profit) }}</td>
+							</tr>
+							<tr>
+								<td class="pe-3">Margin:</td>
+								<td class="text-start">{{ response.totals.margin }}%</td>
+							</tr>
+						</tbody>
 					</table>
 
 				</th>

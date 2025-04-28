@@ -282,7 +282,7 @@ export default {
 	}
 
 	.logo-box{
-		background: red url(https://cdn.promoretailer.com/web/icons/arrow-up.svg) no-repeat top center;
+		background: red url(https://r2.promoconnections.com/web/icons/arrow-up.svg) no-repeat top center;
 		background-size: contain;
 		position: absolute;
 		border: 2px dotted #000;

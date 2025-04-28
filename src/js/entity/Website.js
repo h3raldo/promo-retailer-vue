@@ -13,6 +13,7 @@ let product_rules = {
     create( type, entity ){
 
         let data = {
+            id: null,
             type,
             name: '',
             entity: {},

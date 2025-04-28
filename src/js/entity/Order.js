@@ -170,7 +170,7 @@ function convertFromSource( data, cb )
         let order = entity.order.create(data.init.id);
         let logos = [];
 
-        utils.ajax(`https://promoretailer.com/pr_api/?order=${order_data.source_id}`, (magento_order) => {
+        utils.ajax(`https://promoconnections.com/pr_api/?order=${order_data.source_id}`, (magento_order) => {
 
             order.info.source = 'magento';
             let stores = magento_order.store.split(':');

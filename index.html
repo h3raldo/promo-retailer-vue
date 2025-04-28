@@ -16,6 +16,9 @@
 			brand: {
 				logo_small: 'https://cdn.promoretailer.com/web/logos/pr-logo.png',
 				name: 'Promo Retailer',
+				magento: {
+					domain: 'promoconnections.com'
+				}
 			},
             user: 'admin',
             logoutUrl: '/',
@@ -47,145 +50,146 @@
             },
             api: {
 				email: {
-					send: 'https://tools.promoretailer.dev/api/email/send/'
+					send: 'https://promoconnections.tools/api/email/send/'
 				},
 				entity: {
 					save: '/admin/entity/:type/save/',
-					events: 'https://tools.promoretailer.dev/api/entity/events/'
+					delete: '/admin/entity/delete/',
+					events: 'https://promoconnections.tools/api/entity/events/'
 				},
                 companies: {
-                    search: 'https://tools.promoretailer.dev/api/companies/',
+                    search: 'https://promoconnections.tools/api/companies/',
                     company: {
-                        get: 'https://tools.promoretailer.dev/api/companies/company/:id/',
-                        save: 'https://tools.promoretailer.dev/api/companies/save/',
-                        new: 'https://tools.promoretailer.dev/api/companies/create/',
-                        contacts: 'https://tools.promoretailer.dev/api/companies/company/:id/contacts/',
+                        get: 'https://promoconnections.tools/api/companies/company/:id/',
+                        save: 'https://promoconnections.tools/api/companies/save/',
+                        new: 'https://promoconnections.tools/api/companies/create/',
+                        contacts: 'https://promoconnections.tools/api/companies/company/:id/contacts/',
                     }
                 },
 				orders: {
-					export: 'https://tools.promoretailer.dev/admin/orders/export/',
-					report: 'https://tools.promoretailer.dev/api/report/orders/',
+					export: 'https://promoconnections.tools/admin/orders/export/',
+					report: 'https://promoconnections.tools/api/report/orders/',
 					order: {
-						packing_slip: 'https://tools.promoretailer.dev/admin/orders/order/:id/packing-slip/',
-						print: 'https://tools.promoretailer.dev/admin/orders/order/:id/print/',
-						invoice: 'https://tools.promoretailer.dev/api/quickbooks/createInvoice/'
+						packing_slip: 'https://promoconnections.tools/admin/orders/order/:id/packing-slip/',
+						print: 'https://promoconnections.tools/admin/orders/order/:id/print/',
+						invoice: 'https://promoconnections.tools/api/quickbooks/createInvoice/'
 					}
 				},
                 contacts: {
-                    search: 'https://tools.promoretailer.dev/api/contacts/',
+                    search: 'https://promoconnections.tools/api/contacts/',
                     contact: {
-                        get: 'https://tools.promoretailer.dev/api/contacts/contact/:id/',
-                        new: 'https://tools.promoretailer.dev/admin/contacts/create/',
-                        save: 'https://tools.promoretailer.dev/admin/contacts/save/'
+                        get: 'https://promoconnections.tools/api/contacts/contact/:id/',
+                        new: 'https://promoconnections.tools/admin/contacts/create/',
+                        save: 'https://promoconnections.tools/admin/contacts/save/'
                     }
                 },
 				purchase_orders: {
-					search: 'https://tools.promoretailer.dev/api/purchase-orders/',
-					report: 'https://tools.promoretailer.dev/api/report/purchase_orders/',
+					search: 'https://promoconnections.tools/api/purchase-orders/',
+					report: 'https://promoconnections.tools/api/report/purchase_orders/',
 					order: {
-						get: 'https://tools.promoretailer.dev/api/purchase-orders/po/:id/',
-						save: 'https://tools.promoretailer.dev/api/purchase-orders/po/',
-						new: 'https://tools.promoretailer.dev/purchase-orders/create/',
+						get: 'https://promoconnections.tools/api/purchase-orders/po/:id/',
+						save: 'https://promoconnections.tools/api/purchase-orders/po/',
+						new: 'https://promoconnections.tools/purchase-orders/create/',
 						delete: '/admin/purchase-orders/delete/:id/',
-						public: 'https://tools.promoretailer.dev/orders/public/view/:id/',
+						public: 'https://promoconnections.tools/orders/public/view/:id/',
 					}
 				},
 				quickbooks: {
-					connect: 'https://tools.promoretailer.dev/',
+					connect: 'https://promoconnections.tools/',
 					customer: {
-						search: 'https://tools.promoretailer.dev/api/quickbooks/customers/search/'
+						search: 'https://promoconnections.tools/api/quickbooks/customers/search/'
 					}
 				},
 				decorators: {
-					search: 'https://tools.promoretailer.dev/api/decorators/',
+					search: 'https://promoconnections.tools/api/decorators/',
 					decorator: {
-						get: 'https://tools.promoretailer.dev/api/decorators/decorator/:id/',
-						save: 'https://tools.promoretailer.dev/admin/decorators/decorator/save/',
-						new: 'https://tools.promoretailer.dev/api/decorators/create/',
+						get: 'https://promoconnections.tools/api/decorators/decorator/:id/',
+						save: 'https://promoconnections.tools/admin/decorators/decorator/save/',
+						new: 'https://promoconnections.tools/api/decorators/create/',
 					}
 				},
 				products: {
-					search: 'https://tools.promoretailer.dev/api/products/',
+					search: 'https://promoconnections.tools/api/products/',
 					product: {
-						get: 'https://tools.promoretailer.dev/api/products/product/:id/',
-						save: 'https://tools.promoretailer.dev/admin/products/product/save/',
-						create: 'https://tools.promoretailer.dev/api/products/create/',
-						delete: 'https://tools.promoretailer.dev/api/products/delete/',
+						get: 'https://promoconnections.tools/api/products/product/:id/',
+						save: 'https://promoconnections.tools/admin/products/product/save/',
+						create: 'https://promoconnections.tools/api/products/create/',
+						delete: 'https://promoconnections.tools/api/products/delete/',
 						placements: {
-							get: 'https://tools.promoretailer.dev/api/editor/group/info/:group/',
-							push: 'https://tools.promoretailer.dev/admin/editor/placement/push/:product/',
+							get: 'https://promoconnections.tools/api/editor/group/info/:group/',
+							push: 'https://promoconnections.tools/admin/editor/placement/push/:product/',
 						},
 						variant: {
-							available: 'https://tools.promoretailer.dev/api/products/product/:id/variants/available',
+							available: 'https://promoconnections.tools/api/products/product/:id/variants/available',
 						},
 						magento: {
-							sync: 'https://tools.promoretailer.dev/admin/products/product/:id/magento/sync/',
+							sync: 'https://promoconnections.tools/admin/products/product/:id/magento/sync/',
 						}
 					},
 					categories: {
-						counts: 'https://tools.promoretailer.dev/api/products/categories/counts/',
+						counts: 'https://promoconnections.tools/api/products/categories/counts/',
 						category: {
-							count: 'https://tools.promoretailer.dev/api/products/categories/category/:id/count/',
+							count: 'https://promoconnections.tools/api/products/categories/category/:id/count/',
 						}
 					},
 				},
 				websites: {
-					search: 'https://tools.promoretailer.dev/api/websites/',
+					search: 'https://promoconnections.tools/api/websites/',
 					website: {
-						get: 'https://tools.promoretailer.dev/api/websites/website/:id/',
-						new: 'https://tools.promoretailer.dev/admin/websites/website/',
-						save: 'https://tools.promoretailer.dev/admin/websites/website/',
-						delete: 'https://tools.promoretailer.dev/admin/websites/website/',
+						get: 'https://promoconnections.tools/api/websites/website/:id/',
+						new: 'https://promoconnections.tools/admin/websites/website/',
+						save: 'https://promoconnections.tools/admin/websites/website/',
+						delete: 'https://promoconnections.tools/admin/websites/website/',
 						products: {
-							compiled: 'https://tools.promoretailer.dev/api/websites/website/:id/products/compiled/',
+							compiled: 'https://promoconnections.tools/api/websites/website/:id/products/compiled/',
 						},
 						magento: {
-							create: 'https://tools.promoretailer.dev/admin/websites/website/:id/products/compiled/',
-						}
+							create: 'https://promoconnections.tools/admin/websites/website/:id/products/compiled/',
+						},
 					}
 				},
 				logos: {
-					search: 'https://tools.promoretailer.dev/api/logos/',
+					search: 'https://promoconnections.tools/api/logos/',
 					logo: {
-						get: 'https://tools.promoretailer.dev/api/logos/logo/:id/',
-						new: 'https://tools.promoretailer.dev/admin/logos/logo/create/',
-						save: 'https://tools.promoretailer.dev/admin/logos/logo/save/',
-						delete: 'https://tools.promoretailer.dev/admin/logos/logo/:id/delete/',
+						get: 'https://promoconnections.tools/api/logos/logo/:id/',
+						new: 'https://promoconnections.tools/admin/logos/logo/create/',
+						save: 'https://promoconnections.tools/admin/logos/logo/save/',
+						delete: 'https://promoconnections.tools/admin/logos/logo/:id/delete/',
 						variant: {
-							new: 'https://tools.promoretailer.dev/admin/logos/logo/:id/variants/create/',
-							delete: 'https://tools.promoretailer.dev/admin/logos/logo/variants/:id/delete/',
-							upload: 'https://tools.promoretailer.dev/api/logos/logo/:id/',
+							new: 'https://promoconnections.tools/admin/logos/logo/:id/variants/create/',
+							delete: 'https://promoconnections.tools/admin/logos/logo/variants/:id/delete/',
+							upload: 'https://promoconnections.tools/api/logos/logo/:id/',
 						}
 					}
 				},
 				config: {
-					get: 'https://tools.promoretailer.dev/api/config/get/',
-					save: 'https://tools.promoretailer.dev/api/config/save/',
+					get: 'https://promoconnections.tools/api/config/get/',
+					save: 'https://promoconnections.tools/api/config/save/',
 				}
             },
             quotes: {
-                search: 'https://tools.promoretailer.dev/api/quotes/',
+                search: 'https://promoconnections.tools/api/quotes/',
                 quote: {
-                    new: 'https://tools.promoretailer.dev/quotes/create/',
-                    save: 'https://tools.promoretailer.dev/quotes/save/',
-                    duplicate: 'https://tools.promoretailer.dev/quotes/duplicate/:id/',
-                    delete: 'https://tools.promoretailer.dev/quotes/delete/:id/',
+                    new: 'https://promoconnections.tools/quotes/create/',
+                    save: 'https://promoconnections.tools/quotes/save/',
+                    duplicate: 'https://promoconnections.tools/quotes/duplicate/:id/',
+                    delete: 'https://promoconnections.tools/quotes/delete/:id/',
                     push: 'https://preview.promoretailer.dev/quotes/push/',
-                    public: 'https://tools.promoretailer.dev/quote/public/view/:id/',
-                    get: 'https://tools.promoretailer.dev/api/quotes/quote/:id/',
+                    public: 'https://promoconnections.tools/quote/public/view/:id/',
+                    get: 'https://promoconnections.tools/api/quotes/quote/:id/',
                 },
                 decorators: 'https://preview.promoretailer.dev/quote/decorators/'
             },
             orders: {
-                search: 'https://tools.promoretailer.dev/api/orders/',
+                search: 'https://promoconnections.tools/api/orders/',
                 order: {
-                    get: 'https://tools.promoretailer.dev/api/orders/order/:id/',
-                    new: 'https://tools.promoretailer.dev/admin/orders/create/',
-                    save: 'https://tools.promoretailer.dev/orders/save/',
-                    duplicate: 'https://tools.promoretailer.dev/orders/duplicate/:id/',
-                    delete: 'https://tools.promoretailer.dev/orders/delete/:id/',
+                    get: 'https://promoconnections.tools/api/orders/order/:id/',
+                    new: 'https://promoconnections.tools/admin/orders/create/',
+                    save: 'https://promoconnections.tools/orders/save/',
+                    duplicate: 'https://promoconnections.tools/orders/duplicate/:id/',
+                    delete: 'https://promoconnections.tools/orders/delete/:id/',
                     push: 'https://preview.promoretailer.dev/orders/push/',
-                    public: 'https://tools.promoretailer.dev/orders/order/:id/',
+                    public: 'https://promoconnections.tools/orders/order/:id/',
                 }
             },
             reports: {
@@ -203,8 +207,8 @@
                 search: 'https://preview.promoretailer.dev/prismic/lookup/logo/:name/'
             },
             sage: {
-                search: 'https://tools.promoretailer.dev/api/sage/search/',
-                item: 'https://tools.promoretailer.dev/api/sage/search/item/:id/'
+                search: 'https://promoconnections.tools/api/sage/search/',
+                item: 'https://promoconnections.tools/api/sage/search/item/:id/'
             },
             website: {
                 get: 'https://preview.promoretailer.dev/api/prismic'

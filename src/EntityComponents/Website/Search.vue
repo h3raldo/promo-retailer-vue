@@ -27,11 +27,14 @@ export default {
 	inject: ['symfony', 'alert'],
 	computed: {
 		defaultParams() {
+
+			let params = 'per_page=15'
+
 			if( this.hideChildren !== true ){
-				return '';
+				return params;
 			}
 
-			return 'children=false'
+			return params + '&children=false'
 		}
 	},
 	methods: {
