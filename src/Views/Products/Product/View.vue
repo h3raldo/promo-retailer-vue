@@ -126,6 +126,24 @@ export default {
 						</div>
 						<div class="col-4">
 
+							<div class="bg-light p-3 mb-4">
+								<div class="border-bottom pb-2 mb-2 d-flex gap-3 align-items-center">
+									<h6 class="mb-0"><i class="bi bi-bar-chart-line-fill"></i> Reporting</h6>
+								</div>
+								<table class="table table-light table-sm">
+									<tbody>
+									<tr>
+										<td>Websites</td>
+										<td>{{ entities.product._reports.website_rules_count }}</td>
+									</tr>
+									<tr>
+										<td>Website Rules</td>
+										<td>{{ entities.product._reports.website_rules_count }}</td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+
 							<div class="bg-light p-3">
 								<div class="border-bottom pb-2 mb-2 d-flex gap-3 align-items-center">
 									<h6 class="mb-0"><i class="bi bi-layout-text-window-reverse"></i> Magento Settings</h6>

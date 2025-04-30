@@ -181,12 +181,16 @@ export default {
 			new_rule.id = null;
 			this.rules.push(new_rule)
 		},
-		copyFromWebsite( website )
+		copyFromWebsite( website, products )
 		{
+			Object.keys(products).forEach( id => {
+				this.products[id] = products[id];
+			})
 			website.product_rules.rules.forEach( rule => {
 				rule.id = null;
 				this.website.product_rules.rules.push( rule )
 			});
+			this.initialCategory();
 		},
 		editRule( rule, index )
 		{
@@ -205,6 +209,10 @@ export default {
 		stop(e){
 			e.stopPropagation();
 			e.preventDefault();
+		},
+		initialCategory(){
+			let firstActive = this.categoryTree.filter( c => c.products.length > 0);
+			if( firstActive.length > 0 ) this.editCategory( firstActive[0] );
 		}
 	},
 	created() {
@@ -218,9 +226,16 @@ export default {
 			}
 		}
 
+
+		else if( typeof this.website.product_rules?.global_rules?.decoration_sets === 'undefined' ) this.website.product_rules.global_rules = {
+			filters: [],
+			decoration_sets: [],
+			decoration_groups: [],
+			overwrites: [],
+		}
+
 		else{
-			let firstActive = this.categoryTree.filter( c => c.products.length > 0);
-			if( firstActive.length > 0 ) this.editCategory( firstActive[0] );
+			this.initialCategory();
 		}
 
 	}
@@ -232,7 +247,7 @@ export default {
 		<div class="d-flex gap-2">
 			<Search :onSelect="productSelected" buttonText="Add Product" buttonIcon="bi bi-plus-circle" :sage="true" />
 			<!--			<AddCategory />-->
-			<WebsiteSearch :onSelect="copyFromWebsite" buttonClasses="btn btn-outline-primary" buttonText="Copy from Website" icon="bi-copy" />
+			<WebsiteSearch :onSelect="copyFromWebsite" buttonClasses="btn btn-outline-primary" buttonText="Copy from Website" icon="bi-copy" :returnFullEntity="true"  />
 			<Modal title="Compile (Validate Product Decoration Settings)" id="compile-products" button-text="Validate & Preview Products" buttonClasses="btn btn-outline-primary">
 				<Compiled />
 			</Modal>
@@ -274,7 +289,7 @@ export default {
 		<div class="d-flex gap-2">
 			<Search :onSelect="productSelected" buttonText="Add Product" buttonIcon="bi bi-plus-circle" :sage="true" />
 <!--			<AddCategory />-->
-			<WebsiteSearch :onSelect="copyFromWebsite" buttonClasses="btn btn-outline-primary" buttonText="Copy from Website" icon="bi-copy" />
+			<WebsiteSearch :onSelect="copyFromWebsite" buttonClasses="btn btn-outline-primary" buttonText="Copy from Website" icon="bi-copy" :returnFullEntity="true" />
 		</div>
 	</div>
 </template>

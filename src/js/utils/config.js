@@ -2,6 +2,7 @@ import utils from "@/js/utils.js";
 
 let keys = {
     approvalEmail: 'email/order/approval',
+    globalInputs: 'global:product:custom_fields',
     globalCategories: 'global/product/categories',
     decorationLocations: 'global/decoration/locations',
     decorationSets: 'global/decoration/sets',
@@ -18,6 +19,7 @@ let retrieve = ( key, callback, error_callback  ) => {
 export default {
     get: {
         option( key, callback, error_callback ){
+            console.log('want to get', key, keys[key])
             retrieve( keys[key], callback, error_callback );
         },
         approvalEmail( callback, error_callback ) {

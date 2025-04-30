@@ -21,8 +21,8 @@ export default {
 		}
 	},
 	methods: {
-		selected(company, variant) {
-			this.onSelect(company, variant)
+		selected(logo, variant) {
+			this.onSelect(logo, variant)
 
 			if (this.getType === 'modal')
 				this.$refs.modal.$refs.closeModalButton.click();

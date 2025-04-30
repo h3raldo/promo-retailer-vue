@@ -1,5 +1,6 @@
 <script setup>
-import LogoSearch from "@/EntityComponents/Order/Logos/Search.vue";
+import LogoSearchLegacy from "@/EntityComponents/Order/Logos/Search.vue";
+import LogoSearch from "@/EntityComponents/Logo/Search.vue";
 import Modal from "@/components/globals/bootstrap/Modal.vue";
 </script>
 
@@ -9,6 +10,20 @@ import entity from "@/js/entity.js";
 export default {
 	data() {
 		return {}
+	},
+
+	methods: {
+		addLogo( logo, variant ){
+			let new_logo = entity.order.logo.create(variant);
+			new_logo.id = variant.handle;
+			new_logo.name = logo.name;
+			new_logo.url = variant.image;
+			new_logo.variation = variant.types.join(', ');
+			this.fn.logo.add(new_logo);
+
+
+			console.log('selected', variant);
+		}
 	},
 
 	inject: ['logos', 'fn'],
@@ -53,9 +68,7 @@ export default {
 	</div>
 
 	<div class="pt-4 border-top mt-4">
-		<Modal :id="'quote-logo-search'" :title="'Logo Search'" :buttonText="'Add Logo'" :buttonClasses="'btn btn-primary'" :icon="'bi-plus-circle'">
-			<LogoSearch />
-		</Modal>
+		<LogoSearch :selectVariant="true" buttonClasses="btn btn-primary" :buttonText="'Add Logo'" :buttonIcon="'bi bi-plus-circle'" :onSelect="addLogo" />
 		<button class="btn btn-outline-primary ms-3" @click="fn.logo.addCustomLogo"><i class="bi bi-plus-circle"></i> Add Custom Logo</button>
 	</div>
 

@@ -12,7 +12,7 @@ export default {
 			searchState: {}
 		}
 	},
-	props: ['type', 'onSelect', 'api', 'columns', 'entity', 'defaultParams'],
+	props: ['type', 'onSelect', 'api', 'columns', 'entity', 'defaultParams', 'loading'],
 	inject: ['symfony'],
 	computed: {},
 	methods: {
@@ -73,7 +73,7 @@ export default {
 
 		<template #item="{item}">
 			<td v-for="column in columns">{{ item[column.id] }}</td>
-			<td><button class="btn btn-primary" @click="onSelect(item)">Select</button></td>
+			<td><button class="btn btn-primary" @click="onSelect(item)" :disabled="loading === true">Select</button></td>
 		</template>
 	</Grid>
 </template>

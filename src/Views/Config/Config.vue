@@ -2,6 +2,7 @@
 import Email from "@/Views/Config/Section/Email.vue";
 import Categories from "@/Views/Config/Section/Categories.vue";
 import Decorations from "@/Views/Config/Section/Decorations.vue";
+import Inputs from "@/Views/Config/Section/Inputs.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -9,6 +10,28 @@ import utils from "@/js/utils.js";
 		data(){
 			return {
 				id: this.$route.params.section,
+				settings: [
+					{
+						id: 'email',
+						name: 'Email Settings',
+						description: 'Approval email template',
+					},
+					{
+						id: 'categories',
+						name: 'Global Categories',
+						description: 'Categories used globally for all products.',
+					},
+					{
+						id: 'decorations',
+						name: 'Decorations',
+						description: 'Global decoration settings',
+					},
+					{
+						id: 'inputs',
+						name: 'Inputs',
+						description: 'Global inputs used by websites.',
+					}
+				]
 			}
 		},
 		computed: {
@@ -32,38 +55,25 @@ import utils from "@/js/utils.js";
 </script>
 <template>
 
-	<div class="text-end pb-3 bg-gray p-3 mb-4 d-flex justify-content-between align-items-center">
-		<h3 class="m-0"><i class="bi bi-person"></i> Config</h3>
-		<button class="btn btn-outline-secondary p-3" @click="goToSection('')">View All</button>
+	<div class="text-end bg-gray p-3 mb-4 d-flex gap-3 align-items-center">
+		<div>
+			<button v-if="id !== ''" class="btn btn-outline-secondary" @click="goToSection('')"><i class="bi bi-arrow-left"></i></button>
+		</div>
+		<h3 class="m-0"><i class="bi bi-gear"></i> Settings</h3>
 	</div>
 
 	<div v-if="section">
 		<Email v-if="id === 'email'" />
 		<Categories v-if="id === 'categories'" />
 		<Decorations v-if="id === 'decorations'" />
+		<Inputs v-if="id === 'inputs'" />
 	</div>
 
 	<div v-else>
-		<div>
-			<h5>Email Settings</h5>
-			<p>Approval email template</p>
-			<button class="btn btn-primary" @click="goToSection('email')">Email Settings</button>
-		</div>
-
-		<hr>
-
-		<div>
-			<h5>Global Categories</h5>
-			<p>Categories used globally for all products.</p>
-			<button class="btn btn-primary" @click="goToSection('categories')">Edit Categories</button>
-		</div>
-
-		<hr>
-
-		<div>
-			<h5>Decorations</h5>
-			<p>Global decoration settings</p>
-			<button class="btn btn-primary" @click="goToSection('decorations')">Edit Decorations</button>
+		<div v-for="s in settings" class="mb-3 border-bottom pb-4">
+			<h5>{{ s.name }}</h5>
+			<p>{{ s.description }}</p>
+			<button class="btn btn-primary" @click="goToSection(s.id)">Edit {{ s.name }}</button>
 		</div>
 	</div>
 
