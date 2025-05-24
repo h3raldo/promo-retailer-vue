@@ -18,6 +18,9 @@ export default {
 		canSave(){
 			return this.handleValidates && this.website.name !== '' && this.website.handle !== '';
 		},
+		productRulesExport(){
+			return this.symfony.api.websites.website.export.items.replace(':id', this.website.id);
+		},
 		saveData() {
 			return {
 				entities: {
@@ -163,6 +166,14 @@ export default {
 		</div>
 		<div>
 			<div class="text-end d-flex gap-2">
+				<div class="btn-group">
+					<button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+						Actions
+					</button>
+					<ul class="dropdown-menu">
+						<li><a class="dropdown-item" :href="productRulesExport" target="_blank"><i class="bi bi-table"></i> Export Products</a></li>
+					</ul>
+				</div>
 				<button class="btn btn-primary" :disabled="loading || !canSave" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
 				<button v-if="website.config.magento.store_id" class="btn btn-warning" :disabled="loading || !canSave" @click="sync"><i class="bi bi-arrow-repeat"></i> Sync To Magento</button>
 				<button v-if="canSave && !website.config.magento.store_id" class="btn btn-warning btn-sm" @click="createWebsite"><i class="bi bi-cloud-plus"></i> Create Website</button>

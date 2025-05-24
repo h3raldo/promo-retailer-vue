@@ -130,7 +130,7 @@ export default {
 								<div class="border-bottom pb-2 mb-2 d-flex gap-3 align-items-center">
 									<h6 class="mb-0"><i class="bi bi-bar-chart-line-fill"></i> Reporting</h6>
 								</div>
-								<table class="table table-light table-sm">
+								<table class="table table-light table-sm" v-if="entities?.product?._reports">
 									<tbody>
 									<tr>
 										<td>Websites</td>

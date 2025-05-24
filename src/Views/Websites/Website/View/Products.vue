@@ -9,6 +9,7 @@ import WebsiteSearch from "@/EntityComponents/Website/Search.vue"
 import Rules from "@/Views/Websites/Website/View/Rules/Rules.vue";
 import Categories from "@/Views/Websites/Website/View/Rules/Categories.vue";
 import RulesGlobal from "@/Views/Websites/Website/View/Rules/Rules.Global.vue";
+import DynamicDecorationSetCreator from "@/EntityComponents/Decorations/DynamicDecorationSetCreator.vue";
 </script>
 <script>
 import entity from "@/js/entity.js";
@@ -292,6 +293,8 @@ export default {
 			<WebsiteSearch :onSelect="copyFromWebsite" buttonClasses="btn btn-outline-primary" buttonText="Copy from Website" icon="bi-copy" :returnFullEntity="true" />
 		</div>
 	</div>
+
+<!--	<DynamicDecorationSetCreator />-->
 </template>
 
 <style>

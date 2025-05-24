@@ -67,7 +67,11 @@ export default {
 	},
 
 	mounted() {
-		if( localStorage.getItem('search') ) this.search = JSON.parse( localStorage.getItem('search'));
+		/*
+		if( localStorage.getItem('search') )
+			this.search = JSON.parse( localStorage.getItem('search'));
+			*/
+
 	}
 }
 </script>
