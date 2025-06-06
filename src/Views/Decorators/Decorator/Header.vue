@@ -22,6 +22,7 @@ export default {
 				'UV Printing',
 				'Vinyl',
 				'DTG Printing',
+			  	'Patch'
 			]
 		}
 	},

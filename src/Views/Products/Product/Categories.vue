@@ -10,11 +10,16 @@ export default {
 		return {
 			loading: false,
 			categories: [],
+			remoteCategories: []
 		}
 	},
 	props: [],
-	inject: ['product'],
+	inject: ['product', 'config'],
 	computed: {
+		allCategories(){
+			if( this.config?.categories ) return this.config.categories;
+			return this.remoteCategories;
+		}
 	},
 	methods: {
 		updated(){
@@ -27,6 +32,8 @@ export default {
 		}
 	},
 	mounted(){
+		if( this.config?.categories ) return;
+
 		let self = this;
 		self.loading = true;
 
@@ -34,7 +41,7 @@ export default {
 			self.loading = false;
 
 			if( !response ) return;
-			self.categories = response;
+			self.remoteCategories = response;
 
 			self.updated();
 		} )
@@ -43,6 +50,6 @@ export default {
 </script>
 <template>
 <div>
-	<Category v-for="category in categories" :product="product" :category="category" />
+	<Category v-for="category in allCategories" :product="product" :category="category" />
 </div>
 </template>

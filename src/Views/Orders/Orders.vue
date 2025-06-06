@@ -124,7 +124,7 @@ export default {
 		},
 		hasPRPurchaseOrder( purchaseOrders )
 		{
-			return purchaseOrders.filter( p => p.company_id === 17 || p.company_id === 6 ).length > 0;
+			return purchaseOrders.filter( p => p.company_id === 17 || p.company_id === 6 ).length > 0; // @todo - add a WAY better system for seeing if this is PR
 		},
 		isInvoiced( item ){
 			if( !item.invoice_quickbooks_id ) return false;
@@ -161,9 +161,9 @@ export default {
 
 		<template #item="{item}">
 
-			<td>{{ item.id }}</td>
+			<td :class="{'bg-danger-subtle': item.type === 'urgent'}">{{ item.id }}</td>
 
-			<td>
+			<td :class="{'bg-danger-subtle': item.type === 'urgent'}">
 				<EditableColumn :type="'select'" :item="item" :column="'status'" :options="entity.order.default.statuses" :entity="'order'">
 					<span :class="getStatusColor(item.status)" @click="editing = item.id">
 						{{ item.status }}
@@ -171,7 +171,7 @@ export default {
 				</EditableColumn>
 			</td>
 
-			<td>
+			<td :class="{'bg-danger-subtle': item.type === 'urgent'}">
 				<EditableColumn :type="'select'" :item="item" :column="'type'" :options="entity.order.default.types" :entity="'order'">
 					<span :class="getStatusColor(item.type)" @click="editing = item.id">
 						<span v-if="item.type === 'default'">-</span>
@@ -180,7 +180,7 @@ export default {
 				</EditableColumn>
 			</td>
 
-			<td @click="viewQuote(item.id)">
+			<td @click="viewQuote(item.id)" :class="{'bg-danger-subtle': item.type === 'urgent'}">
 				{{ formatDate(item.date) }}
 			</td>
 
@@ -214,6 +214,12 @@ export default {
 								</span>
 							</span>
 						</template>
+						<template v-if="item.events">
+							<div></div>
+							<span class="badge text-bg-warning">
+								<i class="bi bi-calendar-event"></i> {{ item.events[item.events.length-1].type }} {{ formatDate(item.events[item.events.length-1].date) }}: {{item.events[item.events.length-1].note}}
+							</span>
+						</template>
 
 					</div>
 					<div>
@@ -231,12 +237,12 @@ export default {
 
 			</td>
 
-			<td>
+			<td :class="{'bg-danger-subtle': item.type === 'urgent'}">
 				<EditableColumn :type="'date'" :item="item" :column="'dateShipBy'" :entity="'order'">
 					{{ formatDate(item.dateShipBy) }}
 				</EditableColumn>
 			</td>
-			<td>
+			<td :class="{'bg-danger-subtle': item.type === 'urgent'}">
 				<EditableColumn :type="'date'" :item="item" :column="'dateDeliverBy'" :entity="'order'">
 					<span v-if="item.dateDeliverByFirm" class="badge text-bg-danger">
 						{{ formatDate(item.dateDeliverBy) }}
@@ -246,7 +252,7 @@ export default {
 					</span>
 				</EditableColumn>
 			</td>
-			<td>
+			<td :class="{'bg-danger-subtle': item.type === 'urgent'}">
 				<span v-if="isInvoiced(item)" class="badge text-bg-success">
 					<i class="bi bi-currency-dollar"></i> Invoiced
 				</span><br v-if="isInvoiced(item)">
@@ -266,12 +272,12 @@ export default {
 				</details>
 				-->
 			</td>
-			<td @click="viewQuote(item.id)">{{ formatPricing(item.total) }}</td>
-			<td @click="viewQuote(item.id)">{{ formatPricing(item.totalProfit) }}</td>
-			<td @click="viewQuote(item.id)">{{ item.totalMargin }}%</td>
-			<td @click="viewQuote(item.id)">{{ item.author }}</td>
+			<td @click="viewQuote(item.id)" :class="{'bg-danger-subtle': item.type === 'urgent'}">{{ formatPricing(item.total) }}</td>
+			<td @click="viewQuote(item.id)" :class="{'bg-danger-subtle': item.type === 'urgent'}">{{ formatPricing(item.totalProfit) }}</td>
+			<td @click="viewQuote(item.id)" :class="{'bg-danger-subtle': item.type === 'urgent'}">{{ item.totalMargin }}%</td>
+			<td @click="viewQuote(item.id)" :class="{'bg-danger-subtle': item.type === 'urgent'}">{{ item.author }}</td>
 
-			<td class="delete text-end d-print-none">
+			<td class="delete text-end d-print-none" :class="{'bg-danger-subtle': item.type === 'urgent'}">
 				<a class="btn btn-outline-primary me-1" :href="getDuplicateUrl(item.id)"><i class="bi bi-copy"></i></a>
 				<Modal :id="'deleteQuote-'+item.id" :title="'Are you sure?'"  :icon="'bi-trash'" :buttonClasses="'btn btn-danger'">
 					<p>Quote will be deleted permanently. Cannot be undone.</p>

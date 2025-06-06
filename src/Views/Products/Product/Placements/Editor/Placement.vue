@@ -111,8 +111,8 @@ export default {
 						<input type="number" class="form-control" name="height" min="20" max="500" value="50" v-model="placement.height">
 					</div>
 					<div class="col-6">
-						<label class="form-label">Rotation</label>
-						<input type="range" class="form-range" name="rotation" min="-180" max="180" value="0" v-model="placement.rotation">
+						<label class="form-label">Rotation ({{ placement.rotation }})</label>
+						<input type="range" class="form-range" name="rotation" min="-180" max="180" value="0" v-model.number="placement.rotation">
 					</div>
 				</div>
 	

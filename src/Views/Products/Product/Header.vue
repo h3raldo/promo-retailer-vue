@@ -155,6 +155,16 @@ export default {
 			</div>
 		</div>
 
+		<div>
+			<div class="form-floating">
+				<select class="form-select" id="status" v-model="product.bundle">
+					<option :value="true">Bundle</option>
+					<option :value="false">Default</option>
+				</select>
+				<label for="status">Type</label>
+			</div>
+		</div>
+
 		<div class="flex-grow-1">
 			<div class="form-floating">
 				<input type="text" class="form-control" id="client" placeholder="Name" v-model="product.name">

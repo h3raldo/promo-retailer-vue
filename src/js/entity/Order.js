@@ -80,6 +80,7 @@ let types = [
     { value: 'default', title: '-'},
     { value: 'bulk', title: 'Bulk'},
     { value: 'inventory', title: 'Inventory'},
+    { value: 'urgent', title: 'Urgent'},
 ];
 
 let company = {

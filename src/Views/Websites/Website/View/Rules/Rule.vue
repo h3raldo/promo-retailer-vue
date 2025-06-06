@@ -6,7 +6,7 @@ export default {
 	data() {
 		return {}
 	},
-	props: ['rule', 'index', 'edit', 'paste', 'copy', 'copyActive', 'remove', 'duplicate'],
+	props: ['rule', 'index', 'edit', 'paste', 'copy', 'copyActive', 'remove', 'duplicate', 'qty'],
 	inject: ['symfony', 'products'],
 	methods: {
 		getProduct(){
@@ -24,8 +24,8 @@ export default {
 				</template>
 				<template v-else>
 					<button class="btn btn-sm btn-primary" @click="edit(rule, index)"><i class="bi bi-pencil"></i></button>
-					<button class="btn btn-sm btn-outline-info" @click="copy(rule)">Copy</button>
-					<button class="btn btn-sm btn-outline-primary" @click="duplicate(rule)"><i class="bi bi-copy"></i></button>
+					<button v-if="typeof copy === 'function'" class="btn btn-sm btn-outline-info" @click="copy(rule)">Copy</button>
+					<button v-if="typeof duplicate === 'function'" class="btn btn-sm btn-outline-primary" @click="duplicate(rule)"><i class="bi bi-copy"></i></button>
 				</template>
 			</div>
 		</td>
@@ -35,7 +35,7 @@ export default {
 					<div style="width: 40px">
 						<a v-if="getProduct().thumbnail" :href="getProduct().thumbnail" target="_blank"><img :src="getProduct().thumbnail" alt="" height="40" loading="lazy"></a>
 					</div>
-					<div>
+					<div class="flex-fill">
 						<span>
 							<small>
 								<i class="bi bi-building"></i> {{ rule.entity.product.company.name }}
@@ -52,6 +52,14 @@ export default {
 							<span>:</span>
 							<span>{{ filter.value.join(', ')}}</span>
 						</small>
+					</div>
+					<div v-if="qty === true" class="col-1 d-flex align-items-center gap-3">
+						<div>
+							<i class="bi bi-x"></i>
+						</div>
+						<div>
+							<input class="form-control" type="number" v-model="rule.qty">
+						</div>
 					</div>
 				</div>
 			</template>

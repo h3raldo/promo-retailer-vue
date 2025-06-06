@@ -155,20 +155,27 @@ export default {
 							<label class="form-label">Color</label>
 							<input type="color" class="form-control form-control-color" v-model="location.color">
 						</div>
-						<div class="col-5">
-							<label class="form-label">Weight</label>
-							<select class="form-control form-select" v-model="location.font_weight">
-								<option value="normal">Normal</option>
-								<option value="bold">Bold</option>
-							</select>
-						</div>
 						<div class="col-3">
 							<label class="form-label">Font</label>
 							<select class="form-control form-select" v-model="location.font">
 								<option value="arial">Arial</option>
 								<option value="georgia">Georgia</option>
 								<option value="open sans">Open Sans</option>
+								<option value="Montserrat">Montserrat</option>
 							</select>
+						</div>
+						<div class="col-3">
+							<label class="form-label">Weight</label>
+							<select class="form-control form-select" v-model="location.font_weight">
+								<option value="normal">Normal</option>
+								<option value="600">Semibold</option>
+								<option value="bold">Bold</option>
+								<option value="900">Black</option>
+							</select>
+						</div>
+						<div class="col-2">
+							<label class="form-label">Size</label>
+							<input class="form-control" type="number" min="1" max="100" v-model="location.font_size">
 						</div>
 						<div class="col-3">
 							<label class="form-label">Text Align</label>
@@ -178,26 +185,37 @@ export default {
 								<option value="center">Center</option>
 							</select>
 						</div>
-						<div class="col-4">
-							<label class="form-label">Top ({{location.top}}%)</label>
-							<input type="range" class="form-range" name="rotation" min="0" max="100" value="0" step=".5" v-model="location.top">
+						<div class="col-6">
+							<div class="d-flex justify-content-between align-items-center">
+								<label class="form-label">Top ({{location.top}}%)</label>
+								<div>
+									<input class="form-control form-control-sm" type="number" min="0" max="100" v-model="location.top">
+								</div>
+							</div>
+							<input type="range" class="form-range" name="rotation" min="0" max="100" value="0" step=".25" v-model="location.top">
 						</div>
 						<template v-if="location.text_align !== 'center'">
 
-						<div class="col-4" v-if="location.text_align !== 'right'">
-							<label class="form-label">Left ({{location.left}}%)</label>
-							<input type="range" class="form-range" name="rotation" min="0" max="100" value="0" step=".5" v-model="location.left">
+						<div class="col-6" v-if="location.text_align !== 'right'">
+							<div class="d-flex justify-content-between align-items-center">
+								<label class="form-label">Left ({{location.left}}%)</label>
+								<div>
+									<input class="form-control form-control-sm" type="number" min="0" max="100" v-model="location.left">
+								</div>
+							</div>
+							<input type="range" class="form-range" name="rotation" min="0" max="100" value="0" step=".25" v-model="location.left">
 						</div>
-						<div class="col-4" v-else>
-							<label class="form-label">Right ({{location.right}}%)</label>
-							<input type="range" class="form-range" name="rotation" min="0" max="100" value="0" step=".5" v-model="location.right">
+						<div class="col-6" v-else>
+							<div class="d-flex justify-content-between align-items-center">
+								<label class="form-label">Right ({{location.right}}%)</label>
+								<div>
+									<input class="form-control form-control-sm" type="number" min="0" max="100" v-model="location.right">
+								</div>
+							</div>
+							<input type="range" class="form-range" name="rotation" min="0" max="100" value="0" step=".25" v-model="location.right">
 						</div>
 
 						</template>
-						<div class="col-4">
-							<label class="form-label">Font Size ({{location.font_size}}px)</label>
-							<input type="range" class="form-range" name="rotation" min="12" max="50" value="0" v-model="location.font_size">
-						</div>
 					</div>
 
 					<button class="btn btn-outline-danger" @click="deleteLocation(i, set)">Delete</button>

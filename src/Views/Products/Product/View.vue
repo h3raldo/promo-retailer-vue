@@ -8,6 +8,7 @@ import Editor from "@/Views/Products/Product/Placements/Editor.vue";
 import Pricing from "@/Views/Products/Product/Decorators.vue";
 import ProductView from "@/EntityComponents/Sage/Product.View.vue";
 import ViewPersonalization from "@/Views/Products/Product/View.Personalization.vue";
+import ViewBundle from "@/Views/Products/Product/View.Bundle.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -23,6 +24,7 @@ export default {
 			loading: true,
 			notFound: false,
 			entities: {},
+			config: {},
 			available: {},
 			urls: this.symfony.api.products.product,
 		}
@@ -32,11 +34,13 @@ export default {
 		tabs(){
 			let tabs = ['Info', 'Variants', 'Categories', 'Template', 'Decorators', 'Personalization'];
 			if( this.productData && this.productData.external && this.productData.external.sage ) tabs.push('Sage');
+			if( this.entities.product.bundle ){
+				tabs = ['Info', 'Categories', 'Bundle']
+			}
 			return tabs;
 		},
 		productData(){
 			if( !this.entities.product ) return null;
-
 			return this.entities.product.data;
 		},
 		_returnToModal(){
@@ -52,6 +56,7 @@ export default {
 	provide() {
 		return {
 			product: computed(() => this.entities.product),
+			config: computed(() => this.config),
 			variants: computed(() => this.entities.variants),
 			available: computed(() => this.available),
 			returnToModal: this._returnToModal,
@@ -87,7 +92,7 @@ export default {
 				return;
 			}
 
-
+			self.config = d.config;
 			self.entities = d.entities
 		});
 	}
@@ -209,6 +214,10 @@ export default {
 
 				<template #Personalization>
 					<ViewPersonalization />
+				</template>
+
+				<template #Bundle>
+					<ViewBundle />
 				</template>
 			</Tabs>
 		</template>

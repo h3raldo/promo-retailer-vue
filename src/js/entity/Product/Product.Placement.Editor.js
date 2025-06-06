@@ -13,8 +13,12 @@ let rotation = (() => {
             cx = position.height / 2;
             cy = position.width / 2;
 
-            if( angle > 90 ) angle -= 90
-            else if( angle < -90) angle += 90
+            if (angle > 90) {
+                angle -= 90;
+            } else if (angle < -90) {
+                angle += 90; // Shift negative angles into the correct range
+            }
+
         }
 
         let radians = (Math.PI / 180) * angle,
@@ -25,7 +29,7 @@ let rotation = (() => {
 
         return {
             x: Math.floor(nx),
-            y: Math.floor( (ny - y) * -1 )
+            y: Math.floor(ny - y) * -1
         }
     }
 
@@ -50,6 +54,8 @@ let rotation = (() => {
             }
         }
 
+        // console.log('rotation', position.rotation, typeof position.rotation, corner);
+
         if( position.rotation > 0 && position.rotation < 90 ){ // rotate right < 90
             return {
                 x: calcNewRotation( corner.bottom.left, position ).x,
@@ -66,13 +72,16 @@ let rotation = (() => {
                 y: calcNewRotation( corner.inverse.top.left, position ).y
             }
         } else if( position.rotation < -90 && position.rotation > -180 ){ // rotate left > 90
+
+            console.log( 'result', corner,  calcNewRotation(corner.inverse.top.left, position).y );
+
             return {
-                x: calcNewRotation( corner.inverse.top.left, position ).x,
-                y: calcNewRotation( corner.inverse.top.right, position ).y
+                x: calcNewRotation(corner.inverse.top.left, position).x,
+                y: calcNewRotation(corner.inverse.top.right, position).y
             }
         } else if( position.rotation === -90 ){
             return {
-                x: calcNewRotation(corner.top.left, position).x,
+                x: calcNewRotation(corner.top.right, position).x,
                 y: calcNewRotation(corner.inverse.top.right, position).y * -1
             }
         } else if( position.rotation === 90 && position.width > position.height ){

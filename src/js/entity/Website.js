@@ -14,6 +14,7 @@ let product_rules = {
 
         let data = {
             id: null,
+            qty: 1,
             type,
             name: '',
             entity: {},
