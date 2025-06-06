@@ -124,7 +124,10 @@ export default {
 		},
 		hasPRPurchaseOrder( purchaseOrders )
 		{
-			return purchaseOrders.filter( p => p.company_id === 17 || p.company_id === 6 ).length > 0; // @todo - add a WAY better system for seeing if this is PR
+			let types = {};
+			let prs = purchaseOrders.filter( p => p.company.includes('PR ') );
+			prs.forEach( p => types[p.company] = true )
+			return Object.keys(types);
 		},
 		isInvoiced( item ){
 			if( !item.invoice_quickbooks_id ) return false;
@@ -184,7 +187,7 @@ export default {
 				{{ formatDate(item.date) }}
 			</td>
 
-			<td @click="viewQuote(item.id)" :class="lastOpened === item.id ? 'bg-warning-subtle' : ''">
+			<td @click="viewQuote(item.id)" :class="{'bg-danger-subtle': item.type === 'urgent', 'bg-warning-subtle': lastOpened === item.id}">
 
 				<div class="d-flex align-items-center">
 					<div class="flex-grow-1">
@@ -192,6 +195,10 @@ export default {
 							<span :class="'fw-normal badge source-'+item.source">
 								{{ item.source.charAt(0).toUpperCase() }} -
 								{{ item.referenceNumber || '' }}
+							</span>
+
+							<span v-if="item.status==='confirmed' && item.purchaseOrders.length < 1" class="badge text-bg-danger ms-1">
+								<i class="bi bi-info-circle pe-1"></i> NO PURCHASE ORDERS CREATED
 							</span>
 
 							<span v-if="!item.company || !item.quickbooksID" class="text-danger badge">
@@ -207,16 +214,17 @@ export default {
 						<template v-if="item.purchaseOrders.length">
 							<span class="d-block small">
 								<span class="badge text-bg-primary">
-									<i class="bi bi-cash-coin"></i> x {{ item.purchaseOrders.length }} <span v-if="hasPRPurchaseOrder(item.purchaseOrders)">(contains PR)</span>
+									<i class="bi bi-cash-coin"></i> x {{ item.purchaseOrders.length }} <span v-if="hasPRPurchaseOrder(item.purchaseOrders).length > 0">({{ hasPRPurchaseOrder(item.purchaseOrders).join(', ') }})</span>
 								</span>
 								<span class="badge text-bg-danger ms-2" v-if="item.qa.POs.difference && item.qa.POs.difference > 5">
 									<i class="bi bi-cash-coin"></i> {{ Math.round(item.qa.POs.difference) }}% Diff
 								</span>
+
 							</span>
 						</template>
 						<template v-if="item.events">
-							<div></div>
-							<span class="badge text-bg-warning">
+							<div style="height: 7px;"></div>
+							<span class="badge text-bg-warning" style="white-space: initial;">
 								<i class="bi bi-calendar-event"></i> {{ item.events[item.events.length-1].type }} {{ formatDate(item.events[item.events.length-1].date) }}: {{item.events[item.events.length-1].note}}
 							</span>
 						</template>
