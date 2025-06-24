@@ -69,7 +69,10 @@ export default {
 		<tr v-for="website in availableWebsites">
 			<td><button @click="goToWebsite(website.id)" class="btn btn-sm btn-primary">Edit</button></td>
 			<td>{{ website.id }}</td>
-			<td>{{ website.name }}</td>
+			<td>
+				<span class="text-secondary" v-if="website.parent.name">{{ website.parent.name }} <i class="bi bi-chevron-double-right"></i></span>
+				{{ website.name }}
+			</td>
 			<td>{{ website.handle }}</td>
 			<td>
 				<EntityDelete entity="website" :id="website.id" :callback="afterDelete" />

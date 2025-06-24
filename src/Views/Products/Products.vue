@@ -18,6 +18,7 @@ export default {
 				'Status': { id: 'status' },
 				'Sku': { id: 'sku' },
 				'Name': { id: 'name' },
+				'Avg Weight': { },
 				'Supplier': { },
 			},
 		}
@@ -83,6 +84,9 @@ export default {
 			</td>
 			<td @click="viewSingle(item.id)">
 				{{ item.name }}
+			</td>
+			<td @click="viewSingle(item.id)">
+				{{ item.average_weight }}
 			</td>
 			<td @click="viewSingle(item.id)">
 				{{ item.company.name }}

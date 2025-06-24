@@ -53,7 +53,7 @@ export default {
 			}
 
 			// update link
-			this.editor?.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+			this.editor?.chain().focus().extendMarkRange('link').setLink({ href: url, target: null }).run()
 		},
 		addImage() {
 			const url = window.prompt('URL')

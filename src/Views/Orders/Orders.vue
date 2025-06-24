@@ -125,7 +125,7 @@ export default {
 		hasPRPurchaseOrder( purchaseOrders )
 		{
 			let types = {};
-			let prs = purchaseOrders.filter( p => p.company.includes('PR ') );
+			let prs = purchaseOrders.filter( p => p?.company?.includes('PR ') );
 			prs.forEach( p => types[p.company] = true )
 			return Object.keys(types);
 		},
