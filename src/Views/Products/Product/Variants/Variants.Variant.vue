@@ -183,6 +183,16 @@ export default {
 							<button class="btn btn-sm btn-outline-primary" @click="addCustomLabel">Add</button>
 						</div>
 
+
+						<!-- @todo: private product -->
+						<!--
+						<br><br>
+						<label class="form-check-label bg-gray px-2 rounded small">
+							<input class="form-check-input me-1" type="checkbox" :value="true" v-model="variant.data.private">
+							<span>Private Product</span>
+						</label>
+						-->
+
 					</template>
 
 					<template #Cost>

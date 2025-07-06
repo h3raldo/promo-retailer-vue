@@ -23,9 +23,16 @@ export default {
 					<button class="btn btn-sm btn-outline-info ms-2" @click="paste(rule)">Paste</button>
 				</template>
 				<template v-else>
-					<button class="btn btn-sm btn-primary" @click="edit(rule, index)"><i class="bi bi-pencil"></i></button>
-					<button v-if="typeof copy === 'function'" class="btn btn-sm btn-outline-info" @click="copy(rule)">Copy</button>
-					<button v-if="typeof duplicate === 'function'" class="btn btn-sm btn-outline-primary" @click="duplicate(rule)"><i class="bi bi-copy"></i></button>
+					<div class="btn-group">
+						<button type="button" class="btn btn-sm btn-primary" @click="edit(rule, index)"><i class="bi bi-pencil"></i></button>
+						<button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+							<span class="visually-hidden">Toggle Dropdown</span>
+						</button>
+						<ul class="dropdown-menu">
+							<li v-if="typeof copy === 'function'"><button class="dropdown-item" @click="copy(rule)">Copy</button></li>
+							<li v-if="typeof duplicate === 'function'"><button class="dropdown-item" @click="duplicate(rule)">Duplicate</button></li>
+						</ul>
+					</div>
 				</template>
 			</div>
 		</td>
@@ -44,7 +51,9 @@ export default {
 								<a :href="symfony.views.products_product.replace(':id', rule.entity.product.id)" target="_blank">
 									{{ rule.entity.product.sku }}
 								</a>
+								<span v-if="rule._status && rule._status.validated === false" class="badge text-bg-danger ms-1">Unvalidated</span>
 								<span class="d-block">{{ rule.name }}</span>
+
 							</small>
 						</span>
 						<small v-for="filter in rule.filters" class="d-flex gap-1">

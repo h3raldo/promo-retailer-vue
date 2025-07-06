@@ -15,7 +15,7 @@ export default {
 		}
 	},
 	inject: ['symfony', 'alert', 'updateLocalStorage'],
-	props: ['columns', 'searchState', 'api', 'bulkEdits', 'entity', 'defaultParams'],
+	props: ['columns', 'searchState', 'api', 'bulkEdits', 'entity', 'defaultParams', 'rowClasses'],
 	computed: {
 		caretClasses() {
 			if( this.searchState.order_by_direction === 'desc' ) return 'bi bi-caret-down';
@@ -129,6 +129,11 @@ export default {
 			this.alert(`Item(s) Saved!`);
 
 			this.getEntities();
+		},
+		getRowClasses( item ){
+			if( typeof this.rowClasses === 'function' ) return this.rowClasses( item );
+			if( item.bg_success ) return 'table-success';
+			return '';
 		}
 	},
 	mounted() {
@@ -211,7 +216,7 @@ export default {
 				</thead>
 				<tbody>
 					<template v-for="item in entities">
-						<tr class="quote-row" :class="item.bg_success ? 'table-success' : ''">
+						<tr class="quote-row" :class="getRowClasses(item)">
 							<td v-if="bulkEdits" class="d-print-none"><input class="form-check-input p-2" type="checkbox" v-model="selected" :value="item.id"></td>
 							<slot name="item" :item="item"></slot>
 						</tr>

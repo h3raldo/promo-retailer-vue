@@ -1,5 +1,6 @@
 <script setup>
 import Loader from "@/components/globals/Loader.vue";
+import Tabs from "@/components/globals/Tabs.vue";
 import CompiledProduct from "@/Views/Websites/Website/View/Products/Compiled.Product.vue";
 </script>
 <script>
@@ -11,10 +12,12 @@ export default {
 			status: {
 				loading: false,
 			},
+			tabs: ['Validated', 'Invalid'],
 			products: [],
 			logos: [],
 			sets: [],
-			info: {}
+			info: {},
+			invalidated_products: [],
 		}
 	},
 	props: [],
@@ -23,11 +26,29 @@ export default {
 		compile(){
 			let self = this;
 			self.status.loading = true;
+			self.invalidated_products = [];
 			utils.ajax( this.symfony.api.websites.website.products.compiled.replace(':id', this.website.id), (d) => {
 				self.products = d.products;
 				self.logos = d.logos;
 				self.sets = d.sets;
 				self.info = d.info;
+
+				let validatedProducts = {};
+				d.products.forEach( product => {
+					validatedProducts[product.product.id] = true;
+				})
+
+				self.website.product_rules.rules.forEach( rule => {
+					if( rule.type !== 'product' ) return;
+					rule._status = {
+						validated: !!validatedProducts[rule.entity.product.id]
+					}
+
+					if( !validatedProducts[rule.entity.product.id] ){
+						self.invalidated_products.push(rule);
+					}
+				})
+
 				self.status.loading = false;
 			})
 		}
@@ -49,27 +70,39 @@ export default {
 
 	<div v-else class="mt-3">
 
-		<div v-for="result in products">
+		<Tabs v-if="products && products.length" :labels="tabs">
+			<template #Validated>
+				<div v-for="result in products">
+					<details class="py-2 border-bottom">
+						<summary>{{ result.product.name }}</summary>
 
-			<details class="py-2 border-bottom">
-				<summary>{{ result.product.name }}</summary>
+						<table class="table table-sm">
+							<thead>
+							<tr>
+								<th class="col-1">ID</th>
+								<th class="col-2">Color</th>
+								<th class="col-1">Size</th>
+								<th>Decoration Sets</th>
+							</tr>
+							</thead>
+							<tbody>
+							<CompiledProduct  v-for="variant in result.variants" :variant="variant" :logos="logos" :sets="sets" :info="info" />
+							</tbody>
+						</table>
+					</details>
+				</div>
+			</template>
 
-				<table class="table table-sm">
-					<thead>
-					<tr>
-						<th class="col-1">ID</th>
-						<th class="col-2">Color</th>
-						<th class="col-1">Size</th>
-						<th>Decoration Sets</th>
-					</tr>
-					</thead>
-					<tbody>
-					<CompiledProduct  v-for="variant in result.variants" :variant="variant" :logos="logos" :sets="sets" :info="info" />
-					</tbody>
-				</table>
-			</details>
+			<template #Invalid>
+				<ul>
+					<li v-for="result in invalidated_products">
+						{{ result.name }}
+					</li>
+				</ul>
+			</template>
+		</Tabs>
 
-		</div>
+
 
 	</div>
 

@@ -133,6 +133,17 @@ export default {
 			if( !item.invoice_quickbooks_id ) return false;
 			item.bg_success = true;
 			return true;
+		},
+		getRowClasses( row_item ) {
+			let type = row_item.type;
+			let colors = {
+				hold: 'table-warning',
+				inventory: 'table-info',
+				production: 'table-success',
+				urgent: 'table-danger',
+			}
+			if( colors[type] ) return colors[type];
+			return '';
 		}
 	},
 
@@ -156,7 +167,7 @@ export default {
 		<button class="btn btn-primary p-3" @click="createNew"><i class="bi bi-plus-square-fill"></i> Create New</button>
 	</div>
 
-	<Grid :api="symfony.orders.search" :columns="columns" :searchState="searchState" :bulkEdits="bulkEdits" :entity="'order'">
+	<Grid :api="symfony.orders.search" :columns="columns" :searchState="searchState" :bulkEdits="bulkEdits" :entity="'order'" :rowClasses="getRowClasses">
 
 		<template #header="{search}">
 			<Search :getEntities="search" :searchParams="searchState" />
@@ -164,9 +175,9 @@ export default {
 
 		<template #item="{item}">
 
-			<td :class="{'bg-danger-subtle': item.type === 'urgent'}">{{ item.id }}</td>
+			<td>{{ item.id }}</td>
 
-			<td :class="{'bg-danger-subtle': item.type === 'urgent'}">
+			<td>
 				<EditableColumn :type="'select'" :item="item" :column="'status'" :options="entity.order.default.statuses" :entity="'order'">
 					<span :class="getStatusColor(item.status)" @click="editing = item.id">
 						{{ item.status }}
@@ -174,7 +185,7 @@ export default {
 				</EditableColumn>
 			</td>
 
-			<td :class="{'bg-danger-subtle': item.type === 'urgent'}">
+			<td>
 				<EditableColumn :type="'select'" :item="item" :column="'type'" :options="entity.order.default.types" :entity="'order'">
 					<span :class="getStatusColor(item.type)" @click="editing = item.id">
 						<span v-if="item.type === 'default'">-</span>
@@ -183,11 +194,11 @@ export default {
 				</EditableColumn>
 			</td>
 
-			<td @click="viewQuote(item.id)" :class="{'bg-danger-subtle': item.type === 'urgent'}">
+			<td @click="viewQuote(item.id)">
 				{{ formatDate(item.date) }}
 			</td>
 
-			<td @click="viewQuote(item.id)" :class="{'bg-danger-subtle': item.type === 'urgent', 'bg-warning-subtle': lastOpened === item.id}">
+			<td @click="viewQuote(item.id)" :class="{'bg-warning-subtle': lastOpened === item.id}">
 
 				<div class="d-flex align-items-center">
 					<div class="flex-grow-1">
@@ -245,12 +256,12 @@ export default {
 
 			</td>
 
-			<td :class="{'bg-danger-subtle': item.type === 'urgent'}">
+			<td>
 				<EditableColumn :type="'date'" :item="item" :column="'dateShipBy'" :entity="'order'">
 					{{ formatDate(item.dateShipBy) }}
 				</EditableColumn>
 			</td>
-			<td :class="{'bg-danger-subtle': item.type === 'urgent'}">
+			<td>
 				<EditableColumn :type="'date'" :item="item" :column="'dateDeliverBy'" :entity="'order'">
 					<span v-if="item.dateDeliverByFirm" class="badge text-bg-danger">
 						{{ formatDate(item.dateDeliverBy) }}
@@ -260,7 +271,7 @@ export default {
 					</span>
 				</EditableColumn>
 			</td>
-			<td :class="{'bg-danger-subtle': item.type === 'urgent'}">
+			<td>
 				<span v-if="isInvoiced(item)" class="badge text-bg-success">
 					<i class="bi bi-currency-dollar"></i> Invoiced
 				</span><br v-if="isInvoiced(item)">
@@ -280,12 +291,12 @@ export default {
 				</details>
 				-->
 			</td>
-			<td @click="viewQuote(item.id)" :class="{'bg-danger-subtle': item.type === 'urgent'}">{{ formatPricing(item.total) }}</td>
-			<td @click="viewQuote(item.id)" :class="{'bg-danger-subtle': item.type === 'urgent'}">{{ formatPricing(item.totalProfit) }}</td>
-			<td @click="viewQuote(item.id)" :class="{'bg-danger-subtle': item.type === 'urgent'}">{{ item.totalMargin }}%</td>
-			<td @click="viewQuote(item.id)" :class="{'bg-danger-subtle': item.type === 'urgent'}">{{ item.author }}</td>
+			<td @click="viewQuote(item.id)">{{ formatPricing(item.total) }}</td>
+			<td @click="viewQuote(item.id)">{{ formatPricing(item.totalProfit) }}</td>
+			<td @click="viewQuote(item.id)">{{ item.totalMargin }}%</td>
+			<td @click="viewQuote(item.id)">{{ item.author }}</td>
 
-			<td class="delete text-end d-print-none" :class="{'bg-danger-subtle': item.type === 'urgent'}">
+			<td class="delete text-end d-print-none">
 				<a class="btn btn-outline-primary me-1" :href="getDuplicateUrl(item.id)"><i class="bi bi-copy"></i></a>
 				<Modal :id="'deleteQuote-'+item.id" :title="'Are you sure?'"  :icon="'bi-trash'" :buttonClasses="'btn btn-danger'">
 					<p>Quote will be deleted permanently. Cannot be undone.</p>

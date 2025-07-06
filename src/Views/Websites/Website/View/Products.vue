@@ -9,6 +9,7 @@ import WebsiteSearch from "@/EntityComponents/Website/Search.vue"
 import Rules from "@/Views/Websites/Website/View/Rules/Rules.vue";
 import Categories from "@/Views/Websites/Website/View/Rules/Categories.vue";
 import RulesGlobal from "@/Views/Websites/Website/View/Rules/Rules.Global.vue";
+import RuleEditBulk from "@/Views/Websites/Website/View/Rules/Rule.Edit.Bulk.vue";
 import DynamicDecorationSetCreator from "@/EntityComponents/Decorations/DynamicDecorationSetCreator.vue";
 </script>
 <script>
@@ -37,7 +38,14 @@ export default {
 				index: null,
 				open: true,
 				category: null,
+				bulk: {
+					rule: {},
+					index: null,
+					open: true,
+					category: null,
+				}
 			},
+
 		}
 	},
 	inject: ['symfony', 'website', 'products', 'config', 'alert'],
@@ -270,11 +278,14 @@ export default {
 	</Modal>
 
 	<div>
+		<div class="border p-2 px-3 mb-3">
+			<RulesGlobal :globals="website.product_rules.global_rules" />
+		</div>
 		<div class="mb-3">
 			<Categories :categories="categoryTree" :editCategory="editCategory" />
 		</div>
 		<div class="border p-2 px-3 mb-3">
-			<RulesGlobal :globals="website.product_rules.global_rules" />
+			<RuleEditBulk v-if="edit.category" :category="edit.category" />
 		</div>
 		<div>
 			<button v-if="copy.active" class="btn btn-sm btn-outline-success ms-2" @click="copy.active = false">Done Pasting</button>

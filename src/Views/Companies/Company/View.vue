@@ -31,6 +31,7 @@ export default {
 
 			let tabs = [
 				'Main',
+			  	'Communication',
 				'Logos',
 				'Websites',
 				'Child_Companies',
@@ -154,6 +155,14 @@ export default {
 		},
 		onLogoSelect(logo){
 			console.log('selected', logo);
+		},
+		addCC(){
+			if( typeof this.company.data.contacts.approval.cc === 'undefined' ) {
+				this.company.data.contacts.approval.cc = [];
+			}
+			this.company.data.contacts.approval.cc.push({
+				email: '',
+			});
 		}
 	},
 	provide() {
@@ -268,24 +277,8 @@ export default {
 							</div>
 						</details>
 
-						<hr>
 
-						<div class="mt-2 pb-2">
-							<label class="form-label">Approval Email</label>
-							<input type="email" class="form-control" v-model="company.data.contacts.approval.email" />
-						</div>
-
-						<div class="mt-2 pb-2">
-							<label class="form-label">Approval First Name</label>
-							<input type="email" class="form-control" v-model="company.data.contacts.approval.first_name" />
-						</div>
-
-						<div class="mt-2 pb-2">
-							<label class="form-label">Approval Last Name</label>
-							<input type="email" class="form-control" v-model="company.data.contacts.approval.last_name" />
-						</div>
-
-						<div class="mt-2">
+						<div class="mt-4">
 							<label class="form-check-label">
 								<input class="form-check-input me-1" type="checkbox" v-model="company.data.config.contacts_from_order"><span>Generate Contacts from Orders</span>
 							</label>
@@ -349,6 +342,54 @@ export default {
 					</div>
 				</div>
 
+			</template>
+
+			<template #Communication>
+
+				<h3>Order Approval</h3>
+				<div class="row">
+					<div class="col">
+						<div class="mt-2 pb-2">
+							<label class="form-label">First Name</label>
+							<input type="email" class="form-control" v-model="company.data.contacts.approval.first_name" />
+							<div class="form-text">
+								This name is what shows up in the email template.
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="mt-2 pb-2">
+							<label class="form-label">Last Name</label>
+							<input type="email" class="form-control" v-model="company.data.contacts.approval.last_name" />
+							<div class="form-text">
+								This name is what shows up in the email template.
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="mt-2 pb-2">
+							<label class="form-label">Email</label>
+							<input type="email" class="form-control" v-model="company.data.contacts.approval.email" />
+							<div class="form-text">
+								The primary email address to send the approval email to.
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row mt-2 justify-content-end">
+					<div class="col-4">
+						<label class="form-label">Additional Email Address to CC</label>
+						<template v-if="company.data.contacts.approval.cc">
+							<div v-for="(cc, ci) in company.data.contacts.approval.cc" class="d-flex gap-2">
+								<input type="email" class="form-control mb-2" v-model="cc.email" placeholder="additional@additional.com" />
+								<div><button class="btn btn-danger" @click="company.data.contacts.approval.cc.splice(ci,1)"><i class="bi bi-x"></i></button></div>
+							</div>
+						</template>
+						<div class="mt-1">
+							<button class="btn btn-outline-primary" @click="addCC">Add email to CC</button>
+						</div>
+					</div>
+				</div>
 			</template>
 
 			<template #Contacts>

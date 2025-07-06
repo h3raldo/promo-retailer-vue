@@ -79,7 +79,9 @@ let statuses = [
 let types = [
     { value: 'default', title: '-'},
     { value: 'bulk', title: 'Bulk'},
+    { value: 'hold', title: 'On Hold'},
     { value: 'inventory', title: 'Inventory'},
+    { value: 'production', title: 'Production'},
     { value: 'urgent', title: 'Urgent'},
 ];
 

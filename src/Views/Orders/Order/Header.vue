@@ -321,8 +321,11 @@ export default {
 								<button class="btn btn-success" :disabled="loading" @click="invoice"><i class="bi bi-currency-dollar"></i> Create Invoice</button>
 							</Modal>
 						</li>
+						<li v-if="order.client.email">
+							<HeaderEmail :save="save" :email="order.client.email" />
+						</li>
 						<li v-if="ableToSendEmail">
-							<HeaderEmail :save="save" :publicUrl="publicUrl" />
+							<HeaderEmail :save="save" type="approval" buttonText="Approval Email" />
 						</li>
 						<li><hr class="dropdown-divider"></li>
 						<li><a class="dropdown-item" :href="duplicateUrl"><i class="bi bi-copy"></i> Duplicate</a></li>

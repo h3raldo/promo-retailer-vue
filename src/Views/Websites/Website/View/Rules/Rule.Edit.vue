@@ -35,7 +35,7 @@ export default {
 			}
 		}
 	},
-	props: ['rule', 'index'],
+	props: ['rule', 'index', 'product_ids'],
 	inject: ['symfony', 'config'],
 	methods: {
 		addFilter(){
@@ -74,17 +74,20 @@ export default {
 			})
 		},
 
-		openModal()
+		async openModal()
 		{
 			if( this.rule.type !== 'product') return;
 
 			this.loading.data = true;
-			utils.ajax(this.symfony.api.products.product.variant.available.replace(':id', this.rule.entity.product.id), (d) => {
-				Object.keys(d.response).forEach(key => {
-					this.available[key] = d.response[key];
-				})
-				this.loading.data = false;
+
+			let data = await utils.ajaxAsync( this.symfony.api.products.product.variant.available, {
+				ids: this.product_ids || [this.rule.entity.product.id],
 			})
+
+			Object.keys(data.data).forEach(key => {
+				this.available[key] = data.data[key];
+			})
+			this.loading.data = false;
 		}
 	},
 	watch: {

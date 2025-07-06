@@ -12,10 +12,11 @@ export default {
 			body: '',
 			loading: false,
 			error: false,
+			ccs: [],
 		}
 	},
-	props: ['save', 'publicUrl'],
-	inject: ['order', 'entities', 'symfony'],
+	props: ['save', 'type', 'email'],
+	inject: ['order', 'entities', 'symfony', 'urls', 'init'],
 	methods: {
 		send(){
 			let self = this;
@@ -24,6 +25,7 @@ export default {
 				to: self.to,
 				subject: self.subject,
 				body: self.body,
+				ccs: self.ccs,
 			}
 
 			self.loading = true;
@@ -36,61 +38,72 @@ export default {
 				self.error = true
 				self.loading = false;
 			}, data)
+		},
+		setupApprovalEmail(){
+			let self = this;
 
+			let fillInVariables = ( string ) => {
 
+				let publicUrl = this.urls.public.replace(':id', this.init.public_id );
+
+				let variables = [
+					{
+						variable: '[company_name]',
+						value: self.entities.company.name,
+					},
+					{
+						variable: '[client_name]',
+						value: self.order.client.name,
+					},
+					{
+						variable: '[approver_name]',
+						value: self.entities.company.data.contacts.approval.first_name,
+					},
+					{
+						variable: '[approver_email]',
+						value: self.entities.company.data.contacts.approval.email,
+					},
+					{
+						variable: '[reference_number]',
+						value: self.order.info.reference_number,
+					},
+					{
+						variable: '[sales_order_url]',
+						value: publicUrl,
+					}
+				]
+
+				variables.forEach( v => {
+					string = string.replaceAll( v.variable, v.value );
+				})
+
+				//string = string.replace(/(?:\r\n|\r|\n)/g, '%0D%0A');
+
+				return string;
+			}
+
+			utils.config.get.approvalEmail( (response) => {
+				if( !response ) return;
+				let body = fillInVariables( response.body );
+				let subject = fillInVariables( response.subject );
+
+				self.body = body;
+				self.subject = subject;
+				self.to = self.entities.company.data.contacts.approval.email;
+
+				if( self.entities.company.data.contacts.approval.cc )
+					self.entities.company.data.contacts.approval.cc.forEach( c => self.ccs.push( c.email ) )
+			} )
 		}
 	},
 	mounted() {
-
-		let self = this;
-
-		function fillInVariables( string ){
-
-			let variables = [
-				{
-					variable: '[company_name]',
-					value: self.entities.company.name,
-				},
-				{
-					variable: '[client_name]',
-					value: self.order.client.name,
-				},
-				{
-					variable: '[approver_name]',
-					value: self.entities.company.data.contacts.approval.first_name,
-				},
-				{
-					variable: '[approver_email]',
-					value: self.entities.company.data.contacts.approval.email,
-				},
-				{
-					variable: '[reference_number]',
-					value: self.order.info.reference_number,
-				},
-				{
-					variable: '[sales_order_url]',
-					value: self.publicUrl,
-				}
-			]
-
-			variables.forEach( v => {
-				string = string.replaceAll( v.variable, v.value );
-			})
-
-			//string = string.replace(/(?:\r\n|\r|\n)/g, '%0D%0A');
-
-			return string;
+		if( this.type === 'approval' ){
+			this.setupApprovalEmail();
+			return;
 		}
 
-		utils.config.get.approvalEmail( (response) => {
-			if( !response ) return;
-			let body = fillInVariables( response.body );
-			let subject = fillInVariables( response.subject );
-
-			self.body = body;
-			self.subject = subject;
-			self.to = self.entities.company.data.contacts.approval.email;
-		} )
+		this.to = this.email
+		this.subject = 'Message from Promo Connections'
 	}
 }
 </script>
@@ -106,13 +119,17 @@ export default {
 			<input type="text" class="form-control" v-model="to">
 		</div>
 		<div class="mb-2">
+			<label class="form-label">CCs</label>
+			<input type="text" class="form-control" :value="ccs.join(', ')" disabled>
+		</div>
+		<div class="mb-2">
 			<label class="form-label">Message</label>
 			<textarea class="form-control" rows="15" v-model="body"></textarea>
 		</div>
 
-		<div class="text-end">
+		<div class="text-center py-3">
 			<span class="text-danger pe-3" v-if="error">Error sending email!</span>
-			<button class="btn btn-primary btn-lg" @click="send" :disabled="loading">Send</button>
+			<button class="btn btn-primary btn-lg" @click="send" :disabled="loading">Send Email</button>
 		</div>
 	</Modal>
 </template>
