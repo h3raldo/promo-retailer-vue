@@ -322,10 +322,7 @@ export default {
 							</Modal>
 						</li>
 						<li v-if="order.client.email">
-							<HeaderEmail :save="save" :email="order.client.email" />
-						</li>
-						<li v-if="ableToSendEmail">
-							<HeaderEmail :save="save" type="approval" buttonText="Approval Email" />
+							<HeaderEmail :save="save" />
 						</li>
 						<li><hr class="dropdown-divider"></li>
 						<li><a class="dropdown-item" :href="duplicateUrl"><i class="bi bi-copy"></i> Duplicate</a></li>
@@ -409,6 +406,12 @@ export default {
 			<label class="form-check-label bg-gray px-2 rounded small">
 				<input class="form-check-input me-1" type="checkbox" v-model="order.info.statuses.emailed">
 				<span>Emailed</span>
+			</label>
+		</div>
+		<div v-for="tag in order.info.tags" :key="tag">
+			<label class="form-check-label bg-gray px-2 rounded small">
+				<input class="form-check-input me-1" type="checkbox" v-model="order.info.tags" :value="tag">
+				<span>{{ tag }}</span>
 			</label>
 		</div>
 	</div>

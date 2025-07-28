@@ -3,6 +3,7 @@ import Email from "@/Views/Config/Section/Email.vue";
 import Categories from "@/Views/Config/Section/Categories.vue";
 import Decorations from "@/Views/Config/Section/Decorations.vue";
 import Inputs from "@/Views/Config/Section/Inputs.vue";
+import OrderTags from "@/Views/Config/Section/OrderTags.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -30,6 +31,11 @@ import utils from "@/js/utils.js";
 						id: 'inputs',
 						name: 'Inputs',
 						description: 'Global inputs used by websites.',
+					},
+					{
+						id: 'tags',
+						name: 'Order Tags',
+						description: 'Global tags for sales orders.',
 					}
 				]
 			}
@@ -67,6 +73,7 @@ import utils from "@/js/utils.js";
 		<Categories v-if="id === 'categories'" />
 		<Decorations v-if="id === 'decorations'" />
 		<Inputs v-if="id === 'inputs'" />
+		<OrderTags v-if="id === 'tags'" />
 	</div>
 
 	<div v-else>

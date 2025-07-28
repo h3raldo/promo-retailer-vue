@@ -136,6 +136,14 @@ export default {
 			return '';
 		}
 	},
+	watch: {
+		columns: {
+			handler(){
+				this.updateLocalStorage('config');
+			},
+			deep: true
+		},
+	},
 	mounted() {
 		if( this.entities.length > 0 ) return;
 		this.getEntities();
@@ -146,7 +154,7 @@ export default {
 	<div class="grid">
 
 		<div class="grid--header d-print-none">
-			<slot name="header" :search="getEntities"></slot>
+			<slot name="header" :search="getEntities" :response="response"></slot>
 		</div>
 
 		<Loader v-if="loading" :align="'center'" />
@@ -207,10 +215,12 @@ export default {
 				<thead>
 					<tr>
 						<th v-if="bulkEdits" class="d-print-none"></th>
-						<th v-for="(col, title) in columns" @click="orderBy(col.id)" :class="'text-nowrap ' + (col.align ? `text-${col.align}` : '')">
+						<template v-for="(col, title) in columns">
+						<th v-if="typeof col.active === 'undefined' || col.active === true" @click="orderBy(col.id)" :class="'text-nowrap ' + (col.align ? `text-${col.align}` : '')">
 							{{ title }}
 							<span v-if="col.id && searchState.order_by === col.id"><i :class="caretClasses"></i></span>
 						</th>
+						</template>
 						<th style="width: 120px" class="d-print-none"></th>
 					</tr>
 				</thead>

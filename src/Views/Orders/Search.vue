@@ -1,5 +1,6 @@
 <script setup>
 import entity from "@/js/entity.js";
+import Modal from "@/components/globals/bootstrap/Modal.vue";
 </script>
 <script>
 import utils from "@/js/utils.js";
@@ -10,7 +11,7 @@ export default {
 
 		}
 	},
-	props: ['getEntities', 'searchParams'],
+	props: ['getEntities', 'searchParams', 'response'],
 	inject: ['symfony', 'alert'],
 	methods: {
 		search(e){
@@ -22,6 +23,9 @@ export default {
 		{
 			return 'page-item' + (page === parseInt(this.searchParams.page) ? ' active' : '');
 		}
+	},
+	mounted() {
+		console.log(this.entities);
 	}
 }
 </script>
@@ -136,32 +140,49 @@ export default {
 				<div>
 					<div class="d-flex gap-2 pt-2">
 						<div>
-							<select name="status_paid" class="form-select-sm" v-model="searchParams.status_paid">
+							<select name="status_paid" class="form-select form-select-sm" v-model="searchParams.status_paid">
 								<option value="null">Paid: Any</option>
 								<option value="true">Paid: Yes</option>
 								<option value="false">Paid: No</option>
 							</select>
 						</div>
 						<div>
-							<select name="status_invoiced" class="form-select-sm" v-model="searchParams.status_invoiced">
+							<select name="status_invoiced" class="form-select form-select-sm" v-model="searchParams.status_invoiced">
 								<option value="null">Invoiced: Any</option>
 								<option value="true">Invoiced: Yes</option>
 								<option value="false">Invoiced: No</option>
 							</select>
 						</div>
 						<div>
-							<select name="status_shipped" class="form-select-sm" v-model="searchParams.status_shipped">
+							<select name="status_shipped" class="form-select form-select-sm" v-model="searchParams.status_shipped">
 								<option value="null">Shipped: Any</option>
 								<option value="true">Shipped: Yes</option>
 								<option value="false">Shipped: No</option>
 							</select>
 						</div>
 						<div>
-							<select name="status_emailed" class="form-select-sm" v-model="searchParams.status_emailed">
+							<select name="status_emailed" class="form-select form-select-sm" v-model="searchParams.status_emailed">
 								<option value="null">Emailed: Any</option>
 								<option value="true">Emailed: Yes</option>
 								<option value="false">Emailed: No</option>
 							</select>
+						</div>
+						<div>
+							<div class="dropdown">
+								<button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+									Tags
+								</button>
+								<ul class="dropdown-menu">
+									<template v-if="response?.entities?.config?.order_tags">
+									<li v-for="tag in response.entities.config.order_tags" class="d-flex gap-1 align-items-center py-1 px-2">
+										<input class="form-check-input mt-0" type="checkbox" name="tags[]" :value="tag.id" v-model="searchParams.tags">
+										<label class="small text-nowrap">
+											<span>{{ tag.label }}</span>
+										</label>
+									</li>
+									</template>
+								</ul>
+							</div>
 						</div>
 					</div>
 				</div>

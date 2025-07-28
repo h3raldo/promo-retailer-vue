@@ -18,6 +18,7 @@ export default {
 				data: '',
 			},
 			search: {},
+			config: {},
 			cache: {
 				component: {}
 			}
@@ -58,6 +59,7 @@ export default {
 			updateLocalStorage: this.updateLocalStorage,
 			symfony: computed(() => this.symfony),
 			search: computed(() => this.search),
+			config: computed(() => this.config),
 			cache: computed(() => this.cache),
 		}
 	},
@@ -67,11 +69,11 @@ export default {
 	},
 
 	mounted() {
-		/*
 		if( localStorage.getItem('search') )
 			this.search = JSON.parse( localStorage.getItem('search'));
-			*/
 
+		if( localStorage.getItem('config') )
+			this.config = JSON.parse( localStorage.getItem('config'));
 	}
 }
 </script>

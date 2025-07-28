@@ -12,6 +12,7 @@ function create(id){
             title: 'New Order',
             status: 'new',
             type: 'default',
+            tags: [],
             statuses: {
                 shipped: false,
                 invoiced: false,
@@ -28,6 +29,7 @@ function create(id){
             ship_by: '',
             shipped: '',
             tracking_number: '',
+            tracking_numbers: [],
             delivery_method: '',
             payment_method: '',
             attributes: [],
@@ -123,6 +125,17 @@ function patchData( data, init )
     if( typeof order.info.shipped === 'undefined' ) order.info.shipped = blank.info.shipped;
     if( typeof order.info.tracking_number === 'undefined' ) order.info.tracking_number = blank.info.tracking_number;
     if( typeof order.info.website === 'undefined' ) order.info.website = blank.info.website;
+    if ( typeof order.info.tags === 'undefined' ) order.info.tags = [];
+
+    if( typeof order.info.tracking_numbers === 'undefined' ) {
+        order.info.tracking_numbers = [];
+        if( order.info.tracking_number ) order.info.tracking_numbers.push({
+            number: order.info.tracking_number,
+            date: '',
+            description: 'All Items',
+            carrier: '',
+        });
+    }
 
     if( init.website && init.website.id ){
         order.info.website.id = init.website.id;

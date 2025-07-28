@@ -48,6 +48,14 @@ export default {
 
 			let address = this.entities.company.data[type].address;
 			this.order.client[type] = address;
+		},
+		addTrackingNumber(){
+			this.order.info.tracking_numbers.push({
+				date: '',
+				description: '',
+				number: '',
+				carrier: '',
+			})
 		}
 	}
 }
@@ -152,6 +160,23 @@ export default {
 
 		<div class="col-5">
 
+			<div class="mb-3">
+				<label class="form-label">Tags:</label>
+
+				<!--<div class="dropdown">
+					<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+						Add Tag
+					</button>
+					<ul class="dropdown-menu">
+						<li v-for="tag in entities.config.tags"><a class="dropdown-item" href="#">{{ tag.label }}</a></li>
+					</ul>
+				</div>-->
+
+				<select class="form-select" multiple v-model="order.info.tags">
+					<option v-for="tag in entities.config.tags" :value="tag.id">{{ tag.label }}</option>
+				</select>
+			</div>
+
 			<div class="mb-3" v-if="order.client.ship_to !== ''">
 				<label class="form-label">Ship To:</label>
 				<textarea class="form-control" v-model="order.client.ship_to" rows="4"></textarea>
@@ -194,9 +219,42 @@ export default {
 				<input class="form-control" type="date" v-model="order.info.shipped">
 			</div>
 
-			<div class="mb-3">
+			<div class="mb-3 d-none">
 				<label class="form-label">Tracking Number:</label>
 				<input class="form-control" type="text" v-model="order.info.tracking_number">
+			</div>
+
+			<div class="mb-3">
+				<div class="d-flex gap-2 align-items-center justify-content-between pb-3">
+					<div>
+						<label>Tracking Numbers</label>
+					</div>
+					<div>
+						<button class="btn btn-sm btn-outline-primary" @click="addTrackingNumber"><i class="bi bi-plus-circle"></i> Add Number</button>
+					</div>
+				</div>
+
+				<div v-for="number in order.info.tracking_numbers" class="row mb-3 border-start border-3">
+					<div class="col-8 mb-2">
+						<input type="text" class="form-control" placeholder="Description" v-model="number.description">
+					</div>
+					<div class="col-4 mb-2">
+						<input type="date" class="form-control" placeholder="Date" v-model="number.date">
+					</div>
+					<div class="col-8">
+						<input type="text" class="form-control" placeholder="Tracking Number" v-model="number.number">
+					</div>
+					<div class="col-4">
+						<select class="form-select" v-model="number.carrier">
+							<option value="">- Carrier -</option>
+							<option value="ups">UPS</option>
+							<option value="fedex">FedEx</option>
+							<option value="usps">USPS</option>
+							<option value="dhl">DHL</option>
+						</select>
+					</div>
+				</div>
+
 			</div>
 		</div>
 

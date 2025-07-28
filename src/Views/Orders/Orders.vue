@@ -14,19 +14,19 @@ export default {
 		return {
 			loading: false,
 			columns: {
-				'ID': { id: 'id' },
-				'Status': { id: 'status' },
-				'Type': { id: 'type' },
-				'Pushed Date': { id: 'date' },
+				'ID': { id: 'id', active: true },
+				'Status': { id: 'status', active: true },
+				'Type': { id: 'type', active: true },
+				'Pushed Date': { id: 'date', active: true },
 				// 'Reference Number': { id: 'reference_number' },
-				'Origin/Client': { id: 'client' },
-				'Ship By': { id: 'date_ship_by' },
-				'In-Hands': { id: 'date_deliver_by' },
-				'-': {  },
-				'Total': { id: 'total' },
-				'Profit': { id: 'total_profit'  },
-				'Margin': { id: 'total_margin' },
-				'Author': { id: 'author' },
+				'Origin/Client': { id: 'client', active: true },
+				'Ship By': { id: 'date_ship_by', active: true },
+				'In-Hands': { id: 'date_deliver_by', active: true },
+				'-': { active: true },
+				'Total': { id: 'total', active: true },
+				'Profit': { id: 'total_profit', active: true  },
+				'Margin': { id: 'total_margin', active: true },
+				'Author': { id: 'author', active: true },
 			},
 			bulkEdits: [
 				{
@@ -51,7 +51,7 @@ export default {
 		}
 	},
 
-	inject: ['symfony', 'search', 'cache'],
+	inject: ['symfony', 'search', 'cache', 'config'],
 
 	computed: {
 		searchState(){
@@ -154,6 +154,9 @@ export default {
 				last_opened: 0
 			}
 		}
+
+		if( typeof this.config.orders === 'undefined' ) this.config.orders = { columns: this.columns };
+		else if( this.config.orders.columns ) this.columns = this.config.orders.columns;
 	},
 }
 </script>
@@ -164,20 +167,28 @@ export default {
 		<div>
 			<h3 class="mb-0"><i class="bi bi-table"></i> Sales Orders</h3>
 		</div>
+		<Modal :title="'Modify Columns'"  :icon="'bi-pencil'" :buttonClasses="'btn btn-sm btn-outline-primary'" buttonText="Modify Columns">
+			<div v-for="(column, key) in columns">
+				<label class="form-check-label bg-gray px-2 rounded small">
+					<input class="form-check-input me-1" type="checkbox" v-model="column.active" :value="true">
+					<span>{{ key }}</span>
+				</label>
+			</div>
+		</Modal>
 		<button class="btn btn-primary p-3" @click="createNew"><i class="bi bi-plus-square-fill"></i> Create New</button>
 	</div>
 
 	<Grid :api="symfony.orders.search" :columns="columns" :searchState="searchState" :bulkEdits="bulkEdits" :entity="'order'" :rowClasses="getRowClasses">
 
-		<template #header="{search}">
-			<Search :getEntities="search" :searchParams="searchState" />
+		<template #header="{search, response}">
+			<Search :getEntities="search" :searchParams="searchState" :response="response" />
 		</template>
 
 		<template #item="{item}">
 
-			<td>{{ item.id }}</td>
+			<td v-if="columns['ID'].active">{{ item.id }}</td>
 
-			<td>
+			<td v-if="columns['Status'].active">
 				<EditableColumn :type="'select'" :item="item" :column="'status'" :options="entity.order.default.statuses" :entity="'order'">
 					<span :class="getStatusColor(item.status)" @click="editing = item.id">
 						{{ item.status }}
@@ -185,7 +196,7 @@ export default {
 				</EditableColumn>
 			</td>
 
-			<td>
+			<td v-if="columns['Type'].active">
 				<EditableColumn :type="'select'" :item="item" :column="'type'" :options="entity.order.default.types" :entity="'order'">
 					<span :class="getStatusColor(item.type)" @click="editing = item.id">
 						<span v-if="item.type === 'default'">-</span>
@@ -194,11 +205,11 @@ export default {
 				</EditableColumn>
 			</td>
 
-			<td @click="viewQuote(item.id)">
+			<td v-if="columns['Pushed Date'].active" @click="viewQuote(item.id)">
 				{{ formatDate(item.date) }}
 			</td>
 
-			<td @click="viewQuote(item.id)" :class="{'bg-warning-subtle': lastOpened === item.id}">
+			<td v-if="columns['Origin/Client'].active" @click="viewQuote(item.id)" :class="{'bg-warning-subtle': lastOpened === item.id}">
 
 				<div class="d-flex align-items-center">
 					<div class="flex-grow-1">
@@ -256,12 +267,12 @@ export default {
 
 			</td>
 
-			<td>
+			<td v-if="columns['Ship By'].active">
 				<EditableColumn :type="'date'" :item="item" :column="'dateShipBy'" :entity="'order'">
 					{{ formatDate(item.dateShipBy) }}
 				</EditableColumn>
 			</td>
-			<td>
+			<td v-if="columns['In-Hands'].active">
 				<EditableColumn :type="'date'" :item="item" :column="'dateDeliverBy'" :entity="'order'">
 					<span v-if="item.dateDeliverByFirm" class="badge text-bg-danger">
 						{{ formatDate(item.dateDeliverBy) }}
@@ -271,7 +282,7 @@ export default {
 					</span>
 				</EditableColumn>
 			</td>
-			<td>
+			<td v-if="columns['-'].active">
 				<span v-if="isInvoiced(item)" class="badge text-bg-success">
 					<i class="bi bi-currency-dollar"></i> Invoiced
 				</span><br v-if="isInvoiced(item)">
@@ -291,10 +302,10 @@ export default {
 				</details>
 				-->
 			</td>
-			<td @click="viewQuote(item.id)">{{ formatPricing(item.total) }}</td>
-			<td @click="viewQuote(item.id)">{{ formatPricing(item.totalProfit) }}</td>
-			<td @click="viewQuote(item.id)">{{ item.totalMargin }}%</td>
-			<td @click="viewQuote(item.id)">{{ item.author }}</td>
+			<td v-if="columns['Total'].active" @click="viewQuote(item.id)">{{ formatPricing(item.total) }}</td>
+			<td v-if="columns['Profit'].active" @click="viewQuote(item.id)">{{ formatPricing(item.totalProfit) }}</td>
+			<td v-if="columns['Margin'].active" @click="viewQuote(item.id)">{{ item.totalMargin }}%</td>
+			<td v-if="columns['Author'].active" @click="viewQuote(item.id)">{{ item.author }}</td>
 
 			<td class="delete text-end d-print-none">
 				<a class="btn btn-outline-primary me-1" :href="getDuplicateUrl(item.id)"><i class="bi bi-copy"></i></a>

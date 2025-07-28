@@ -2,7 +2,9 @@ import utils from "@/js/utils.js";
 
 let keys = {
     approvalEmail: 'email/order/approval',
+    emailTemplates: 'email:order:templates',
     globalInputs: 'global:product:custom_fields',
+    globalOrderTags: 'global:order:tags',
     globalCategories: 'global/product/categories',
     decorationLocations: 'global/decoration/locations',
     decorationSets: 'global/decoration/sets',
@@ -24,6 +26,9 @@ export default {
         },
         approvalEmail( callback, error_callback ) {
             retrieve( keys.approvalEmail, callback, error_callback );
+        },
+        emailTemplates( callback, error_callback ) {
+            retrieve( keys.emailTemplates, callback, error_callback );
         },
         globalCategories( callback, error_callback ) {
             retrieve( keys.globalCategories, callback, error_callback );

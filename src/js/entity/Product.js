@@ -69,6 +69,7 @@ function createFromSage( sage_product )
     }
 
     let product = create();
+    product.type = 'default';
     product.sku = sage_product.itemNum;
     product.name = sage_product.prName;
     product.data.info.description = sage_product.description;

@@ -10,6 +10,17 @@ export default {
 			saving: false,
 			approval_body: '',
 			approval_subject: '',
+			emails: [
+				{
+					type: 'approval',
+					label: 'Approval Email',
+					subject: '',
+					body: '',
+				}
+			],
+			available: {
+				from: ['admin@promoconnections.com', 'orders@promoconnections.com', 'sales@promoconnections.com', 'support@promoconnections.com'],
+			}
 		}
 	},
 	inject: ['symfony', 'alert'],
@@ -28,11 +39,8 @@ export default {
 			}
 
 			let data = {
-				path: utils.config.keys.approvalEmail,
-				value: {
-					body: self.approval_body,
-					subject: self.approval_subject
-				}
+				path: utils.config.keys.emailTemplates,
+				value: self.emails,
 			}
 
 			this.saving = true;
@@ -42,13 +50,23 @@ export default {
 			let self = this;
 			self.loading = true;
 
-			utils.config.get.approvalEmail( (response) => {
+			utils.config.get.emailTemplates( (response) => {
 				self.loading = false;
 
 				if( !response ) return;
-				self.approval_body = response.body;
-				self.approval_subject = response.subject;
+				self.emails = response;
 			} )
+		},
+		add(){
+			this.emails.push({
+				type: 'new-email',
+				label: 'New Email',
+				requires: '',
+				subject: '',
+				body: '',
+				to: '[client_email]',
+				from: 'admin@promoconnections.com',
+			})
 		}
 	},
 	mounted() {
@@ -60,8 +78,8 @@ export default {
 
 	<div class="d-flex justify-content-between">
 		<div>
-			<h2>Sales Order - Approval Email</h2>
-			<p>Template for sending approval emails. Following placeholders are available</p>
+			<h2>Sales Order - Email Templates</h2>
+			<p>Templates for sending emails. Following placeholders are available</p>
 		</div>
 		<div>
 			<button class="btn btn-primary p-3" @click="save" :disabled="saving"><i class="bi bi-floppy-fill"></i> Save</button>
@@ -75,16 +93,70 @@ export default {
 
 	<div class="row" v-else>
 		<div class="col">
-			<div class="mb-2">
-				<label class="form-label">Email Subject</label>
-				<input type="text" class="form-control" v-model="approval_subject">
+
+			<div v-for="email in emails">
+				<details class="pb-3 border-bottom mb-3">
+					<summary class="py-3 px-2">{{ email.label }}</summary>
+
+					<div class="ps-3">
+
+						<div class="row mb-2 pb-2">
+							<div class="col">
+								<div class="form-floating">
+									<input type="text" class="form-control" v-model="email.label" placeholder="label">
+									<label>Label (Internal only)</label>
+								</div>
+							</div>
+							<div class="col">
+								<div class="form-floating">
+									<input type="text" class="form-control" v-model="email.type" placeholder="Type">
+									<label>Type (internal ID)</label>
+								</div>
+							</div>
+							<div class="col">
+								<div class="form-floating">
+									<input type="text" class="form-control" v-model="email.requires" placeholder="Requires">
+									<label>Requires</label>
+								</div>
+							</div>
+						</div>
+
+
+						<div class="row">
+							<div class="col">
+								<div class="mb-2">
+									<label class="form-label">From</label>
+									<select class="form-select" v-model="email.from">
+										<option v-for="from in available.from" :value="from">{{ from }}</option>
+									</select>
+								</div>
+							</div>
+							<div class="col">
+								<div class="mb-2">
+									<label class="form-label">To</label>
+									<input type="text" class="form-control" v-model="email.to">
+								</div>
+							</div>
+						</div>
+
+
+						<div class="mb-2">
+							<label class="form-label">Subject</label>
+							<input type="text" class="form-control" v-model="email.subject">
+						</div>
+
+						<div class="mb-2">
+							<label class="form-label">Body</label>
+							<textarea class="form-control" rows="15" v-model="email.body"></textarea>
+						</div>
+					</div>
+				</details>
 			</div>
 
-			<div class="mb-2">
-				<label class="form-label">Email Body</label>
-				<textarea class="form-control" rows="15" v-model="approval_body"></textarea>
-			</div>
+			<button class="btn btn-primary" @click="add"><i class="bi bi-plus-circle"></i> Add New Email Template</button>
 		</div>
+
+
 		<div class="col">
 			<table class="table">
 				<thead>
@@ -103,6 +175,10 @@ export default {
 					<td>Name of user that placed the order</td>
 				</tr>
 				<tr>
+					<td>[client_email]</td>
+					<td>Email of user that placed the order</td>
+				</tr>
+				<tr>
 					<td>[approver_name]</td>
 					<td>Name of approver</td>
 				</tr>
@@ -117,6 +193,14 @@ export default {
 				<tr>
 					<td>[sales_order_url]</td>
 					<td>Link to view sales order</td>
+				</tr>
+				<tr>
+					<td>[ship_date]</td>
+					<td>Sales order Ship Date</td>
+				</tr>
+				<tr>
+					<td>[tracking_info]</td>
+					<td>Table of all tracking numbers available.</td>
 				</tr>
 				</tbody>
 			</table>
