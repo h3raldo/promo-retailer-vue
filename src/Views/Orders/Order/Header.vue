@@ -231,8 +231,6 @@ export default {
 			let self = this;
 			self.loading = true;
 
-			this.order.info.status = 'pushed';
-
 			let callback = {
 				success() {
 					self.hasEdited(false);
