@@ -227,7 +227,7 @@ export default {
 
 			this.ajaxUrl(this.saveUrl, callback.success, callback.error)
 		},
-		push() {
+		toiPromoteU(){
 			let self = this;
 			self.loading = true;
 
@@ -238,9 +238,14 @@ export default {
 					self.hasEdited(false);
 
 					self.ajaxUrl(
-					  self.urls.push,
-					  () => {
-						  self.alert('Pushed to Zoho!');
+					  self.symfony.api.ipromoteu.create_job.replace(':id', self.order.id),
+					  (r) => {
+						  if( r.error ) {
+							  self.alert(r.message, 'danger');
+						  } else {
+							  self.alert(`Pushed to iPromoteU! Job Number: ${r.job_number}`);
+							  self.init.ipromoteu = { job_number: r.job_number }
+						  }
 						  self.loading = false;
 					  },
 					  () => {
@@ -289,6 +294,7 @@ export default {
 			<Breadcrumbs :items="breadcrumbs">
 				<span class="badge text-bg-secondary align-self-center">{{ order.info.source }}</span>
 				<span v-if="init.invoice_quickbooks_id || invoiced" class="badge text-bg-success align-self-center"><i class="bi bi-currency-dollar"></i> Invoiced</span>
+				<span v-if="init.ipromoteu?.job_number" class="badge text-bg-success align-self-center">iPromoteU Job: {{ init.ipromoteu.job_number }}</span>
 			</Breadcrumbs>
 		</div>
 		<div>
@@ -323,6 +329,13 @@ export default {
 						</li>
 						<li v-if="order.client.email">
 							<HeaderEmail :save="save" />
+						</li>
+						<li>
+							<button class="dropdown-item" @click="toiPromoteU">
+								<i class="bi bi-send"></i>
+								<span v-if="init.ipromoteu?.job_number">To iPromoteU Again?</span>
+								<span v-else>To iPromoteU</span>
+							</button>
 						</li>
 						<li><hr class="dropdown-divider"></li>
 						<li><a class="dropdown-item" :href="duplicateUrl"><i class="bi bi-copy"></i> Duplicate</a></li>

@@ -23,6 +23,11 @@ export default {
 				'Ship By': { id: 'date_ship_by', active: true },
 				'In-Hands': { id: 'date_deliver_by', active: true },
 				'-': { active: true },
+				'iPromoteU': { active: false },
+				'Proofing': { active: false },
+				'Production': { active: false },
+				'Billing': { active: false },
+				'Web Order': { active: false },
 				'Total': { id: 'total', active: true },
 				'Profit': { id: 'total_profit', active: true  },
 				'Margin': { id: 'total_margin', active: true },
@@ -51,7 +56,7 @@ export default {
 		}
 	},
 
-	inject: ['symfony', 'search', 'cache', 'config'],
+	inject: ['symfony', 'search', 'cache', 'config', 'resetLocalStorage'],
 
 	computed: {
 		searchState(){
@@ -144,6 +149,12 @@ export default {
 			}
 			if( colors[type] ) return colors[type];
 			return '';
+		},
+		getTags( prefix, item ){
+			return item.tags.filter( t => t.includes(prefix)).join(', ');
+		},
+		resetColumns(){
+			this.resetLocalStorage('config');
 		}
 	},
 
@@ -174,6 +185,7 @@ export default {
 					<span>{{ key }}</span>
 				</label>
 			</div>
+			<button class="btn btn-primary mt-3" @click="resetColumns">Reset Columns (refresh page after)</button>
 		</Modal>
 		<button class="btn btn-primary p-3" @click="createNew"><i class="bi bi-plus-square-fill"></i> Create New</button>
 	</div>
@@ -302,6 +314,16 @@ export default {
 				</details>
 				-->
 			</td>
+
+			<td v-if="columns['iPromoteU'].active" @click="viewQuote(item.id)">
+				<span v-if="item.ipromoteu?.job_number" class="badge text-bg-success">Job: {{ item.ipromoteu.job_number }}</span>
+			</td>
+
+			<td v-if="columns['Proofing'].active" @click="viewQuote(item.id)"><span class="badge text-bg-secondary">{{ getTags('proofing-', item) }}</span></td>
+			<td v-if="columns['Production'].active" @click="viewQuote(item.id)"><span class="badge text-bg-secondary">{{ getTags('production-', item) }}</span></td>
+			<td v-if="columns['Billing'].active" @click="viewQuote(item.id)"><span class="badge text-bg-secondary">{{ getTags('billing-', item) }}</span></td>
+			<td v-if="columns['Web Order'].active" @click="viewQuote(item.id)"><span class="badge text-bg-secondary">{{ getTags('web-', item) }}</span></td>
+
 			<td v-if="columns['Total'].active" @click="viewQuote(item.id)">{{ formatPricing(item.total) }}</td>
 			<td v-if="columns['Profit'].active" @click="viewQuote(item.id)">{{ formatPricing(item.totalProfit) }}</td>
 			<td v-if="columns['Margin'].active" @click="viewQuote(item.id)">{{ item.totalMargin }}%</td>

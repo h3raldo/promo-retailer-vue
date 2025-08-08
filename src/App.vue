@@ -50,6 +50,11 @@ export default {
 		updateLocalStorage(key)
 		{
 			localStorage.setItem(key, JSON.stringify(this[key]));
+		},
+
+		resetLocalStorage(key) {
+			localStorage.removeItem(key);
+			console.log( 'after clear', localStorage.getItem('config') );
 		}
 	},
 
@@ -57,6 +62,7 @@ export default {
 		return {
 			alert: this.showAlert,
 			updateLocalStorage: this.updateLocalStorage,
+			resetLocalStorage: this.resetLocalStorage,
 			symfony: computed(() => this.symfony),
 			search: computed(() => this.search),
 			config: computed(() => this.config),
