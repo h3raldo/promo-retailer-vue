@@ -158,10 +158,20 @@ function patchData( data, init )
     order.fees.forEach( f => {
         if( typeof f.config === 'undefined' ) f.config = new_fee.config;
         if( typeof f.type === 'undefined' ) f.type = 'fee'; // because existing orders can't be guessed
+        if( Array.isArray(f.vendor) ) f.vendor = {};
     })
 
     order.items.forEach( i => {
         if( typeof i.notes.decorator === 'undefined' ) i.notes.decorator = '';
+        if( Array.isArray(i.info.supplier) ) i.info.supplier = {};
+        i.options.forEach( o => {
+            if( Array.isArray(o.selected) ) o.selected = {};
+        })
+        i.subitems.forEach( s => {
+            if( Array.isArray(s.options) ) s.options = {};
+            if( Array.isArray(s.colors) ) s.colors = {};
+            if( Array.isArray(s.sizes) ) s.sizes = {};
+        })
     })
 
     return order;
