@@ -20,7 +20,12 @@ function create(){
                 primary: '',
                 available: []
             },
-            supplier: {}
+            supplier: {},
+            product: {
+                id: '',
+                name: '',
+                magento_id: ''
+            }
         },
         notes: {
             public: '',

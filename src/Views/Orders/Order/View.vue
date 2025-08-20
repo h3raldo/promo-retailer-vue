@@ -78,6 +78,9 @@ function setup()
 		if( d.data ) entity_data = JSON.parse(d.data);
 		if( d.entities ) data.entities = d.entities;
 
+		if( entity_data?.order?.v2 )
+			console.log('new items', entity_data);
+
 		let init = d.init;
 		data.init = d.init;
 

@@ -81,15 +81,7 @@ export default {
 		</div>
 		<div>
 			<div class="text-end d-flex gap-2">
-				<div class="btn-group">
-					<button type="button" class="btn btn-primary" :disabled="loading || !canSave" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
-					<button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-						<span class="visually-hidden">Toggle Dropdown</span>
-					</button>
-					<ul class="dropdown-menu">
-						<li><button class="dropdown-item" :disabled="loading || !canSave" @click="saveWithReUpload">Save & ReUpload Logos</button></li>
-					</ul>
-				</div>
+				<button type="button" class="btn btn-primary" :disabled="loading || !canSave" @click="save"><i class="bi bi-floppy-fill"></i> Save</button>
 			</div>
 		</div>
 	</div>

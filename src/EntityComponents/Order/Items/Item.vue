@@ -16,7 +16,7 @@ export default {
 	},
 
 	props: ['item', 'itemIndex'],
-	inject: ['order', 'updatePricing', 'fn'],
+	inject: ['order', 'updatePricing', 'fn', 'symfony'],
 
 	provide() {
 		return {
@@ -94,11 +94,19 @@ export default {
 <template>
 	<div class="row p-2 border-bottom pb-3">
 		<div class="col col-4">
-			<h5><i v-if="item.info.hidden" class="bi bi-eye-slash me-1"></i>{{ item.info.name }}</h5>
+			<h5><i v-if="item.info.hidden" class="bi bi-eye-slash me-1"></i>
+				{{ item.info.name }}
+			</h5>
 			<span v-if="item.personalization && item.personalization.length > 0" class="badge text-bg-warning">Has Personalization</span>
 
 			<div class="mb-2">
-				<span class="badge text-bg-secondary me-1" v-if="item.info.sku">{{ item.info.sku }}</span>
+
+				<span v-if="item?.info?.product?.id" class="badge text-bg-secondary me-1">
+					<i class="bi bi-box-seam me-1"></i>
+					<a class="text-bg-secondary" :href="symfony.views.products_product.replace(':id', item.info.product.id)" target="_blank">{{ item.info.product.sku }}</a>
+				</span>
+				<span class="badge text-bg-secondary me-1" v-else-if="item.info.sku">{{ item.info.sku }}</span>
+
 				<span class="badge text-bg-secondary me-1" v-if="item.info.supplier.name">{{ item.info.supplier.name }}</span>
 
 				<span class="badge text-bg-primary me-1" v-if="item.notes.flags.includes('RP')">Require Proof</span>

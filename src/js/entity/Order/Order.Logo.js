@@ -14,7 +14,7 @@ function getDefault()
     logo.id = 'your-logo--light';
     logo.name = 'Your logo';
     logo.variation = 'light';
-    logo.url = 'https://res.cloudinary.com/promo-retailer/image/upload/logos/your-logo--dark.png';
+    logo.url = 'https://res.cloudinary.com/dyamjiznt/image/upload/logos/your-logo--dark.png';
 
     return [logo]
 }
@@ -23,7 +23,7 @@ function createFromLogoId( id )
 {
     let logo = create();
     logo.id = id;
-    logo.url = `https://res.cloudinary.com/promo-retailer/image/upload/logos/${id}.png`;
+    logo.url = `https://res.cloudinary.com/dyamjiznt/image/upload/logos/${id}.png`;
     logo.variation = id.split('--')[1];
     logo.name = id;
 

@@ -256,6 +256,7 @@ function convertFromSource( data, cb )
                 item.info.sku = magento_item.configuration.group;
                 item.notes.public = magento_item.options_text;
                 item.info.image.primary = magento_item.configuration.image;
+                item.info.product.magento_id = magento_item.magento_id;
 
                 if( magento_item.configuration.personalization ){
                     Object.keys( magento_item.configuration.personalization ).forEach( key => {
