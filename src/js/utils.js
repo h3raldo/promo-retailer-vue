@@ -1,5 +1,6 @@
 import pricing from "@/js/pricing.js";
 import config from "@/js/utils/config.js"
+import {toRaw} from "vue";
 
 let ajax = {
     fetch(url, method, data, callback, errorCallback)
@@ -45,6 +46,15 @@ export default
     ajaxDelete( url, callback, errorCallback, data=null )
     {
         ajax.fetch( url, 'DELETE', data, callback, errorCallback );
+    },
+
+    ajaxPOST( url, callback, errorCallback, data=null )
+    {
+        ajax.fetch( url, 'POST', data, callback, errorCallback );
+    },
+
+    duplicateObject( obj ){
+        return JSON.parse(JSON.stringify(toRaw(obj)));
     },
 
     async ajaxAsync( url, data ){

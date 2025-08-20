@@ -43,6 +43,8 @@ export default {
 			response.images.forEach( image => {
 				this.typeAssets.push( image );
 				this.variant.image = image.url;
+				this.variant.handle = response.web_file.handle;
+				this.variant.image_cloudinary = response.web_file.cloudinary_url;
 			})
 			// @todo: on web upload, force a save because once web.png is uploaded, it needs to save that it belongs to that variant
 		},

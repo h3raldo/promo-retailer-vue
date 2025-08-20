@@ -3,6 +3,7 @@ import Grid from "@/components/globals/Grid.vue";
 import Search from "@/Views/Websites/Search.vue";
 import Status from "@/components/globals/Grid/Status.vue";
 import EntityDelete from "@/EntityComponents/Entity/EntityDelete.vue";
+import EntityDuplicate from "@/EntityComponents/Entity/EntityDuplicate.vue";
 </script>
 
 <script>
@@ -66,7 +67,8 @@ export default {
 			<td @click="viewSingle(item.id)">
 				{{ item.handle }}
 			</td>
-			<td>
+			<td class="d-flex gap-2">
+				<EntityDuplicate :id="item.id" entity="website" :callback="afterDelete" />
 				<EntityDelete :id="item.id" entity="website" :callback="afterDelete" />
 			</td>
 		</template>

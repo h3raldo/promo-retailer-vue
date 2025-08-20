@@ -80,6 +80,8 @@ export default {
 
 		<td>{{ priceFormat(variant.cost_tiers && variant.cost_tiers.length ? variant.cost_tiers[0].cost : variant.cost) }}</td>
 
+		<td>{{ variant.weight }} lbs</td>
+
 		<td>{{ variant.status }}</td>
 
 		<td>

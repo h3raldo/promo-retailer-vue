@@ -52,6 +52,7 @@ export default {
 				<th class="col-3">Color</th>
 				<th>Size</th>
 				<th>Cost</th>
+				<th>Weight</th>
 				<th>Status</th>
 				<th></th>
 				<th class="col-1"></th>
