@@ -97,6 +97,12 @@ export default {
 					url: self.symfony.views.reports_orders,
 					type: 'vue'
 				},
+				{
+					title: 'Reports (v2)',
+					icon: 'bi-bar-chart-line-fill',
+					url: self.symfony.views.reports_cogs,
+					type: 'vue'
+				},
 			]
 		}
 	},

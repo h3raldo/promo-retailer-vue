@@ -73,6 +73,10 @@ const routes = [
         component: () => import('@/Views/PurchaseOrders/PurchaseOrder/View.vue')
     },
     {
+        path: window.symfony.views.reports_cogs,
+        component: () => import('@/Views/Reports/Cogs.vue')
+    },
+    {
         path: window.symfony.views.reports_orders,
         component: () => import('@/Views/Reports/Orders.vue')
     },
