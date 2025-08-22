@@ -25,7 +25,9 @@ export const useQuoteStore = defineStore('quote', () => {
                 updatePricing();
             },
             duplicate( index ){
-                fn.item.add( JSON.parse(JSON.stringify(toRaw(order.items[index]))) );
+                let item = JSON.parse(JSON.stringify(toRaw(order.items[index])));
+                item.row_id = '';
+                fn.item.add(item);
             },
             move(fromIndex, direction) {
                 let toIndex = fromIndex;

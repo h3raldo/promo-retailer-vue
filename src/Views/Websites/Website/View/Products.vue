@@ -140,7 +140,7 @@ export default {
 
 			utils.ajaxDelete(this.symfony.api.entity.delete, result, error, {
 				id: rule.id,
-				entity: 'websiteRule'
+				type: 'websiteRule'
 			})
 		},
 

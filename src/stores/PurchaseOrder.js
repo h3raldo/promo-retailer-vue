@@ -26,7 +26,9 @@ export const usePurchaseOrderStore = defineStore('purchaseOrder', () => {
                 updatePricing();
             },
             duplicate( index ){
-                fn.item.add( JSON.parse(JSON.stringify(toRaw(po.items[index]))) );
+                let item = JSON.parse(JSON.stringify(toRaw(po.items[index])));
+                item.row_id = '';
+                fn.item.add( item );
             },
             move(fromIndex, direction) {
                 let toIndex = fromIndex;

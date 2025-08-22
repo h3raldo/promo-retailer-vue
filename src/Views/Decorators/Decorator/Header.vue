@@ -110,5 +110,12 @@ export default {
 			</div>
 		</div>
 
+		<div class="flex-grow-1">
+			<div class="form-floating">
+				<input type="text" class="form-control" id="handle" placeholder="Handle" v-model="decorator.company.name" disabled>
+				<label for="handle">Company</label>
+			</div>
+		</div>
+
 	</div>
 </template>

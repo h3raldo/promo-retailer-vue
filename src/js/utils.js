@@ -57,19 +57,22 @@ export default
         return JSON.parse(JSON.stringify(toRaw(obj)));
     },
 
-    async ajaxAsync( url, data ){
-        let init = {
-            method: 'GET'
-        }
+    async ajaxAsync( url, data, method ){
 
-        if( typeof data === 'object' ){
-            init.method = 'POST';
-            init.headers = {
+        let init = {
+            method: 'GET',
+            headers: {
                 'Accept': 'application/json',
                 'Content-type': 'application/json',
-            };
+            }
+        };
+
+        if( typeof data === 'object' ) {
+            init.method = 'POST';
             init.body = JSON.stringify(data);
         }
+
+        if( method ) init.method = method;
 
         const response = await fetch(url, init);
         let r = response.json();
