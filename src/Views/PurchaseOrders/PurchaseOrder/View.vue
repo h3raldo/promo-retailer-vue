@@ -1,7 +1,7 @@
 <script setup>
 import Loader from "@/components/globals/Loader.vue";
 import Header from "@/Views/PurchaseOrders/PurchaseOrder/Header.vue";
-import Items from "@/EntityComponents/Order/Items.vue";
+import Items from "@/Views/PurchaseOrders/PurchaseOrder/Items/Items.vue";
 import Tabs from "@/components/globals/Tabs.vue";
 import References from "@/components/globals/References.vue";
 import Info from "@/Views/PurchaseOrders/PurchaseOrder/Info.vue";
@@ -26,7 +26,7 @@ export default{
 			entities: {
 				order: {},
 			},
-			tabs: ['Info', 'Items', 'Vendor', 'Logos', 'References']
+			tabs: ['Info', 'Items', 'Vendor', 'References']
 		}
 	},
 
@@ -141,10 +141,6 @@ export default{
 
 			<template #Items>
 				<Items />
-			</template>
-
-			<template #Logos>
-				<Logos />
 			</template>
 
 			<template #Vendor>

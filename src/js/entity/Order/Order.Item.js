@@ -7,6 +7,7 @@ import entity from "@/js/entity.js";
 function create(){
     let item = {
         id: '',
+        local_id: '',
         info: {
             name: 'New Item',
             sku: '',
@@ -76,6 +77,7 @@ function create(){
             }
         }
     };
+    item.local_id = 'order-item-' + Date.now();
     item.colors.push(color.create());
     item.sizes.push(size.create());
     item.subitems.push( OrderItemSubitem.create() );

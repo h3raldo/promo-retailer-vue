@@ -214,10 +214,11 @@ export default {
 			self.loading = true;
 
 			let callback = {
-				success() {
+				success(r) {
 					self.alert('Order Saved!');
 					self.loading = false;
 					self.hasEdited(false);
+					self.consolidateIDs(r);
 				},
 				error() {
 					self.alert('Error saving order, see console.', 'danger');
@@ -227,6 +228,19 @@ export default {
 
 			this.ajaxUrl(this.saveUrl, callback.success, callback.error)
 		},
+
+		consolidateIDs( saveResponse )
+		{
+			let no_row_ids = this.order.items.filter( item => !item.row_id );
+
+			let map = saveResponse.data.new_order_items;
+			no_row_ids.forEach( item => {
+				if( !map[item.local_id] ) return;
+				item.row_id = map[item.local_id].id;
+				console.log('updated id', item.local_id, 'to', map[item.local_id], item);
+			})
+		},
+
 		toiPromoteU(){
 			let self = this;
 			self.loading = true;
