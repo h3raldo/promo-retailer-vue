@@ -33,6 +33,17 @@ export const useOrderStore = defineStore('order', () => {
                 let item = JSON.parse(JSON.stringify(toRaw(order.items[index])));
                 item.row_id = ''
                 item.local_id = 'order-item-' + Date.now();
+
+                item.subitems.forEach(subitem => {
+                    let i=0;
+                    Object.keys(subitem.sizes).forEach(key => {
+                        let size = subitem.sizes[key];
+                        size.id = '';
+                        size.local_id = 'order-item-subitem-' + Date.now() + '-' + i;
+                        i++;
+                    })
+                })
+
                 fn.item.add( item );
             },
             move(fromIndex, direction) {

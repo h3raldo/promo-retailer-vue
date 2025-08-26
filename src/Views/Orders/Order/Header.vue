@@ -231,14 +231,39 @@ export default {
 
 		consolidateIDs( saveResponse )
 		{
-			let no_row_ids = this.order.items.filter( item => !item.row_id );
 
-			let map = saveResponse.data.new_order_items;
-			no_row_ids.forEach( item => {
-				if( !map[item.local_id] ) return;
-				item.row_id = map[item.local_id].id;
-				console.log('updated id', item.local_id, 'to', map[item.local_id], item);
-			})
+			if( saveResponse.data.actions.created?.order_item ) {
+				let no_row_ids = this.order.items.filter(item => !item.row_id);
+
+				let map = {};
+				saveResponse.data.actions.created?.order_item.forEach((item) => {
+					map[item.local_id] = item.id;
+				})
+
+				no_row_ids.forEach(item => {
+					if (!map[item.local_id]) return;
+					item.row_id = map[item.local_id];
+					console.log('updated id', item.local_id, 'to', map[item.local_id], item);
+				})
+			}
+
+			if( saveResponse.data.actions.created?.order_item_subitem ) {
+				let map = {};
+				saveResponse.data.actions.created?.order_item_subitem.forEach((item) => {
+					map[item.local_id] = item.id;
+				})
+
+				this.order.items.forEach(item => {
+					item.subitems.forEach(subitem => {
+						Object.keys(subitem.sizes).forEach(key => {
+							let size = subitem.sizes[key];
+							if( !map[size.local_id] ) return;
+							size.id = map[size.local_id];
+							console.log('updated id', size.local_id, 'to', map[size.local_id], size);
+						})
+					})
+				})
+			}
 		},
 
 		toiPromoteU(){

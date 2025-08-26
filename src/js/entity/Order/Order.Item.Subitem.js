@@ -32,8 +32,11 @@ function create( color ){
 
 let size = {
     create( size ){
-        return {
+
+        let o = {
             name: size,
+            id: '',
+            local_id: '',
             qty: 0,
             pricing: {
                 totals: {
@@ -51,7 +54,11 @@ let size = {
                     }
                 }
             }
-        }
+        };
+
+        o.local_id = 'order-item-subitem-' + Date.now();
+
+        return o;
     },
 }
 
