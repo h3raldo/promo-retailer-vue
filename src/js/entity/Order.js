@@ -167,6 +167,9 @@ function patchData( data, init )
         i.options.forEach( o => {
             if( Array.isArray(o.selected) ) o.selected = {};
         })
+        i.sizes.forEach( size => {
+            size.name = size.name.trim();
+        })
         i.subitems.forEach( s => {
             if( Array.isArray(s.options) ) s.options = {};
             if( Array.isArray(s.colors) ) s.colors = {};

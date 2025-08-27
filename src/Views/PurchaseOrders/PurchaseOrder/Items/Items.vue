@@ -1,6 +1,5 @@
 <script setup>
 import Item from '@/EntityComponents/Order/Items/Item.vue';
-import ItemsItem from "@/Views/PurchaseOrders/PurchaseOrder/Items/Items.Item.vue";
 import addItem from "@/EntityComponents/Order/Actions/AddItem.vue";
 import addFee from "@/EntityComponents/Order/Actions/AddFee.vue";
 import Fee from "@/EntityComponents/Order/Items/Fee.vue";
@@ -41,32 +40,18 @@ export default {
 
 <template>
 
+	<div class="row bg-light fw-bold p-2">
+		<div class="col col-4">Product</div>
+		<div class="col col-6">Cost</div>
+		<div class="col col-1">Subtotal</div>
+		<div class="col col-1"></div>
+	</div>
 
-	<table class="table">
-		<thead>
-		<tr>
-			<th colspan="2">Product</th>
-			<th>Color</th>
-			<th>Size</th>
-			<th class="col-1">Qty</th>
-			<th class="col-1">Cost (est)</th>
-			<th class="col-1">Cost (actual)</th>
-			<th class="col-1">Qty Received</th>
-			<th></th>
-		</tr>
-		</thead>
-		<tbody>
-			<ItemsItem v-for="( item, index ) in order.items" :item="item" :itemIndex="index" />
-		</tbody>
-	</table>
+	<Item v-for="( item, index ) in order.items" :item="item" :itemIndex="index" />
 
-	<!--
 	<div class="row border-bottom py-4 mb-4">
 		<div class="col col-4"><addItem /></div>
 	</div>
-	-->
-
-	<br>
 
 	<Fee v-for="(fee, index) in order.fees" :fee="fee" :feeIndex="index" />
 
