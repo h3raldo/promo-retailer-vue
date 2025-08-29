@@ -65,7 +65,7 @@ export default {
 				return;
 			}
 
-			self.$router.push( self.symfony.views.products_product.replace(':id', res.entity.product.id) )
+			this.$router.push( self.symfony.views.products_product.replace(':id', res.entity.product.id) )
 		},
 	},
 	created() {
@@ -106,7 +106,7 @@ export default {
 				{{ item.company.name }}
 			</td>
 			<td>
-				<button class="btn btn-outline-primary" @click="duplicate"><i class="bi bi-copy"></i></button>
+				<button class="btn btn-outline-primary" @click="duplicate(item.id)"><i class="bi bi-copy"></i></button>
 			</td>
 		</template>
 	</Grid>
