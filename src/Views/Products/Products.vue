@@ -12,6 +12,7 @@ export default {
 		return {
 			loading: {
 				create: false,
+				duplicate: false,
 			},
 			columns: {
 				'ID': { id: 'id' },
@@ -53,6 +54,19 @@ export default {
 				self.alert('Error creating', 'danger');
 			})
 		},
+		async duplicate(id)
+		{
+			this.loading.duplicate = true;
+			let res = await utils.ajaxAsync( this.symfony.api.products.product.duplicate, { id }, 'POST')
+			this.loading.duplicate = false;
+
+			if( res.error === true || !res.entity.product.id ){
+				self.alert(res.message, 'danger');
+				return;
+			}
+
+			self.$router.push( self.symfony.views.products_product.replace(':id', res.entity.product.id) )
+		},
 	},
 	created() {
 		if( typeof this.search.products === 'undefined' ) this.search.products = {}
@@ -92,6 +106,7 @@ export default {
 				{{ item.company.name }}
 			</td>
 			<td>
+				<button class="btn btn-outline-primary" @click="duplicate"><i class="bi bi-copy"></i></button>
 			</td>
 		</template>
 	</Grid>

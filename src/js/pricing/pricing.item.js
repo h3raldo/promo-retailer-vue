@@ -54,6 +54,7 @@ function setSubItemPricing( subItem, item, items, sizeCost )
 
     Object.keys( subItem.sizes ).forEach( k => {
         let size = subItem.sizes[k];
+        if( !sizeCost[k] ) console.log('size issue', k, sizeCost, subItem)
         size.pricing.base.size.cost = sizeCost[k].cost;
         size.pricing.base.size.price = sizeCost[k].price;
         updateSizePricing(item, subItem, size);
