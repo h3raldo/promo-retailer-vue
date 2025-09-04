@@ -1,4 +1,5 @@
 import entity from "@/js/entity.js";
+import utils from "@/js/utils.js";
 
 function create( color ){
 
@@ -56,7 +57,7 @@ let size = {
             }
         };
 
-        o.local_id = 'order-item-subitem-' + Date.now();
+        o.local_id = 'order-item-subitem-' + Date.now() + utils.generateUID();
 
         return o;
     },

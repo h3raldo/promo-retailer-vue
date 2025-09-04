@@ -3,6 +3,7 @@ import OrderItemTier from "@/js/entity/Order/Order.Item.Tier.js";
 import OrderItemOption from "@/js/entity/Order/Order.Item.Option.js";
 import OrderItemDecoration from "@/js/entity/Order/Order.Item.Decoration.js";
 import entity from "@/js/entity.js";
+import utils from "@/js/utils.js";
 
 function create(){
     let item = {
@@ -77,7 +78,7 @@ function create(){
             }
         }
     };
-    item.local_id = 'order-item-' + Date.now();
+    item.local_id = 'order-item-' + Date.now() + '-' + utils.generateUID();
     item.colors.push(color.create());
     item.sizes.push(size.create());
     item.subitems.push( OrderItemSubitem.create() );
