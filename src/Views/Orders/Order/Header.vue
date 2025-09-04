@@ -241,7 +241,7 @@ export default {
 				})
 
 				no_row_ids.forEach(item => {
-					if (!map[item.local_id]) return;
+					if (!item.local_id || !map[item.local_id]) return;
 					item.row_id = map[item.local_id];
 					console.log('updated id', item.local_id, 'to', map[item.local_id], item);
 				})
@@ -257,7 +257,7 @@ export default {
 					item.subitems.forEach(subitem => {
 						Object.keys(subitem.sizes).forEach(key => {
 							let size = subitem.sizes[key];
-							if( !map[size.local_id] ) return;
+							if(!size.local_id || !map[size.local_id] ) return;
 							size.id = map[size.local_id];
 							console.log('updated id', size.local_id, 'to', map[size.local_id], size);
 						})
